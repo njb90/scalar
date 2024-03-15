@@ -1,5 +1,5 @@
 /* basic theme */
-.light-mode {
+[data-theme='light'] {
   --default-theme-background-1: #fff;
   --default-theme-background-2: #f6f6f6;
   --default-theme-background-3: #e7e7e7;
@@ -12,7 +12,7 @@
   --default-theme-color-accent: #0099ff;
   --default-theme-border-color: rgba(0, 0, 0, 0.1);
 }
-.dark-mode {
+[data-theme='dark'] {
   --default-theme-background-1: #0f0f0f;
   --default-theme-background-2: #1a1a1a;
   --default-theme-background-3: #272727;
@@ -48,7 +48,7 @@
 }
 
 /* advanced */
-.light-mode {
+[data-theme='light'] {
   --default-theme-color-green: #069061;
   --default-theme-color-red: #ef0006;
   --default-theme-color-yellow: #edbe20;
@@ -56,7 +56,7 @@
   --default-theme-color-orange: #fb892c;
   --default-theme-color-purple: #5203d1;
 }
-.dark-mode {
+[data-theme='dark'] {
   --default-theme-color-green: #00b648;
   --default-theme-color-red: #dc1b19;
   --default-theme-color-yellow: #ffc90d;

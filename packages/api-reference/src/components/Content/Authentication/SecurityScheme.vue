@@ -150,18 +150,18 @@ const startAuthentication = (url: string) => {
       <CardFormGroup v-if="value.type === 'basic' || value.scheme === 'basic'">
         <CardFormTextInput
           id="http.basic.username"
-          placeholder="Username"
+          placeholder="Key"
           :value="authentication.http.basic.username"
           @input="handleHttpBasicUsernameInput">
-          Username
+          Key
         </CardFormTextInput>
         <CardFormTextInput
           id="http.basic.password"
-          placeholder="Password"
+          placeholder="Secret"
           type="password"
           :value="authentication.http.basic.password"
           @input="handleHttpBasicPasswordInput">
-          Password
+          Secret
         </CardFormTextInput>
       </CardFormGroup>
       <CardFormTextInput
