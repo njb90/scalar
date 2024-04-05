@@ -330,7 +330,7 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
   grid-area: header;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 5;
 
   height: var(--refs-header-height);
 }

@@ -55,7 +55,7 @@
   --default-theme-text-decoration: none;
   --default-theme-text-decoration-hover: underline;
 }
-.dark-mode {
+[data-theme='dark'] {
   color-scheme: dark;
   --default-theme-scrollbar-color: rgba(255, 255, 255, 0.18);
   --default-theme-scrollbar-color-active: rgba(255, 255, 255, 0.36);
@@ -71,7 +71,7 @@
   --default-sidebar-indent-border-hover: transparent;
   --default-sidebar-indent-border-active: transparent;
 }
-.light-mode {
+[data-theme='light'] {
   color-scheme: light;
   --default-theme-scrollbar-color-active: rgba(0, 0, 0, 0.36);
   --default-theme-scrollbar-color: rgba(0, 0, 0, 0.18);
@@ -88,9 +88,6 @@
   --default-sidebar-indent-border-active: transparent;
 }
 /* On some browsers, the light color scheme takes precedence when the light mode is active */
-.light-mode .dark-mode {
-  color-scheme: dark !important;
-}
 @media (max-width: 460px) {
   :root {
     --default-theme-font-size-1: 22px;
