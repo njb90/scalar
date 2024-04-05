@@ -6,6 +6,7 @@ import { useNavState, useRefOnMount } from '../../hooks'
 import type { Spec } from '../../types'
 import { Authentication } from './Authentication'
 import { BaseUrl } from './BaseUrl'
+import { ClientLibraries } from './ClientLibraries'
 import { Introduction } from './Introduction'
 import { Lazy, Loading } from './Lazy'
 import { Models, ModelsAccordion } from './Models'
@@ -92,6 +93,7 @@ const isLazy =
           class="introduction-cards"
           :class="{ 'introduction-cards-row': layout === 'accordion' }">
           <BaseUrl :value="localServers" />
+          <ClientLibraries />
           <Authentication :parsedSpec="parsedSpec" />
         </div>
       </template>
