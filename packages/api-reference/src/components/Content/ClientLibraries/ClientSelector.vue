@@ -1,104 +1,66 @@
 <script setup lang="ts">
-import { useResizeObserver } from '@vueuse/core'
+import { ScalarIcon } from '@scalar/components'
 import { type TargetId } from 'httpsnippet-lite'
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
-import { useSnippetTargets } from '../../../hooks'
-import { type SelectedClient, useTemplateStore } from '../../../stores/template'
-import { Icon } from '../../Icon'
+import { useHttpClients } from '../../../hooks'
+import { type HttpClientState, useHttpClientStore } from '../../../stores/'
 
 // Use the template store to keep it accessible globally
-const { state, setItem, getClientTitle, getTargetTitle } = useTemplateStore()
+const { httpClient, setHttpClient, getClientTitle, getTargetTitle } =
+  useHttpClientStore()
+const { availableTargets } = useHttpClients()
 
-const { availableTargets } = useSnippetTargets()
-
-const isSmall = ref(false)
 const containerRef = ref<HTMLElement>()
 
-useResizeObserver(
-  containerRef,
-  (entries) => (isSmall.value = entries[0].contentRect.width < 500),
-)
-
 // Show popular clients with an icon, not just in a select.
-const featuredClients = computed<SelectedClient[]>(() =>
-  isSmall.value
-    ? // Mobile
-      [
-        {
-          targetKey: 'shell',
-          clientKey: 'curl',
-        },
-        {
-          targetKey: 'ruby',
-          clientKey: 'native',
-        },
-        {
-          targetKey: 'node',
-          clientKey: 'undici',
-        },
-        {
-          targetKey: 'python',
-          clientKey: 'python3',
-        },
-      ]
-    : // Desktop
-      [
-        {
-          targetKey: 'shell',
-          clientKey: 'curl',
-        },
-        {
-          targetKey: 'ruby',
-          clientKey: 'native',
-        },
-        {
-          targetKey: 'node',
-          clientKey: 'undici',
-        },
-        {
-          targetKey: 'php',
-          clientKey: 'guzzle',
-        },
-        {
-          targetKey: 'python',
-          clientKey: 'python3',
-        },
-        {
-          targetKey: 'c',
-          clientKey: 'libcurl',
-        },
-      ],
-)
+const featuredClients = [
+  {
+    targetKey: 'shell',
+    clientKey: 'curl',
+  },
+  {
+    targetKey: 'ruby',
+    clientKey: 'native',
+  },
+  {
+    targetKey: 'node',
+    clientKey: 'undici',
+  },
+  {
+    targetKey: 'php',
+    clientKey: 'guzzle',
+  },
+  {
+    targetKey: 'python',
+    clientKey: 'python3',
+  },
+  {
+    targetKey: 'c',
+    clientKey: 'libcurl',
+  },
+] as const
 
 /**
  * Icons have longer names to appear in icon searches, e.g. "javascript-js" instead of just "javascript". This function
  * maps the language key to the icon name.
  */
-const getIconByLanguageKey = (targetKey: TargetId) => {
-  const targetKeyMap: Partial<Record<TargetId, string>> = {
-    javascript: 'javascript-js',
-  }
+const getIconByLanguageKey = (targetKey: TargetId) =>
+  `programming-language-${targetKey}` as const
 
-  const icon = targetKeyMap[targetKey] ?? targetKey
-
-  return `brand/programming-language-${icon}`
-}
-
-const isSelectedClient = (language: SelectedClient) => {
+const isSelectedClient = (language: HttpClientState) => {
   return (
-    language.targetKey === state.selectedClient.targetKey &&
-    language.clientKey === state.selectedClient.clientKey
+    language.targetKey === httpClient.targetKey &&
+    language.clientKey === httpClient.clientKey
   )
 }
 
-function checkIfClientIsFeatured(client: SelectedClient) {
-  return featuredClients.value.some((item) => {
-    return (
-      item.targetKey === client.targetKey && item.clientKey === client.clientKey
-    )
-  })
-}
+const checkIfClientIsFeatured = (client: HttpClientState) =>
+  featuredClients.some(
+    (item) =>
+      item.targetKey === client.targetKey &&
+      item.clientKey === client.clientKey,
+  )
 </script>
 <template>
   <div
@@ -111,13 +73,13 @@ function checkIfClientIsFeatured(client: SelectedClient) {
       :class="{
         'code-languages__active': isSelectedClient(client),
       }"
-      @click="() => setItem('selectedClient', client)">
+      @click="() => setHttpClient(client)">
       <div
         class="code-languages-background"
         :class="`code-languages-icon__${client.targetKey}`">
-        <Icon
+        <ScalarIcon
           class="code-languages-icon"
-          :src="getIconByLanguageKey(client.targetKey)" />
+          :icon="getIconByLanguageKey(client.targetKey)" />
       </div>
       <span>{{ getTargetTitle(client) }}</span>
     </div>
@@ -126,18 +88,14 @@ function checkIfClientIsFeatured(client: SelectedClient) {
       class="code-languages code-languages__select"
       :class="{
         'code-languages__active':
-          state.selectedClient &&
-          !checkIfClientIsFeatured(state.selectedClient),
+          httpClient && !checkIfClientIsFeatured(httpClient),
       }">
       <select
         class="language-select"
-        :value="JSON.stringify(state.selectedClient)"
+        :value="JSON.stringify(httpClient)"
         @input="
           (event) =>
-            setItem(
-              'selectedClient',
-              JSON.parse((event.target as HTMLSelectElement).value),
-            )
+            setHttpClient(JSON.parse((event.target as HTMLSelectElement).value))
         ">
         <optgroup
           v-for="target in availableTargets"
@@ -163,17 +121,11 @@ function checkIfClientIsFeatured(client: SelectedClient) {
       </select>
 
       <div class="code-languages-background code-languages-icon__more">
-        <template
-          v-if="
-            state.selectedClient &&
-            !checkIfClientIsFeatured(state.selectedClient)
-          ">
-          <div
-            class="code-languages-background"
-            :class="`code-languages-icon__${state.selectedClient.targetKey}`">
-            <Icon
+        <template v-if="httpClient && !checkIfClientIsFeatured(httpClient)">
+          <div :class="`code-languages-icon__${httpClient.targetKey}`">
+            <ScalarIcon
               class="code-languages-icon"
-              :src="getIconByLanguageKey(state.selectedClient.targetKey)" />
+              :icon="getIconByLanguageKey(httpClient.targetKey)" />
           </div>
         </template>
         <template v-else>
@@ -263,7 +215,7 @@ function checkIfClientIsFeatured(client: SelectedClient) {
   top: -1px;
   left: -1px;
   pointer-events: none;
-  border-radius: 12px;
+  border-radius: 8px;
   background: var(
     --theme-code-languages-background-supersede,
     var(--default-theme-code-languages-background-supersede)
@@ -404,5 +356,10 @@ function checkIfClientIsFeatured(client: SelectedClient) {
 }
 .references-classic .code-languages-background {
   border-radius: var(--theme-radius, var(--default-theme-radius));
+}
+@media screen and (max-width: 600px) {
+  .references-classic .code-languages {
+    flex-direction: column;
+  }
 }
 </style>

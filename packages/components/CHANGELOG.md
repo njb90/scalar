@@ -1,5 +1,41 @@
 # @scalar/components
 
+## 0.4.10
+
+### Patch Changes
+
+- 95bac72: fix: docusaurus code blocks
+
+## 0.4.9
+
+### Patch Changes
+
+- c14568f: feat: add custom security option
+
+## 0.4.8
+
+### Patch Changes
+
+- ae193a8: feat: sidebar border indents + theme polish
+
+## 0.4.7
+
+### Patch Changes
+
+- f861efa: chore: changed svg rendering strategy
+
+## 0.4.6
+
+### Patch Changes
+
+- 7d0092e: fix: show schema selector
+
+## 0.4.5
+
+### Patch Changes
+
+- 42b385b: fix: make ScalarCodeBlock SSR/SSG compatible
+
 ## 0.4.4
 
 ### Patch Changes

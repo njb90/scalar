@@ -1,23 +1,28 @@
 <script setup lang="ts">
-import { HttpMethod } from '@scalar/api-client'
+import {
+  HttpMethod,
+  getRequestFromAuthentication,
+  getSecretCredentialsFromAuthentication,
+  useAuthenticationStore,
+} from '@scalar/api-client'
 import { ScalarCodeBlock, ScalarIcon } from '@scalar/components'
+import {
+  type TransformedOperation,
+  getHarRequest,
+  getRequestFromOperation,
+} from '@scalar/oas-utils'
 import { snippetz } from '@scalar/snippetz'
 import { HTTPSnippet } from 'httpsnippet-lite'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, inject, onServerPrefetch, ref, watch } from 'vue'
 
 import {
   GLOBAL_SECURITY_SYMBOL,
   getApiClientRequest,
-  getHarRequest,
-  getRequestFromAuthentication,
-  getRequestFromOperation,
-  getSecretCredentialsFromAuthentication,
   getUrlFromServerState,
+  sleep,
 } from '../../../helpers'
-import { useClipboard, useSnippetTargets } from '../../../hooks'
-import { useGlobalStore } from '../../../stores'
-import { useTemplateStore } from '../../../stores/template'
-import type { TransformedOperation } from '../../../types'
+import { useClipboard, useHttpClients } from '../../../hooks'
+import { useHttpClientStore, useServerStore } from '../../../stores'
 import { Card, CardContent, CardFooter, CardHeader } from '../../Card'
 import ExamplePicker from './ExamplePicker.vue'
 import TextSelect from './TextSelect.vue'
@@ -29,12 +34,13 @@ const props = defineProps<{
 const CodeMirrorValue = ref<string>('')
 const selectedExampleKey = ref<string>()
 const { copyToClipboard } = useClipboard()
-const { state, setItem, getClientTitle, getTargetTitle } = useTemplateStore()
+const { httpClient, setHttpClient, httpTargetTitle, httpClientTitle } =
+  useHttpClientStore()
 
-const { availableTargets } = useSnippetTargets()
+const { availableTargets } = useHttpClients()
 
-const { server: serverState, authentication: authenticationState } =
-  useGlobalStore()
+const { server: serverState } = useServerStore()
+const { authentication: authenticationState } = useAuthenticationStore()
 
 const hasMultipleExamples = computed<boolean>(
   () =>
@@ -72,16 +78,16 @@ const generateSnippet = async (): Promise<string> => {
     // Snippetz
     if (
       snippetz().hasPlugin(
-        state.selectedClient.targetKey.replace('javascript', 'js'),
+        httpClient.targetKey.replace('javascript', 'js'),
         // @ts-ignore
-        state.selectedClient.clientKey,
+        httpClient.clientKey,
       )
     ) {
       return (
         snippetz().print(
           // @ts-ignore
-          state.selectedClient.targetKey.replace('javascript', 'js'),
-          state.selectedClient.clientKey,
+          httpClient.targetKey.replace('javascript', 'js'),
+          httpClient.clientKey,
           request,
         ) ?? ''
       )
@@ -90,8 +96,8 @@ const generateSnippet = async (): Promise<string> => {
     // httpsnippet-lite
     const snippet = new HTTPSnippet(request)
     return (await snippet.convert(
-      state.selectedClient.targetKey,
-      state.selectedClient.clientKey,
+      httpClient.targetKey,
+      httpClient.clientKey,
     )) as string
   } catch (e) {
     console.error('[ExampleRequest]', e)
@@ -102,7 +108,7 @@ const generateSnippet = async (): Promise<string> => {
 watch(
   [
     // Update snippet when a different client is selected
-    () => state.selectedClient,
+    () => httpClient,
     // … or the global server state changed
     () => serverState,
     // … or the global authentication state changed
@@ -118,6 +124,8 @@ watch(
     immediate: true,
   },
 )
+
+onServerPrefetch(async () => await sleep(1))
 
 computed(() => {
   return getApiClientRequest({
@@ -141,7 +149,7 @@ computed(() => {
       <template #actions>
         <TextSelect
           class="request-client-picker"
-          :modelValue="JSON.stringify(state.selectedClient)"
+          :modelValue="JSON.stringify(httpClient)"
           :options="
             availableTargets.map((target) => {
               return {
@@ -159,11 +167,9 @@ computed(() => {
               }
             })
           "
-          @update:modelValue="
-            (value) => setItem('selectedClient', JSON.parse(value))
-          ">
-          {{ getTargetTitle(state.selectedClient) }}
-          {{ getClientTitle(state.selectedClient) }}
+          @update:modelValue="(value) => setHttpClient(JSON.parse(value))">
+          {{ httpTargetTitle }}
+          {{ httpClientTitle }}
         </TextSelect>
 
         <button
@@ -187,7 +193,7 @@ computed(() => {
           :hideCredentials="
             getSecretCredentialsFromAuthentication(authenticationState)
           "
-          :lang="state.selectedClient.targetKey"
+          :lang="httpClient.targetKey"
           lineNumbers />
       </div>
     </CardContent>
@@ -267,7 +273,7 @@ computed(() => {
 
 .request-card-footer {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   padding: 6px;
   flex-shrink: 0;
 }

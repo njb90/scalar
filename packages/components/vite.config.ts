@@ -1,9 +1,9 @@
 import vue from '@vitejs/plugin-vue'
-import { URL, fileURLToPath } from 'node:url'
 import * as path from 'path'
 import { defineConfig } from 'vite'
-import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import dts from 'vite-plugin-dts'
+import { libInjectCss } from 'vite-plugin-lib-inject-css'
+import svgLoader from 'vite-svg-loader'
 
 import pkg from './package.json'
 
@@ -25,17 +25,29 @@ export default defineConfig({
       },
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: [
-        'vue',
-        ...Object.keys(pkg.dependencies || {}).filter(
-          (item) => !item.startsWith('@scalar'),
-        ),
-      ],
+      external: ['vue', ...Object.keys(pkg.dependencies || {})],
     },
   },
   plugins: [
     vue(),
+    libInjectCss(),
     dts({ insertTypesEntry: true, rollupTypes: true }),
-    cssInjectedByJsPlugin(),
+    // Ensure the viewBox is preserved
+    svgLoader({
+      svgoConfig: {
+        multipass: true,
+        plugins: [
+          {
+            name: 'preset-default',
+            params: {
+              overrides: {
+                // @see https://github.com/svg/svgo/issues/1128
+                removeViewBox: false,
+              },
+            },
+          },
+        ],
+      },
+    }),
   ],
 })

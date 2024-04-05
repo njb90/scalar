@@ -1,13 +1,10 @@
 <script setup lang="ts">
+import { useAuthenticationStore } from '@scalar/api-client'
 import { createHead, useSeoMeta } from 'unhead'
 import { computed, toRef, watch } from 'vue'
-import { toast } from 'vue-sonner'
 
-import { useDarkModeState, useReactiveSpec, useSnippetTargets } from '../hooks'
-import { useToasts } from '../hooks/useToasts'
-import { useGlobalStore } from '../stores'
+import { useDarkModeState, useHttpClients, useReactiveSpec } from '../hooks'
 import { type ReferenceConfiguration, type ReferenceProps } from '../types'
-import CustomToaster from './CustomToaster.vue'
 import Layouts from './Layouts/'
 
 const props = defineProps<ReferenceProps>()
@@ -16,6 +13,10 @@ const props = defineProps<ReferenceProps>()
 defineEmits<{
   (e: 'updateContent', value: string): void
 }>()
+
+const { toggleDarkMode, isDark } = useDarkModeState(
+  props.configuration?.darkMode,
+)
 
 // Set defaults as needed on the provided configuration
 const configuration = computed<ReferenceConfiguration>(() => ({
@@ -30,12 +31,6 @@ const configuration = computed<ReferenceConfiguration>(() => ({
   isEditable: false,
   ...props.configuration,
 }))
-
-// Configure Reference toasts to use vue-sonner
-const { initializeToasts } = useToasts()
-initializeToasts((message) => {
-  toast(message)
-})
 
 // Create the head tag if the configuration has meta data
 if (configuration.value?.metaData) {
@@ -60,18 +55,12 @@ function mapConfigToState<K extends keyof ReferenceConfiguration>(
   )
 }
 
-// Handle the events from the toggle buttons and map the configuration to the interna state
-const { toggleDarkMode, setDarkMode } = useDarkModeState()
-mapConfigToState('darkMode', (newDarkMode) => {
-  if (newDarkMode !== undefined) setDarkMode(newDarkMode)
-})
-
 // Prefill authentication
-const { setAuthentication } = useGlobalStore()
+const { setAuthentication } = useAuthenticationStore()
 mapConfigToState('authentication', setAuthentication)
 
 // Hides any client snippets from the references
-const { setExcludedClients } = useSnippetTargets()
+const { setExcludedClients } = useHttpClients()
 mapConfigToState('hiddenClients', setExcludedClients)
 
 const { parsedSpec, rawSpec } = useReactiveSpec({
@@ -89,14 +78,13 @@ const { parsedSpec, rawSpec } = useReactiveSpec({
   <Component
     :is="Layouts[configuration?.layout || 'modern']"
     :configuration="configuration"
+    :isDark="isDark"
     :parsedSpec="parsedSpec"
     :rawSpec="rawSpec"
     @toggleDarkMode="() => toggleDarkMode()"
     @updateContent="$emit('updateContent', $event)">
     <template #footer><slot name="footer" /></template>
   </Component>
-  <!-- Initialize the vue-sonner instance -->
-  <CustomToaster />
 </template>
 <style>
 body {

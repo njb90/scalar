@@ -1,5 +1,24 @@
 # @scalar/themes
 
+## 0.6.7
+
+### Patch Changes
+
+- d70bda7: fix: text decoration targetting in themes + unused css in themes
+
+## 0.6.6
+
+### Patch Changes
+
+- 5b83e30: fix: put border indents in proper file
+- ae193a8: feat: sidebar border indents + theme polish
+
+## 0.6.5
+
+### Patch Changes
+
+- 0c5e22c: fix: section flare if position fixed
+
 ## 0.6.4
 
 ### Patch Changes

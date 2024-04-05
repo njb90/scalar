@@ -1,4 +1,8 @@
 /* basic theme */
+:root {
+  --default-theme-text-decoration: underline;
+  --default-theme-text-decoration-hover: underline;
+}
 .light-mode {
   --default-theme-background-1: #f9f6f0;
   --default-theme-background-2: #f2efe8;
@@ -57,6 +61,10 @@
   --default-theme-color-blue: #19689a;
   --default-theme-color-orange: #b26c34;
   --default-theme-color-purple: #4c2191;
+
+  --default-theme-button-1: rgba(0, 0, 0, 1);
+  --default-theme-button-1-hover: rgba(0, 0, 0, 0.8);
+  --default-theme-button-1-color: rgba(255, 255, 255, 0.9);
 }
 .dark-mode {
   --default-theme-color-green: rgba(69, 255, 165, 0.823);
@@ -65,6 +73,10 @@
   --default-theme-color-blue: #6bc1fe;
   --default-theme-color-orange: #f98943;
   --default-theme-color-purple: #b191f9;
+
+  --default-theme-button-1: rgba(255, 255, 255, 1);
+  --default-theme-button-1-hover: rgba(255, 255, 255, 0.9);
+  --default-theme-button-1-color: black;
 }
 /* Custom Theme */
 .dark-mode h2.t-editor__heading,
@@ -91,13 +103,6 @@
 .examples .scalar-card-footer {
   --default-theme-background-3: transparent;
   padding-top: 0;
-}
-.show-api-client-button:before {
-  background: white !important;
-}
-.show-api-client-button span,
-.show-api-client-button svg {
-  color: black !important;
 }
 .code-languages-background {
   background: var(--default-theme-background-1) !important;
@@ -144,8 +149,4 @@
   height: 100vh;
   right: -400px !important;
   left: initial;
-}
-.download-cta a,
-.section .markdown a {
-  text-decoration: underline !important;
 }

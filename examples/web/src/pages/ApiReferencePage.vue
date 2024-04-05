@@ -10,6 +10,7 @@ import { computed, onMounted, reactive, ref, watch } from 'vue'
 
 import DevReferencesOptions from '../components/DevReferencesOptions.vue'
 import DevToolbar from '../components/DevToolbar.vue'
+import MonacoEditor from '../components/MonacoEditor.vue'
 import SlotPlaceholder from '../components/SlotPlaceholder.vue'
 import { emptySpecGenerator } from '../fixtures/emptySpec'
 
@@ -23,12 +24,12 @@ const configuration = reactive<ReferenceConfiguration>({
   layout: 'modern',
   spec: { content },
   // authentication: {
-  //   securitySchemeKey: 'petstore_auth',
+  //   preferredSecurityScheme: 'petstore_auth',
   //   oAuth2: {
   //     clientId: 'foobar123',
   //     scopes: ['read:pets', 'write:pets'],
   //   },
-  //   // securitySchemeKey: 'api_key',
+  //   // preferredSecurityScheme: 'api_key',
   //   // apiKey: {
   //   //   token: 'super-secret-token',
   //   // },
@@ -92,6 +93,11 @@ const parsedSpec = asyncComputed(
     </template>
     <template #sidebar-end>
       <SlotPlaceholder>sidebar-end</SlotPlaceholder>
+    </template>
+    <template #editor>
+      <MonacoEditor
+        v-model="content"
+        :darkMode="configuration.darkMode" />
     </template>
     <template #content-start>
       <SlotPlaceholder>content-start</SlotPlaceholder>

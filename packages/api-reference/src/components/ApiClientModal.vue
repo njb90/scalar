@@ -21,9 +21,6 @@ const { hideApiClient, state } = useApiClientStore()
 
 const isMobile = useMediaQuery('(max-width: 1000px)')
 </script>
-<script lang="ts">
-export { useApiClientStore } from '@scalar/api-client'
-</script>
 <template>
   <div
     v-if="state.showApiClient || overloadShow"
@@ -68,7 +65,6 @@ export { useApiClientStore } from '@scalar/api-client'
         </template>
         <ApiClient
           :proxyUrl="proxyUrl"
-          readOnly
           theme="none"
           @escapeKeyPress="hideApiClient" />
       </div>

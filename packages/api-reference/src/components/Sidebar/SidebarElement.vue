@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { HttpMethod } from '@scalar/api-client'
-import { ScalarIconButton } from '@scalar/components'
-
-import { Icon } from '../Icon'
+import { type Icon, ScalarIcon, ScalarIconButton } from '@scalar/components'
 
 const props = defineProps<{
   id: string
@@ -30,6 +28,13 @@ const emit = defineEmits<{
 const handleClick = async () => {
   if (props.hasChildren) emit('toggleOpen')
   props.item?.select?.()
+}
+
+// Build relative URL and add hash
+const generateLink = (hash: string) => {
+  const newUrl = new URL(window.location.href)
+  newUrl.hash = hash
+  return `${newUrl.pathname}${newUrl.search}${newUrl.hash}`
 }
 </script>
 <template>
@@ -59,11 +64,11 @@ const handleClick = async () => {
       </p>
       <a
         class="sidebar-heading-link"
-        :href="`#${item.id}`">
-        <Icon
+        :href="generateLink(item.id)">
+        <ScalarIcon
           v-if="item?.icon?.src"
           class="sidebar-icon"
-          :src="item.icon.src" />
+          :icon="item.icon.src as Icon" />
         <p class="sidebar-heading-link-title">
           {{ item.title }}
         </p>
@@ -146,6 +151,33 @@ const handleClick = async () => {
     )
   );
 }
+.sidebar-indent-nested .sidebar-indent-nested .sidebar-heading:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc((var(--sidebar-level, var(--default-sidebar-level)) * 12px));
+  width: 1px;
+  height: 100%;
+  background: var(
+    --sidebar-indent-border,
+    var(--default-sidebar-indent-border)
+  );
+}
+.sidebar-indent-nested .sidebar-indent-nested .sidebar-heading:hover:before {
+  background: var(
+    --sidebar-indent-border-hover,
+    var(--default-sidebar-indent-border-hover)
+  );
+}
+.sidebar-indent-nested
+  .sidebar-indent-nested
+  .active_page.sidebar-heading:before {
+  background: var(
+    --sidebar-indent-border-active,
+    var(--default-sidebar-indent-border-active)
+  );
+}
+
 .sidebar-heading-link {
   text-decoration: none;
   color: inherit;
@@ -196,7 +228,7 @@ const handleClick = async () => {
 .toggle-nested-icon {
   border: none;
   color: currentColor;
-  padding: 2px;
+  padding: 3px;
   color: var(--sidebar-color-2, var(--default-sidebar-color-2));
 }
 .active_page .toggle-nested-icon {
@@ -271,24 +303,18 @@ const handleClick = async () => {
   position: relative;
   font-family: var(--theme-font-code, var(--default-theme-font-code));
   white-space: nowrap;
+  margin-left: 3px;
 }
 .active_page .sidebar-heading-type {
   background: transparent;
-  box-shadow: inset 0 0 0 1px
-    var(
-      --sidebar-color-active,
-      var(
-        --default-sidebar-color-active,
-        var(--theme-color-accent, var(--default-theme-color-accent))
-      )
-    );
-  color: var(
-    --sidebar-color-active,
-    var(
-      --default-sidebar-color-active,
-      var(--theme-color-accent, var(--default-theme-color-accent))
-    )
-  );
+}
+.active_page .sidebar-heading-type {
+  background: var(--method-color);
+  color: color-mix(in srgb, var(--method-color), white 85%);
+}
+.dark-mode .active_page .sidebar-heading-type {
+  background: var(--method-color);
+  color: color-mix(in srgb, var(--method-color), black 80%);
 }
 .sidebar-group-item__folder {
   color: var(

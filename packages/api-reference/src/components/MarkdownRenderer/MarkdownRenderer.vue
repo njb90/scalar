@@ -9,7 +9,9 @@ import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
-import { ref, watch } from 'vue'
+import { onServerPrefetch, ref, watch } from 'vue'
+
+import { sleep } from '../../helpers'
 
 const props = withDefaults(
   defineProps<{
@@ -29,7 +31,7 @@ watch(
   () => props.value,
   async () => {
     // Markdown pipeline
-    unified()
+    const result = await unified()
       // Parses markdown
       .use(remarkParse)
       // Support autolink literals, footnotes, strikethrough, tables and tasklists
@@ -58,11 +60,15 @@ watch(
       .use(rehypeStringify)
       // Run the pipeline
       .process(props.value)
-      // Puts it into the DOM
-      .then((result) => (html.value = String(result)))
+
+    // Puts it into the DOM
+    html.value = String(result.value)
   },
   { immediate: true },
 )
+
+// SSR hack - waits for the watch to complete
+onServerPrefetch(async () => await sleep(1))
 </script>
 
 <template>
@@ -123,7 +129,6 @@ watch(
     var(--default-font-size),
     var(--theme-paragraph, var(--default-theme-paragraph))
   );
-  /* prettier-ignore */
   color: var(--theme-color-1, var(--default-theme-color-1));
   font-weight: var(
     --font-weight,
@@ -161,15 +166,18 @@ watch(
   display: list-item;
 }
 .markdown :deep(a) {
-  color: var(
-    --theme-color-accent,
-    var(--default-theme-color-accent)
-  ) !important;
-  text-decoration: none !important;
+  color: var(--theme-color-accent, var(--default-theme-color-accent));
+  text-decoration: var(
+    --theme-text-decoration,
+    var(--default-theme-text-decoration)
+  );
   cursor: pointer;
 }
 .markdown :deep(a:hover) {
-  text-decoration: underline !important;
+  text-decoration: var(
+    --theme-text-decoration-hover,
+    var(--default-theme-text-decoration-hover)
+  );
 }
 .markdown :deep(em) {
   font-style: italic;
@@ -211,13 +219,13 @@ watch(
 }
 
 .markdown :deep(table) {
-  display: table;
+  display: block;
+  overflow-x: auto;
   position: relative;
   border-collapse: collapse;
-  table-layout: fixed;
-  width: 100%;
+  width: max-content;
+  max-width: 100%;
   margin: 1em 0;
-  overflow: hidden;
   box-shadow: 0 0 0 1px
     var(--theme-border-color, var(--default-theme-border-color));
   border-radius: var(--theme-radius-lg, var(--default-theme-radius-lg));
@@ -243,9 +251,16 @@ watch(
   min-width: 1em;
   padding: 6px 9px;
   vertical-align: top;
-  box-sizing: border-box;
+  line-height: 1.5;
   position: relative;
-  word-break: break-all;
+  word-break: initial;
+  font-size: var(--theme-small, var(--default-theme-small));
+  color: var(--theme-color-1, var(--default-theme-color-1));
+  font-weight: var(
+    --font-weight,
+    var(--default-font-weight),
+    var(--theme-small, var(--default-theme-small))
+  );
   border-right: 1px solid
     var(--theme-border-color, var(--default-theme-border-color));
   border-bottom: 1px solid

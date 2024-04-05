@@ -1,5 +1,218 @@
 # @scalar/api-reference
 
+## 1.20.24
+
+### Patch Changes
+
+- ab58747: fix: decrease border radius on code language background element
+
+## 1.20.23
+
+### Patch Changes
+
+- Updated dependencies [95bac72]
+  - @scalar/components@0.4.10
+  - @scalar/api-client@1.1.14
+
+## 1.20.22
+
+### Patch Changes
+
+- 4089634: feat: support x-displayName tag extension
+
+## 1.20.21
+
+### Patch Changes
+
+- Updated dependencies [b0b757d]
+  - @scalar/api-client@1.1.13
+
+## 1.20.20
+
+### Patch Changes
+
+- Updated dependencies [c14568f]
+  - @scalar/api-client@1.1.12
+  - @scalar/components@0.4.9
+  - @scalar/oas-utils@0.1.3
+
+## 1.20.18
+
+### Patch Changes
+
+- c99f6ff: fix: create url for sidebar links using constructor
+
+## 1.20.17
+
+### Patch Changes
+
+- 5b4c8a5: fix: left align read only
+
+## 1.20.16
+
+### Patch Changes
+
+- 5232eab: fix: use function for displaying description in schema property component
+
+## 1.20.15
+
+### Patch Changes
+
+- 8f03345: fix: update only the hash on scroll
+
+## 1.20.14
+
+### Patch Changes
+
+- 78f2ab3: fix: set global security on sidebar navigation
+
+## 1.20.13
+
+### Patch Changes
+
+- 8b0691b: feat: added future support for SSR server state hydration
+- Updated dependencies [8b0691b]
+  - @scalar/api-client@1.1.11
+  - @scalar/oas-utils@0.1.2
+
+## 1.20.12
+
+### Patch Changes
+
+- 999dfc9: chore: moved sidemenu control to css
+- fd5c714: feat: add authentication UI to the API client
+- 5c1b385: fix: improper variables name + remove importants
+- 5f5395f: fix: toast notification doesn't show up
+- Updated dependencies [999dfc9]
+  - @scalar/api-client@1.1.10
+
+## 1.20.11
+
+### Patch Changes
+
+- d70bda7: fix: text decoration targetting in themes + unused css in themes
+- Updated dependencies [d70bda7]
+  - @scalar/themes@0.6.7
+  - @scalar/api-client@1.1.9
+  - @scalar/components@0.4.8
+
+## 1.20.10
+
+### Patch Changes
+
+- ae193a8: feat: sidebar border indents + theme polish
+- bec8e52: fix: add models to tag groups
+- Updated dependencies [5b83e30]
+- Updated dependencies [43421a6]
+- Updated dependencies [ae193a8]
+  - @scalar/themes@0.6.6
+  - @scalar/api-client@1.1.8
+  - @scalar/components@0.4.8
+
+## 1.20.9
+
+### Patch Changes
+
+- 5260d07: feat: description for any
+- f861efa: chore: changed svg rendering strategy
+- Updated dependencies [f861efa]
+  - @scalar/components@0.4.7
+  - @scalar/api-client@1.1.7
+
+## 1.20.8
+
+### Patch Changes
+
+- Updated dependencies [7d0092e]
+  - @scalar/components@0.4.6
+  - @scalar/api-client@1.1.6
+
+## 1.20.7
+
+### Patch Changes
+
+- 1e658b0: fix: rebuild schema property details to truncate long strings
+- 06c57ca: fix: buffer not available in browser environments
+- Updated dependencies [06c57ca]
+  - @scalar/api-client@1.1.5
+
+## 1.20.6
+
+### Patch Changes
+
+- Updated dependencies [42b385b]
+  - @scalar/components@0.4.5
+  - @scalar/api-client@1.1.4
+
+## 1.20.5
+
+### Patch Changes
+
+- 0c5e22c: fix: section flare if position fixed
+- Updated dependencies [0c5e22c]
+  - @scalar/themes@0.6.5
+  - @scalar/api-client@1.1.3
+  - @scalar/components@0.4.4
+
+## 1.20.4
+
+### Patch Changes
+
+- Updated dependencies [c7241e8]
+  - @scalar/api-client@1.1.2
+
+## 1.20.3
+
+### Patch Changes
+
+- 61a97e2: feat: make api client url editable
+- Updated dependencies [61a97e2]
+  - @scalar/api-client@1.1.1
+
+## 1.20.2
+
+### Patch Changes
+
+- 9fe930c: fix: allow examples to be multiline
+
+## 1.20.1
+
+### Patch Changes
+
+- 4b5a136: fix: move theme flare behind all content
+- 1fb2eac: fix: use scroll margin instead of padding to align scroll headers
+- 01476a9: feat: improve nullable types in schemas
+- 083e0a1: style: improve text in markdown tables
+
+## 1.20.0
+
+### Minor Changes
+
+- 31aae5e: chore: moved shared types and methods into oas-utils
+
+### Patch Changes
+
+- 6dc67c1: fix: example requestBody isn’t shown in the api client
+- c4500f6: chore: remove @scalar/swagger-editor as a dependency
+- 41f0d86: fix: example for object with anyOf, allOf, oneOf schemas doesn’t have a value
+- Updated dependencies [31aae5e]
+  - @scalar/api-client@1.1.0
+  - @scalar/oas-utils@0.1.1
+
+## 1.19.7
+
+### Patch Changes
+
+- 63deb4f: fix: enum under items is not being displayed
+
+## 1.19.6
+
+### Patch Changes
+
+- e2491c1: chore: update axios
+- Updated dependencies [e2491c1]
+  - @scalar/api-client@1.0.3
+
 ## 1.19.5
 
 ### Patch Changes
@@ -339,7 +552,7 @@
 
 - 92a8b9f: chore: update dependencies
 - 230f9fb: feat: prefill the authentication data
-- 77c62d3: fix: path isn’t prefixed (https://github.com/scalar/scalar/issues/937)
+- 77c62d3: fix: path isn’t prefixed (<https://github.com/scalar/scalar/issues/937>)
 - Updated dependencies [e0faebb]
 - Updated dependencies [92a8b9f]
 - Updated dependencies [abfb086]

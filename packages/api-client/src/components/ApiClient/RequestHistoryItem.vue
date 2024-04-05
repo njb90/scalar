@@ -3,7 +3,7 @@ import prettyBytes from 'pretty-bytes'
 import prettyMilliseconds from 'pretty-ms'
 
 import { humanDiff } from '../../helpers'
-import { useRequestStore } from '../../stores/requestStore'
+import { useRequestStore } from '../../stores'
 import { type ClientResponse } from '../../types'
 
 defineProps<{ history: string }>()
@@ -53,7 +53,6 @@ const getContentLength = (response: ClientResponse) => {
     </div>
   </div>
 </template>
-
 <style scoped>
 .navtable-item-time {
   text-transform: capitalize;

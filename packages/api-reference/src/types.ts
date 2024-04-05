@@ -1,12 +1,13 @@
-import {
-  type OpenAPIV2,
-  type OpenAPIV3,
-  type OpenAPIV3_1,
-} from '@scalar/openapi-parser'
-import { type ThemeId } from '@scalar/themes'
+import type {
+  AuthenticationState,
+  ContentType,
+  TransformedOperation,
+} from '@scalar/oas-utils'
+import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-parser'
+import type { ThemeId } from '@scalar/themes'
 import type { MetaFlatInput } from '@unhead/schema'
 import type { HarRequest } from 'httpsnippet-lite'
-import { type Slot } from 'vue'
+import type { Slot } from 'vue'
 
 export type ReferenceProps = {
   configuration?: ReferenceConfiguration
@@ -16,6 +17,7 @@ export type ReferenceLayoutProps = {
   configuration: ReferenceConfiguration
   parsedSpec: Spec
   rawSpec: string
+  isDark: boolean
 }
 
 export type ReferenceConfiguration = {
@@ -31,7 +33,7 @@ export type ReferenceConfiguration = {
   isEditable?: boolean
   /** Whether to show the sidebar */
   showSidebar?: boolean
-  /** Whether dark mode is on or off (light mode) */
+  /** Whether dark mode is on or off initially (light mode) */
   darkMode?: boolean
   /** Key used with CNTRL/CMD to open the search modal (defaults to 'k' e.g. CMD+k) */
   searchHotKey?:
@@ -89,77 +91,6 @@ export type SpecConfiguration = {
 
 export type GettingStartedExamples = 'Petstore' | 'CoinMarketCap'
 
-export type Schema = {
-  type: string
-  name?: string
-  example?: any
-  default?: any
-  format?: string
-  description?: string
-  properties?: Record<string, Schema>
-}
-
-export type Parameters = {
-  // Fixed Fields
-  name: string
-  in?: string
-  description?: string
-  required?: boolean
-  deprecated?: boolean
-  allowEmptyValue?: boolean
-  // Other
-  style?: 'form' | 'simple'
-  explode?: boolean
-  allowReserved?: boolean
-  schema?: Schema
-  example?: any
-  examples?: Map<string, any>
-}
-
-export type Response = {
-  description: string
-  content: any
-}
-
-export type CustomRequestExample = {
-  lang: string
-  label: string
-  source: string
-}
-
-export type Information = {
-  'description'?: string
-  'operationId'?: string | number
-  'parameters'?: Parameters[]
-  'responses'?: Record<string, Response>
-  'security'?: OpenAPIV3.SecurityRequirementObject[]
-  'requestBody'?: RequestBody
-  'summary'?: string
-  'tags'?: string[]
-  'deprecated'?: boolean
-  /**
-   * Scalar
-   **/
-  'x-custom-examples'?: CustomRequestExample[]
-  /**
-   * Redocly, current
-   **/
-  'x-codeSamples'?: CustomRequestExample[]
-  /**
-   * Redocly, deprecated
-   **/
-  'x-code-samples'?: CustomRequestExample[]
-}
-
-export type Operation = {
-  httpVerb: string
-  path: string
-  operationId?: string
-  name?: string
-  description?: string
-  information?: Information
-}
-
 export type ExampleResponseHeaders = Record<
   string,
   {
@@ -171,10 +102,6 @@ export type ExampleResponseHeaders = Record<
     }
   }
 >
-
-export type TransformedOperation = Operation & {
-  pathParameters?: Parameters[]
-}
 
 export type Tag = {
   name: string
@@ -208,32 +135,8 @@ export type ContentSchema = {
   }
 }
 
-export type ContentType =
-  | 'application/json'
-  | 'application/xml'
-  | 'text/plain'
-  | 'text/html'
-  | 'application/octet-stream'
-  | 'application/x-www-form-urlencoded'
-  | 'multipart/form-data'
-
 export type Content = {
   [key in ContentType]: ContentSchema
-}
-
-// Create a mapped type to ensure keys are a subset of ContentType
-export type RequestBodyMimeTypes = {
-  [K in ContentType]?: {
-    schema?: any
-    example?: any
-    examples?: any
-  }
-}
-
-export type RequestBody = {
-  description?: string
-  required?: boolean
-  content?: RequestBodyMimeTypes
 }
 
 export type Contact = {
@@ -312,31 +215,6 @@ export type Spec = {
   'security'?: OpenAPIV3.SecurityRequirementObject[]
 }
 
-export type AuthenticationState = {
-  securitySchemeKey: string | null
-  securitySchemes?:
-    | OpenAPIV3.ComponentsObject['securitySchemes']
-    | OpenAPIV3_1.ComponentsObject['securitySchemes']
-  http: {
-    basic: {
-      username: string
-      password: string
-    }
-    bearer: {
-      token: string
-    }
-  }
-  apiKey: {
-    token: string
-  }
-  oAuth2: {
-    clientId: string
-    scopes: string[]
-    accessToken: string
-    state: string
-  }
-}
-
 export type Variable = {
   [key: string]: string
 }
@@ -346,21 +224,6 @@ export type ServerState = {
   description?: string
   servers: Server[]
   variables: Variable[]
-}
-
-export type Header = {
-  name: string
-  value: string
-}
-
-export type Query = {
-  name: string
-  value: string
-}
-
-export type Cookie = {
-  name: string
-  value: string
 }
 
 export type HarRequestWithPath = HarRequest & {

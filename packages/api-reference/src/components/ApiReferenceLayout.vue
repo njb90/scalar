@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { provideUseId } from '@headlessui/vue'
+import { type SSRState, defaultStateFactory } from '@scalar/oas-utils'
 import {
   ResetStyles,
   ScrollbarStyles,
@@ -6,7 +8,16 @@ import {
   ThemeStyles,
 } from '@scalar/themes'
 import { useDebounceFn, useMediaQuery, useResizeObserver } from '@vueuse/core'
-import { computed, onMounted, provide, ref, watch } from 'vue'
+import {
+  computed,
+  getCurrentInstance,
+  onMounted,
+  onServerPrefetch,
+  provide,
+  ref,
+  useSSRContext,
+} from 'vue'
+import { toast } from 'vue-sonner'
 
 import {
   GLOBAL_SECURITY_SYMBOL,
@@ -14,6 +25,7 @@ import {
   downloadSpecFile,
 } from '../helpers'
 import { useNavState, useSidebar } from '../hooks'
+import { useToasts } from '../hooks/useToasts'
 import type {
   ReferenceLayoutProps,
   ReferenceLayoutSlot,
@@ -21,10 +33,11 @@ import type {
 } from '../types'
 import { default as ApiClientModal } from './ApiClientModal.vue'
 import { Content } from './Content'
+import CustomToaster from './CustomToaster.vue'
 import GettingStarted from './GettingStarted.vue'
 import { Sidebar } from './Sidebar'
 
-const props = defineProps<ReferenceLayoutProps>()
+const props = defineProps<Omit<ReferenceLayoutProps, 'isDark'>>()
 
 defineEmits<{
   (e: 'changeTheme', value: ThemeId): void
@@ -38,6 +51,12 @@ defineOptions({
   inheritAttrs: false,
 })
 
+// Configure Reference toasts to use vue-sonner
+const { initializeToasts } = useToasts()
+initializeToasts((message) => {
+  toast(message)
+})
+
 defineSlots<{
   [x in ReferenceLayoutSlot]: (props: ReferenceSlotProps) => any
 }>()
@@ -45,14 +64,19 @@ defineSlots<{
 const isLargeScreen = useMediaQuery('(min-width: 1150px)')
 
 // Track the container height to control the sidebar height
-const elementHeight = ref(0)
+const elementHeight = ref('100dvh')
 const documentEl = ref<HTMLElement | null>(null)
 useResizeObserver(documentEl, (entries) => {
-  elementHeight.value = entries[0].contentRect.height
+  elementHeight.value = entries[0].contentRect.height + 'px'
 })
 
 // Scroll to hash if exists
-const { breadcrumb, setCollapsedSidebarItem } = useSidebar()
+const {
+  breadcrumb,
+  collapsedSidebarItems,
+  isSidebarOpen,
+  setCollapsedSidebarItem,
+} = useSidebar()
 const { enableHashListener, getSectionId, getTagId, hash } = useNavState()
 
 enableHashListener()
@@ -101,6 +125,42 @@ const referenceSlotProps = computed<ReferenceSlotProps>(() => ({
   spec: props.parsedSpec,
 }))
 
+// Initialize the server state
+onServerPrefetch(() => {
+  const firstTag = props.parsedSpec.tags?.[0]
+  if (firstTag) setCollapsedSidebarItem(getTagId(firstTag), true)
+
+  const ctx = useSSRContext<SSRState>()
+  if (!ctx) return
+
+  ctx.scalarState ||= defaultStateFactory()
+  ctx.scalarState['useSidebarContent-collapsedSidebarItems'] =
+    collapsedSidebarItems
+})
+
+/**
+ * Due to a bug in headless UI, we need to set an ID here that can be shared across server/client
+ * TODO remove this once the bug is fixed
+ *
+ * @see https://github.com/tailwindlabs/headlessui/issues/2979
+ */
+provideUseId(() => {
+  const instance = getCurrentInstance()
+  const ATTR_KEY = 'scalar-instance-id'
+  if (!instance) return ATTR_KEY
+  let instanceId = instance.uid
+  // SSR: grab the instance ID from vue and set it as an attribute
+  if (typeof window === 'undefined') {
+    instance.attrs ||= {}
+    instance.attrs[ATTR_KEY] = instanceId
+  }
+  // Client: grab the instanceId from the attribute and return it to headless UI
+  else if (instance.vnode.el?.getAttribute) {
+    instanceId = instance.vnode.el.getAttribute(ATTR_KEY)
+  }
+  return `${ATTR_KEY}-${instanceId}`
+})
+
 // Provide global security
 provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
 </script>
@@ -115,13 +175,14 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
           {
             'references-editable': configuration.isEditable,
             'references-sidebar': configuration.showSidebar,
+            'references-sidebar-mobile-open': isSidebarOpen,
             'references-classic': configuration.layout === 'classic',
           },
           reset,
           scrollbars,
           $attrs.class,
         ]"
-        :style="{ '--full-height': `${elementHeight}px` }"
+        :style="{ '--full-height': elementHeight }"
         @scroll.passive="debouncedScroll">
         <!-- Header -->
         <div class="references-header">
@@ -131,7 +192,7 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
         </div>
         <!-- Navigation (sidebar) wrapper -->
         <aside
-          v-show="configuration.showSidebar"
+          v-if="configuration.showSidebar"
           class="references-navigation t-doc__sidebar">
           <!-- Navigation tree / Table of Contents -->
           <div class="references-navigation-list">
@@ -215,6 +276,8 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
       </div>
     </ScrollbarStyles>
   </ResetStyles>
+  <!-- Initialize the vue-sonner instance -->
+  <CustomToaster />
 </template>
 <style scoped>
 /* Configurable Layout Variables */
@@ -243,6 +306,7 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
   /* Scroll vertically */
   overflow-y: auto;
   overflow-x: hidden;
+  scrollbar-gutter: stable;
 
   /*
   Calculated by a resize observer and set in the style attribute
@@ -361,7 +425,7 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
       'rendered'
       'footer';
   }
-  .references-sidebar {
+  .references-sidebar.references-sidebar-mobile-open {
     overflow-y: hidden;
   }
   .references-editable {
@@ -381,10 +445,15 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
   }
 
   .references-navigation {
+    display: none;
     position: sticky;
     top: var(--refs-header-height);
     height: 0px;
     z-index: 10;
+  }
+
+  .references-sidebar-mobile-open .references-navigation {
+    display: block;
   }
 
   .references-navigation-list {

@@ -60,11 +60,11 @@ import PageLink from '../components/PageLink.vue'
     </div>
     <h1>Examples</h1>
     <div class="page-links">
-      <PageLink href="http://localhost:5051">
+      <PageLink href="http://localhost:5058">
         <template #title>Next.js</template>
         <template #description>@scalar/nextjs-api-reference</template>
       </PageLink>
-      <PageLink href="http://localhost:5052">
+      <PageLink href="http://localhost:5059">
         <template #title>React</template>
         <template #description>@scalar/api-reference</template>
       </PageLink>

@@ -1,5 +1,126 @@
 # @scalar/api-client
 
+## 1.1.14
+
+### Patch Changes
+
+- Updated dependencies [95bac72]
+  - @scalar/components@0.4.10
+
+## 1.1.13
+
+### Patch Changes
+
+- b0b757d: feat: improve API Client request parameter tables
+
+## 1.1.12
+
+### Patch Changes
+
+- c14568f: feat: add custom security option
+- Updated dependencies [c14568f]
+  - @scalar/components@0.4.9
+  - @scalar/oas-utils@0.1.3
+
+## 1.1.11
+
+### Patch Changes
+
+- 8b0691b: feat: added future support for SSR server state hydration
+- Updated dependencies [8b0691b]
+  - @scalar/oas-utils@0.1.2
+
+## 1.1.10
+
+### Patch Changes
+
+- 999dfc9: feat: add authentication UI to the API client
+
+## 1.1.9
+
+### Patch Changes
+
+- Updated dependencies [d70bda7]
+  - @scalar/themes@0.6.7
+  - @scalar/components@0.4.8
+
+## 1.1.8
+
+### Patch Changes
+
+- 43421a6: fix: only lowercase hostname
+- ae193a8: feat: sidebar border indents + theme polish
+- Updated dependencies [5b83e30]
+- Updated dependencies [6889ad9]
+- Updated dependencies [ae193a8]
+  - @scalar/themes@0.6.6
+  - @scalar/use-codemirror@0.9.1
+  - @scalar/components@0.4.8
+
+## 1.1.7
+
+### Patch Changes
+
+- Updated dependencies [f861efa]
+  - @scalar/components@0.4.7
+
+## 1.1.6
+
+### Patch Changes
+
+- Updated dependencies [7d0092e]
+  - @scalar/components@0.4.6
+
+## 1.1.5
+
+### Patch Changes
+
+- 06c57ca: fix: buffer not available in browser environments
+
+## 1.1.4
+
+### Patch Changes
+
+- Updated dependencies [42b385b]
+  - @scalar/components@0.4.5
+
+## 1.1.3
+
+### Patch Changes
+
+- Updated dependencies [0c5e22c]
+  - @scalar/themes@0.6.5
+  - @scalar/components@0.4.4
+
+## 1.1.2
+
+### Patch Changes
+
+- c7241e8: fix: address bar changes do not have an effect on the actual request
+
+## 1.1.1
+
+### Patch Changes
+
+- 61a97e2: feat: make api client url editable
+
+## 1.1.0
+
+### Minor Changes
+
+- 31aae5e: chore: moved shared types and methods into oas-utils
+
+### Patch Changes
+
+- Updated dependencies [31aae5e]
+  - @scalar/oas-utils@0.1.1
+
+## 1.0.3
+
+### Patch Changes
+
+- e2491c1: chore: update axios
+
 ## 1.0.2
 
 ### Patch Changes

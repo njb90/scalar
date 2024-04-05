@@ -1,9 +1,15 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import { useRequestStore } from '../../../stores'
+import type { GeneratedParameter } from '../../../types'
 import { CollapsibleSection } from '../../CollapsibleSection'
 import { Grid } from '../../Grid'
 
-defineProps<{ cookies?: any[] }>()
+const props = defineProps<{
+  cookies?: any[]
+  generatedCookies?: GeneratedParameter[]
+}>()
 
 const { activeRequest } = useRequestStore()
 
@@ -18,12 +24,16 @@ function addAnotherHandler() {
 
   activeRequest.cookies?.push({ name: '', value: '', enabled: true })
 }
+
+const hasCookies = computed(() => {
+  return !!(props.cookies?.length || props.generatedCookies?.length)
+})
 </script>
 <template>
   <CollapsibleSection
-    :defaultOpen="activeRequest.cookies && activeRequest.cookies.length > 0"
+    :defaultOpen="hasCookies"
     title="Cookies">
-    <template v-if="!cookies || cookies.length === 0">
+    <template v-if="!hasCookies">
       <div class="scalar-api-client__empty-state">
         <button
           class="scalar-api-client-add"
@@ -51,6 +61,7 @@ function addAnotherHandler() {
     <template v-else>
       <Grid
         addLabel="Cookie"
+        :generatedItems="generatedCookies"
         :items="cookies"
         @addAnother="addAnotherHandler"
         @deleteIndex="handleDeleteIndex" />
@@ -60,9 +71,8 @@ function addAnotherHandler() {
 <style>
 .scalar-api-client-add {
   color: var(--theme-color-2, var(--default-theme-color-2));
-  padding: 6px;
+  padding: 3px 9px;
   width: fit-content;
-  border-radius: var(--theme-radius, var(--default-theme-radius));
   cursor: pointer;
   font-size: var(--theme-micro, var(--default-theme-micro));
   font-weight: var(--theme-semibold, var(--default-theme-semibold));
@@ -73,6 +83,8 @@ function addAnotherHandler() {
   appearance: none;
   display: flex;
   align-items: center;
+  border: 1px solid var(--theme-border-color, var(--default-theme-border-color));
+  border-radius: 30px;
 }
 .scalar-api-client-add svg {
   width: 12px;
