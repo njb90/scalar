@@ -275,6 +275,7 @@ useDeprecationWarnings(props.configuration)
           <div class="references-rendered">
             <Content
               :baseServerURL="configuration.baseServerURL"
+              :clientLibraries="configuration.clientLibraries"
               :layout="
                 configuration.layout === 'classic' ? 'accordion' : 'default'
               "

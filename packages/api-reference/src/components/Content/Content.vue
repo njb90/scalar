@@ -19,6 +19,7 @@ const props = defineProps<{
   parsedSpec: Spec
   layout?: 'default' | 'accordion'
   baseServerURL?: string
+  clientLibraries?: boolean
 }>()
 
 const { getOperationId, getTagId, hash } = useNavState()
@@ -110,7 +111,7 @@ const isLazy = props.layout !== 'accordion' && !hash.value.startsWith('model')
           class="introduction-cards"
           :class="{ 'introduction-cards-row': layout === 'accordion' }">
           <BaseUrl />
-          <ClientLibraries />
+          <ClientLibraries v-if="props.clientLibraries !== false" />
           <Authentication :parsedSpec="parsedSpec" />
         </div>
       </template>
