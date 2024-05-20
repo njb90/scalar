@@ -1,4 +1,10 @@
 <script lang="ts" setup>
+import {
+  type CodeBlockSSRKey,
+  type SSRState,
+  createHash,
+  ssrState,
+} from '@scalar/oas-utils'
 import prismjs from 'prismjs'
 import 'prismjs/components/prism-bash'
 import 'prismjs/components/prism-json'
@@ -9,8 +15,11 @@ import {
   onMounted,
   onServerPrefetch,
   ref,
+  useSSRContext,
   watch,
 } from 'vue'
+
+import { prettyPrintString } from './utils/prettyPrintString'
 
 /**
  * Uses prism.js for syntax highlighting
@@ -32,6 +41,11 @@ const props = withDefaults(
     lineNumbers: false,
   },
 )
+
+const ssrHash = createHash(prettyPrintString(props.content))
+
+const ssrStateKey =
+  `components-scalar-code-block${ssrHash}` satisfies CodeBlockSSRKey
 
 /**
  * The requested module 'prismjs' is a CommonJS module, which may not support all module.exports as named exports.
@@ -83,36 +97,68 @@ if (props.hideCredentials) {
 }
 
 const el = ref(null)
-const ssrContent = ref('')
+const ssrContent = ref(ssrState[ssrStateKey] ?? '')
 
 const language = computed(() => {
   return props.lang === 'node' ? 'js' : props.lang
 })
+const originalLang = props.lang
 
 // Update the syntax highlight on lang change
 watch(
-  () => [props.lang, props.content],
+  [() => props.lang, () => props.content, el],
   () => {
-    if (el.value) nextTick(() => highlightElement(el.value!))
+    // Ensure everything has loaded before applying client side highlighting
+    // Also for SSR only apply client side after changing the language
+    if (
+      el.value &&
+      props.content &&
+      (!ssrContent.value || props.lang !== originalLang)
+    ) {
+      ssrContent.value = ''
+      nextTick(() => highlightElement(el.value!))
+    }
   },
+  { immediate: true },
 )
 
-// We want to render the syntax highlight on the server first
+const NEW_LINE_EXP = /\n(?!$)/g
+
+/**
+ * We want to render the syntax highlight on the server first
+ * The line numbers plugin is front-end only so we handle it ourselves on the server
+ * TODO we can get rid of the front-end plugin as well and just use this method
+ * @see https://stackoverflow.com/a/59577306
+ */
 onServerPrefetch(async () => {
+  let lineNumbers = ''
+
+  if (props.lineNumbers) {
+    prismjs.hooks.add('after-tokenize', (env) => {
+      const match = env.code.match(NEW_LINE_EXP)
+      const linesNum = match ? match.length + 1 : 1
+      const lines = new Array(linesNum + 1).join('<span></span>')
+      lineNumbers = `<span aria-hidden="true" class="line-numbers-rows">${lines}</span>`
+    })
+  }
+
   const html = prismjs.highlight(
-    typeof props.content === 'object'
-      ? JSON.stringify(props.content)
-      : props.content,
+    prettyPrintString(props.content),
     prismjs.languages[language.value]!,
     language.value,
   )
-  ssrContent.value = html
+
+  ssrContent.value = html + lineNumbers
+
+  // Make sure we aren't storing 0s
+  if (ssrHash !== 0) {
+    const ctx = useSSRContext<SSRState>()
+    ctx!.payload.data[ssrStateKey] = html + lineNumbers
+  }
 })
 
 // Here we overwrite the SSR with client rendered syntax highlighting
 onMounted(async () => {
-  if (el.value) highlightElement(el.value)
-
   // This bit async autoloads any syntax we have not pre-loaded
   await import('prismjs/plugins/autoloader/prism-autoloader.js')
   plugins.autoloader.languages_path =
@@ -120,30 +166,27 @@ onMounted(async () => {
 })
 </script>
 <template>
-  <!-- SSR generated highlighting -->
   <pre
-    v-if="ssrContent"
     :class="[
       `scalar-component scalar-codeblock-pre language-${language}`,
       {
         'line-numbers': lineNumbers,
       },
-    ]"><code ref="el" :class="`scalar-codeblock-code language-${language}`" v-html="ssrContent" /></pre>
-  <!-- Client side highlighting -->
-  <pre
-    v-else
-    class="scalar-component scalar-codeblock-pre"
-    :class="{
-      'line-numbers': lineNumbers,
-    }"><code ref="el" :class="`scalar-codeblock-code lang-${language}`">{{content}}</code></pre>
+    ]"><!--
+        SSR generated highlighting
+        * Do not remove these strange comments and line breaks as any line breaks
+          inside of pre will show in the dom
+      --><code v-if="ssrContent" :class="`scalar-codeblock-code language-${language}`" v-html="prettyPrintString(ssrContent)" /><!--
+        Client side generated highlighting
+      --><code v-else ref="el" :class="`scalar-codeblock-code language-${language}`">{{prettyPrintString(content)}}</code></pre>
 </template>
 <style>
 .scalar-codeblock-code[class*='language-'],
 .scalar-codeblock-pre[class*='language-'] {
-  color: var(--theme-color-3, var(--default-theme-color-2));
+  color: var(--scalar-color-2);
   background: none;
-  font-family: var(--theme-font-code, var(--default-theme-font-code));
-  font-size: var(--theme-small, var(--default-theme-small));
+  font-family: var(--scalar-font-code);
+  font-size: var(--scalar-small);
   text-align: left;
   white-space: pre;
   word-spacing: normal;
@@ -172,7 +215,7 @@ onMounted(async () => {
 
 :not(pre) > code[class*='language-'],
 .scalar-codeblock-pre[class*='language-'] {
-  background: var(--theme-background-2, var(--default-theme-background-2));
+  background: var(--scalar-background-2);
 }
 
 /* Line Numbers */
@@ -224,35 +267,35 @@ onMounted(async () => {
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: var(--theme-color-2, var(--default-theme-color-2));
+  color: var(--scalar-color-2);
 }
 
 .token.punctuation {
-  color: var(--theme-color-3, var(--default-theme-color-3));
+  color: var(--scalar-color-3);
 }
 
 .token.tag,
 .token.attr-name,
 .token.namespace,
 .token.deleted {
-  color: var(--theme-color-red, var(--default-theme-color-red));
+  color: var(--scalar-color-red);
 }
 
 .token.function-name {
-  color: var(--theme-color-green, var(--default-theme-color-green));
+  color: var(--scalar-color-green);
 }
 
 .token.boolean,
 .token.number,
 .token.function {
-  color: var(--theme-color-orange, var(--default-theme-color-orange));
+  color: var(--scalar-color-orange);
 }
 
 .token.property,
 .token.class-name,
 .token.constant,
 .token.symbol {
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  color: var(--scalar-color-1);
 }
 
 .token.selector,
@@ -260,7 +303,7 @@ onMounted(async () => {
 .token.atrule,
 .token.keyword,
 .token.builtin {
-  color: var(--theme-color-purple, var(--default-theme-color-purple));
+  color: var(--scalar-color-purple);
 }
 
 .token.string,
@@ -268,22 +311,22 @@ onMounted(async () => {
 .token.attr-value,
 .token.regex,
 .token.variable {
-  color: var(--theme-color-blue, var(--default-theme-color-blue));
+  color: var(--scalar-color-blue);
 }
 
 .light-mode .dark-mode .language-shell .token.variable {
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  color: var(--scalar-color-1);
 }
 .light-mode .dark-mode .language-shell .token.string {
-  color: var(--theme-color-blue, var(--default-theme-color-blue));
+  color: var(--scalar-color-blue);
 }
 .language-shell .token.string {
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  color: var(--scalar-color-1);
 }
 .token.operator,
 .token.entity,
 .token.url {
-  color: var(--theme-color-3, var(--default-theme-color-3));
+  color: var(--scalar-color-3);
 }
 
 .token.important,
@@ -299,7 +342,7 @@ onMounted(async () => {
 }
 
 .token.inserted {
-  color: var(--theme-color-green, var(--default-theme-color-green));
+  color: var(--scalar-color-green);
 }
 
 /** Hide credentials */
@@ -311,7 +354,7 @@ onMounted(async () => {
 /** Show a few dots instead */
 .credentials::after {
   content: '·····';
-  font-size: var(--theme-small, var(--default-theme-small));
-  color: var(--theme-color-3, var(--default-theme-color-3));
+  font-size: var(--scalar-small);
+  color: var(--scalar-color-3);
 }
 </style>

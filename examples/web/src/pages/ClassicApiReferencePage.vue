@@ -3,9 +3,8 @@ import {
   ApiReference,
   type ReferenceConfiguration,
 } from '@scalar/api-reference'
+import content from '@scalar/galaxy/latest.yaml?raw'
 import { reactive } from 'vue'
-
-import content from '../fixtures/petstorev3.json'
 
 const configuration = reactive<ReferenceConfiguration>({
   theme: 'default',

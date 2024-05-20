@@ -1,7 +1,7 @@
 import { describe, expect, test, vi } from 'vitest'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 
-import { type SpecConfiguration } from '../types'
+import type { SpecConfiguration } from '../types'
 import { useReactiveSpec } from './useReactiveSpec'
 
 const basicSpec = {
@@ -88,11 +88,11 @@ describe('useReactiveSpec', () => {
 
     const { rawSpec } = useReactiveSpec({
       specConfig: {
-        url: 'https://example.com/swagger.json',
+        url: 'https://example.com/openapi.json',
       },
     })
 
-    expect(fetch).toHaveBeenCalledWith('https://example.com/swagger.json')
+    expect(fetch).toHaveBeenCalledWith('https://example.com/openapi.json')
 
     await new Promise((resolve) => {
       watch(rawSpec, (value) => {

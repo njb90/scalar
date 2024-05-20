@@ -3,15 +3,23 @@ import {
   ApiReference,
   type ReferenceConfiguration,
 } from '@scalar/api-reference'
+import content from '@scalar/galaxy/latest.yaml?raw'
 import { reactive } from 'vue'
 
 import SlotPlaceholder from '../components/SlotPlaceholder.vue'
-import content from '../fixtures/petstorev3.json'
 
 const configuration = reactive<ReferenceConfiguration>({
   proxy: import.meta.env.VITE_REQUEST_PROXY_URL,
   isEditable: false,
-  spec: { content },
+  // Add path routing option
+  ...(window.location.pathname.startsWith('/path-routing')
+    ? {
+        pathRouting: { basePath: '/path-routing' },
+      }
+    : {}),
+  spec: {
+    content,
+  },
 })
 </script>
 <template>

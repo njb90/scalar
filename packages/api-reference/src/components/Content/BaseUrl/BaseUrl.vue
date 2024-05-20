@@ -4,24 +4,23 @@ import { ScalarIcon } from '@scalar/components'
 import { ref, watch } from 'vue'
 
 import { useServerStore } from '../../../stores'
-import { type Server, type Variable } from '../../../types'
+import type { Variable } from '../../../types'
 import { Card, CardContent, CardHeader } from '../../Card'
 import { MarkdownRenderer } from '../../MarkdownRenderer'
 import ServerItem from './ServerItem.vue'
 import ServerVariables from './ServerVariables.vue'
 
-const props = defineProps<{
-  value: Server[]
-}>()
-
 const { server, setServer } = useServerStore()
 const selectedServerIndex = ref<number>(0)
 
+// TODO move this to a computed property in the store
 watch(
-  selectedServerIndex,
+  [selectedServerIndex, () => server.servers],
   () => {
+    if (!server.servers.length) return
+
     // Add configured variables
-    const variables = props.value[selectedServerIndex.value]?.variables ?? {}
+    const variables = server.servers[selectedServerIndex.value]?.variables ?? {}
 
     const prefilledVariables: Variable[] = variables
       ? Object.keys(variables).map((name): Variable => {
@@ -34,7 +33,7 @@ watch(
 
     // Add variables found in the URL
     const foundVariables = findVariables(
-      props.value[selectedServerIndex.value]?.url,
+      server.servers[selectedServerIndex.value]?.url,
     )
 
     foundVariables
@@ -48,28 +47,18 @@ watch(
 
     setServer({
       selectedServer: selectedServerIndex.value,
-      description: props.value[selectedServerIndex.value]?.description,
-      servers: props.value,
+      description: server.servers[selectedServerIndex.value]?.description,
       variables: prefilledVariables,
     })
   },
   {
-    immediate: true,
-  },
-)
-
-watch(
-  () => props.value,
-  () => {
-    setServer({
-      servers: props.value,
-    })
+    deep: true,
   },
 )
 </script>
 
 <template>
-  <Card v-if="value.length > 0">
+  <Card v-if="server.servers.length > 0">
     <CardHeader
       borderless
       muted>
@@ -81,7 +70,7 @@ watch(
         <div class="server-item">
           <div class="server-selector">
             <select
-              v-if="value.length > 1"
+              v-if="server.servers.length > 1"
               :value="selectedServerIndex"
               @input="
                 (event) =>
@@ -91,7 +80,7 @@ watch(
                   ))
               ">
               <option
-                v-for="(serverOption, index) in value"
+                v-for="(serverOption, index) in server.servers"
                 :key="index"
                 :value="index">
                 {{ serverOption.url }}
@@ -99,11 +88,11 @@ watch(
             </select>
 
             <ServerItem
-              :value="value[selectedServerIndex]"
+              :value="server.servers[selectedServerIndex]"
               :variables="server.variables" />
 
             <ScalarIcon
-              v-if="value.length > 1"
+              v-if="server.servers.length > 1"
               icon="ChevronDown" />
           </div>
         </div>
@@ -136,17 +125,17 @@ watch(
   min-width: 0;
   overflow: hidden;
   gap: 2px;
-  color: var(--theme-color-2, var(--default-theme-color-2));
+  color: var(--scalar-color-2);
 }
 
 .description {
   padding: 6px 12px;
-  font-size: var(--theme-small, var(--default-theme-small));
+  font-size: var(--scalar-small);
 }
 .description :deep(.markdown) {
-  font-size: var(--theme-micro, var(--default-theme-micro));
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
-  color: var(--theme-color--1, var(--default-theme-color-1));
+  font-size: var(--scalar-micro);
+  font-weight: var(--scalar-semibold);
+  color: var(--scalar-color--1);
   padding: 4px 0;
   display: block;
 }
@@ -172,8 +161,7 @@ watch(
 
 .scalar-card-serverlist-container {
   /* margin: 9px; */
-  box-shadow: 0 0 0 1px
-    var(--theme-border-color, var(--default-theme-border-color));
-  border-radius: var(--theme-radius, var(--default-theme-radius));
+  box-shadow: 0 0 0 1px var(--scalar-border-color);
+  border-radius: var(--scalar-radius);
 }
 </style>

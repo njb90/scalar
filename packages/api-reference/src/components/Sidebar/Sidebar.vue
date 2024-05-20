@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import { sleep } from '../../helpers'
 import { useNavState, useSidebar } from '../../hooks'
@@ -28,7 +28,12 @@ const disableScroll = ref(true)
 // but not when we click, only on scroll.
 // Also disable scroll on expansion of sidebar tag
 watch(hash, (id) => {
-  if (!isIntersectionEnabled.value || disableScroll.value) return
+  if (
+    !isIntersectionEnabled.value ||
+    disableScroll.value ||
+    typeof window === 'undefined'
+  )
+    return
   scrollSidebar(id)
 })
 
@@ -55,9 +60,7 @@ const scrollSidebar = (id: string) => {
 
 // TODO timeout is due to sidebar section opening time
 onMounted(() => {
-  setTimeout(() => {
-    scrollSidebar(window.location.hash.replace(/^#/, ''))
-  }, 500)
+  setTimeout(() => scrollSidebar(hash.value), 500)
   disableScroll.value = false
 })
 </script>
@@ -72,7 +75,9 @@ onMounted(() => {
           v-for="item in items.entries"
           :key="item.id">
           <template v-if="item.isGroup">
-            <li class="sidebar-group-title">{{ item.title }}</li>
+            <li class="sidebar-group-title">
+              {{ item.displayTitle ?? item.title }}
+            </li>
             <template
               v-for="group in item.children"
               :key="group.id">
@@ -83,7 +88,7 @@ onMounted(() => {
                 :isActive="hash === group.id"
                 :item="{
                   id: group.id,
-                  title: group.title,
+                  title: group.displayTitle ?? group.title,
                   select: group.select,
                   httpVerb: group.httpVerb,
                   deprecated: group.deprecated ?? false,
@@ -108,7 +113,7 @@ onMounted(() => {
                         :isActive="hash === child.id"
                         :item="{
                           id: child.id,
-                          title: child.title,
+                          title: child.displayTitle ?? child.title,
                           select: child.select,
                           httpVerb: child.httpVerb,
                           deprecated: child.deprecated ?? false,
@@ -128,7 +133,7 @@ onMounted(() => {
               :isActive="hash === item.id"
               :item="{
                 id: item.id,
-                title: item.title,
+                title: item.displayTitle ?? item.title,
                 select: item.select,
                 httpVerb: item.httpVerb,
                 deprecated: item.deprecated ?? false,
@@ -153,7 +158,7 @@ onMounted(() => {
                       :isActive="hash === child.id"
                       :item="{
                         id: child.id,
-                        title: child.title,
+                        title: child.displayTitle ?? child.title,
                         select: child.select,
                         httpVerb: child.httpVerb,
                         deprecated: child.deprecated ?? false,
@@ -172,7 +177,7 @@ onMounted(() => {
 
 <style scoped>
 .sidebar {
-  --default-theme-sidebar-indent-base: 12px;
+  --scalar-sidebar-indent-base: 12px;
 }
 .sidebar {
   flex: 1;
@@ -180,16 +185,9 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   border-right: 1px solid
-    var(
-      --sidebar-border-color,
-      var(
-        --default-sidebar-border-color,
-        var(--theme-border-color, var(--default-theme-border-color))
-      )
-    );
-  /* prettier-ignore */
-  background: var(--sidebar-background-1, var(--default-sidebar-background-1, var(--theme-background-1, var(--default-theme-background-1))));
-  --default-sidebar-level: 0;
+    var(--scalar-sidebar-border-color, var(--scalar-border-color));
+  background: var(--scalar-sidebar-background-1, var(--scalar-background-1));
+  --scalar-sidebar-level: 0;
 }
 .sidebar-pages {
   flex: 1;
@@ -205,17 +203,16 @@ onMounted(() => {
   }
 }
 .sidebar-group-title {
-  color: var(--sidebar-color-1, var(--default-sidebar-color-1));
-  font-size: var(--theme-mini, var(--default-theme-mini));
+  color: var(--scalar-sidebar-color-1);
+  font-size: var(--scalar-mini);
   padding: 12px 6px 6px;
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
+  font-weight: var(--scalar-semibold);
   text-transform: uppercase;
   word-break: break-word;
   line-height: 1.385;
 }
 .sidebar-group-item + .sidebar-group-title {
-  border-top: 1px solid
-    var(--sidebar-border-color, var(--default-sidebar-border-color));
+  border-top: 1px solid var(--scalar-sidebar-border-color);
   margin-top: 9px;
 }
 </style>

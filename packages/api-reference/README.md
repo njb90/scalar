@@ -4,7 +4,7 @@
 [![Downloads](https://img.shields.io/npm/dm/%40scalar/api-reference)](https://www.npmjs.com/package/@scalar/api-reference)
 [![Hits on jsdelivr](https://img.shields.io/jsdelivr/npm/hm/%40scalar%2Fapi-reference)](https://www.jsdelivr.com/package/npm/@scalar/api-reference)
 [![License](https://img.shields.io/npm/l/%40scalar%2Fapi-reference)](https://www.npmjs.com/package/@scalar/api-reference)
-[![Discord](https://img.shields.io/discord/1135330207960678410?style=flat&color=5865F2)](https://discord.gg/8HeZcRGPFS)
+[![Discord](https://img.shields.io/discord/1135330207960678410?style=flat&color=5865F2)](https://discord.gg/scalar)
 
 Generate interactive API documentations from Swagger files. [Try our Demo](https://docs.scalar.com/swagger-editor)
 
@@ -29,6 +29,73 @@ import { ApiReference } from '@scalar/api-reference'
 ```
 
 You can even [mount the component in React](https://github.com/scalar/scalar/blob/main/examples/react/src/App.tsx).
+
+## OpenAPI Specification
+
+We’re expecting the passed specification to adhere to [the Swagger 2.0, OpenAPI 3.0 or OpenAPI 3.1 specification](https://github.com/OAI/OpenAPI-Specification).
+
+On top of that, we’ve added a few things for your convenience:
+
+### x-displayName
+
+You can overwrite tag names with `x-displayName`.
+
+```diff
+openapi: 3.1.0
+info:
+  title: Example
+  version: "1.0"
+tags:
+  - name: pl4n3t5
++    x-displayName: planets
+paths:
+  '/planets':
+    get:
+      summary: Get all planets
+      tags:
+        - pl4n3t5
+```
+
+### x-tagGroup
+
+You can group your tags with `x-tagGroup`.
+
+```diff
+openapi: 3.1.0
+info:
+  title: Example
+  version: "1.0"
+tags:
+  - name: planets
++x-tagGroups:
++  - name: galaxy
++    tags:
++      - planets
+paths:
+  '/planets':
+    get:
+      summary: Get all planets
+      tags:
+        - planets
+```
+
+### x-internal
+
+You can hide operations from the reference with `x-internal`.
+
+```diff
+openapi: 3.1.0
+info:
+  title: Example
+  version: "1.0"
+paths:
+  '/planets':
+    get:
+      summary: Get all planets
+    post:
+      summary: Create a new planet
++      x-internal: true
+```
 
 ## Configuration
 
@@ -55,7 +122,7 @@ Directly pass an OpenAPI/Swagger spec.
 Pass the URL of a spec file (JSON or Yaml).
 
 ```vue
-<ApiReference :configuration="{ spec: { url: '/swagger.json' } }" />
+<ApiReference :configuration="{ spec: { url: '/openapi.json' } }" />
 ```
 
 #### proxyUrl?: string
@@ -78,7 +145,27 @@ Making requests to other domains is restricted in the browser and requires [CORS
 Whether the sidebar should be shown.
 
 ```vue
-<ApiReference :configuration="{ showSidebar: true} />
+<ApiReference :configuration="{ showSidebar: true } />
+```
+
+#### hideModels?: boolean
+
+Whether models (`components.schemas` or `definitions`) should be shown in the sidebar, search and content.
+
+`@default false`
+
+```vue
+<ApiReference :configuration="{ hideModels: true } />
+```
+
+#### hideDownloadButton?: boolean
+
+Whether to show the "Download OpenAPI Specification" button
+
+`@default false`
+
+```vue
+<ApiReference :configuration="{ hideDownloadButton: true } />
 ```
 
 ### customCss?: string
@@ -99,7 +186,7 @@ const customCss = `* { font-family: "Comic Sans MS", cursive, sans-serif; }`
 
 #### searchHotKey?: string
 
-Key used with CNTRL/CMD to open the search modal (defaults to 'k' e.g. CMD+k)
+Key used with CTRL/CMD to open the search modal (defaults to 'k' e.g. CMD+k)
 
 ```vue
 <ApiReference :configuration="{ searchHotKey: 'l'} />
@@ -151,7 +238,7 @@ You can listen to spec changes with onSpecUpdate that runs on spec/swagger conte
 
 To make authentication easier you can prefill the credentials for your users:
 
-````vue
+```vue
 <ApiReference :configuration="{
   authentication: {
       // The OpenAPI file has keys for all security schemes:
@@ -163,7 +250,7 @@ To make authentication easier you can prefill the credentials for your users:
       },
     },
   } />
-``
+```
 
 For OpenAuth2 it’s more looking like this:
 
@@ -172,13 +259,23 @@ For OpenAuth2 it’s more looking like this:
   authentication: {
       // The OpenAPI file has keys for all security schemes
       // Which one should be used by default?
-      preferredSecurityScheme: 'petstore_auth',
-      // The `petstore_auth` security scheme is of type `oAuth2`, so prefill the client id and the scopes:
+      preferredSecurityScheme: 'oauth2',
+      // The `oauth2` security scheme is of type `oAuth2`, so prefill the client id and the scopes:
       oAuth2: {
         clientId: 'foobar123',
         // optional:
-        scopes: ['read:pets', 'write:pets'],
+        scopes: ['read:planets', 'write:planets'],
       },
     },
   } />
-````
+```
+
+#### withDefaultFonts?: boolean
+
+By default we’re using Inter and JetBrains Mono, served by Google Fonts. If you use a different font or just don’t want to use Google Fonts, pass `withDefaultFonts: false` to the configuration.
+
+```vue
+<ApiReference :configuration="{
+  withDefaultFonts: false
+} />
+```

@@ -1,11 +1,12 @@
 import { useApiClientStore, useOpenApiStore } from '@scalar/api-client'
 import { type TransformedOperation, ssrState } from '@scalar/oas-utils'
-import { type OpenAPIV3_1 } from '@scalar/openapi-parser'
+import type { OpenAPIV3_1 } from '@scalar/openapi-parser'
 import { computed, reactive, ref, watch } from 'vue'
 
 import {
   getHeadingsFromMarkdown,
   getLowestHeadingLevel,
+  getModels,
   hasModels,
   hasWebhooks,
   openClientFor,
@@ -16,6 +17,7 @@ import { useNavState } from './useNavState'
 export type SidebarEntry = {
   id: string
   title: string
+  displayTitle?: string
   children?: SidebarEntry[]
   select?: () => void
   httpVerb?: string
@@ -36,6 +38,12 @@ const {
 
 // Track the parsed spec
 const parsedSpec = ref<Spec | undefined>(undefined)
+
+function setParsedSpec(spec: Spec) {
+  return (parsedSpec.value = spec)
+}
+
+const hideModels = ref(false)
 
 // Track which sidebar items are collapsed
 type CollapsedSidebarItems = Record<string, boolean>
@@ -59,7 +67,14 @@ const updateHeadings = async (description: string) => {
   const newHeadings = await getHeadingsFromMarkdown(description)
   const lowestLevel = getLowestHeadingLevel(newHeadings)
 
-  return newHeadings.filter((heading) => heading.depth === lowestLevel)
+  return newHeadings.filter((heading) => {
+    return (
+      // highest level, eg. # Introduction
+      heading.depth === lowestLevel ||
+      // second highest level, eg. ## Authentication
+      heading.depth === lowestLevel + 1
+    )
+  })
 }
 
 // Create the list of sidebar items from the given spec
@@ -71,12 +86,29 @@ const items = computed(() => {
     openApi: { globalSecurity },
   } = useOpenApiStore()
 
-  // Introduction
-  const headingEntries: SidebarEntry[] = headings.value.map((heading) => {
-    return {
-      id: getHeadingId(heading),
-      title: heading.value.toUpperCase(),
-      show: !state.showApiClient,
+  // Headings from the OpenAPI description field
+  const headingEntries: SidebarEntry[] = []
+  let currentHeading: SidebarEntry | null = null
+
+  headings.value.forEach((heading) => {
+    // If the heading is the lowest level, create a new heading entry.
+    if (heading.depth === getLowestHeadingLevel(headings.value)) {
+      currentHeading = {
+        id: getHeadingId(heading),
+        title: heading.value.toUpperCase(),
+        show: !state.showApiClient,
+        children: [],
+      }
+
+      headingEntries.push(currentHeading)
+    }
+    // If the heading is the second lowest level, add it to the current heading entry.
+    else if (currentHeading) {
+      currentHeading.children?.push({
+        id: getHeadingId(heading),
+        title: heading.value,
+        show: !state.showApiClient,
+      })
     }
   })
 
@@ -90,34 +122,38 @@ const items = computed(() => {
     tags[0].description !== ''
 
   const operationEntries: SidebarEntry[] | undefined =
-    firstTag &&
-    moreThanOneDefaultTag(parsedSpec.value?.tags) &&
-    firstTag.operations?.length > 0
-      ? parsedSpec.value?.tags?.map((tag: Tag) => {
-          return {
-            id: getTagId(tag),
-            title: tag.name.toUpperCase(),
-            show: true,
-            children: tag.operations?.map((operation: TransformedOperation) => {
-              const id = getOperationId(operation, tag)
-              const title = operation.name ?? operation.path
-              titlesById[id] = title
+    firstTag && moreThanOneDefaultTag(parsedSpec.value?.tags)
+      ? parsedSpec.value?.tags
+          // Filter out tags without operations
+          ?.filter((tag: Tag) => tag.operations?.length > 0)
+          .map((tag: Tag) => {
+            return {
+              id: getTagId(tag),
+              title: tag.name.toUpperCase(),
+              displayTitle: (tag['x-displayName'] ?? tag.name).toUpperCase(),
+              show: true,
+              children: tag.operations?.map(
+                (operation: TransformedOperation) => {
+                  const id = getOperationId(operation, tag)
+                  const title = operation.name ?? operation.path
+                  titlesById[id] = title
 
-              return {
-                id,
-                title,
-                httpVerb: operation.httpVerb,
-                deprecated: operation.information?.deprecated ?? false,
-                show: true,
-                select: () => {
-                  if (state.showApiClient) {
-                    openClientFor(operation, globalSecurity)
+                  return {
+                    id,
+                    title,
+                    httpVerb: operation.httpVerb,
+                    deprecated: operation.information?.deprecated ?? false,
+                    show: true,
+                    select: () => {
+                      if (state.showApiClient) {
+                        openClientFor(operation, globalSecurity)
+                      }
+                    },
                   }
                 },
-              }
-            }),
-          }
-        })
+              ),
+            }
+          })
       : firstTag?.operations?.map((operation) => {
           const id = getOperationId(operation, firstTag)
           const title = operation.name ?? operation.path
@@ -138,29 +174,29 @@ const items = computed(() => {
         })
 
   // Models
-  const modelEntries: SidebarEntry[] = hasModels(parsedSpec.value)
-    ? [
-        {
-          id: getModelId(),
-          title: 'MODELS',
-          show: !state.showApiClient,
-          children: Object.keys(
-            parsedSpec.value?.components?.schemas ?? {},
-          ).map((name) => {
-            const id = getModelId(name)
-            titlesById[id] = name
+  const modelEntries: SidebarEntry[] =
+    hasModels(parsedSpec.value) && !hideModels.value
+      ? [
+          {
+            id: getModelId(),
+            title: 'MODELS',
+            show: !state.showApiClient,
+            children: Object.keys(getModels(parsedSpec.value) ?? {}).map(
+              (name) => {
+                const id = getModelId(name)
+                titlesById[id] = name
 
-            return {
-              id,
-              title:
-                (parsedSpec?.value?.components?.schemas?.[name] as any).title ??
-                name,
-              show: !state.showApiClient,
-            }
-          }),
-        },
-      ]
-    : []
+                return {
+                  id,
+                  title:
+                    (getModels(parsedSpec.value)?.[name] as any).title ?? name,
+                  show: !state.showApiClient,
+                }
+              },
+            ),
+          },
+        ]
+      : []
 
   const groupOperations: SidebarEntry[] | undefined = parsedSpec.value?.[
     'x-tagGroups'
@@ -245,9 +281,9 @@ export function useSidebar(options?: { parsedSpec: Spec }) {
     watch(
       () => parsedSpec.value?.tags?.length,
       () => {
-        if (window?.location.hash) {
-          const hashSectionId = getSectionId(window.location.hash)
-          if (!hashSectionId) setCollapsedSidebarItem(hashSectionId, true)
+        if (hash.value) {
+          const hashSectionId = getSectionId(hash.value)
+          if (hashSectionId) setCollapsedSidebarItem(hashSectionId, true)
         } else {
           const firstTag = parsedSpec.value?.tags?.[0]
           if (firstTag) setCollapsedSidebarItem(getTagId(firstTag), true)
@@ -262,7 +298,7 @@ export function useSidebar(options?: { parsedSpec: Spec }) {
         const description = parsedSpec.value?.info?.description
 
         if (!description) {
-          return []
+          return (headings.value = [])
         }
 
         return (headings.value = await updateHeadings(description))
@@ -277,5 +313,7 @@ export function useSidebar(options?: { parsedSpec: Spec }) {
     collapsedSidebarItems,
     toggleCollapsedSidebarItem,
     setCollapsedSidebarItem,
+    hideModels,
+    setParsedSpec,
   }
 }

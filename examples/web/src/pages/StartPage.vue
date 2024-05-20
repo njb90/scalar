@@ -2,6 +2,8 @@
 import { ThemeStyles } from '@scalar/themes'
 
 import PageLink from '../components/PageLink.vue'
+
+const inDevelopment = import.meta.env.DEV
 </script>
 <template>
   <ThemeStyles id="default" />
@@ -47,6 +49,12 @@ import PageLink from '../components/PageLink.vue'
           API documentation within a pre-existing website.
         </template>
       </PageLink>
+      <PageLink to="path-routing-api-reference">
+        <template #title>API Reference with Path Routing</template>
+        <template #description>
+          Standalone API Reference with path routing instead of hash routing
+        </template>
+      </PageLink>
     </div>
     <h1>@scalar/api-client</h1>
     <div class="page-links">
@@ -60,31 +68,74 @@ import PageLink from '../components/PageLink.vue'
     </div>
     <h1>Examples</h1>
     <div class="page-links">
-      <PageLink href="http://localhost:5058">
+      <PageLink href="http://localhost:5062/galaxy">
+        <template #title>Nuxt</template>
+        <template #description>@scalar/nuxt</template>
+      </PageLink>
+      <PageLink href="http://localhost:5063/scalar">
+        <template #title>Docusaurus</template>
+        <template #description>@scalar/docusaurus</template>
+      </PageLink>
+      <PageLink
+        :href="
+          inDevelopment
+            ? 'http://localhost:5058'
+            : 'https://scalar-example-next-js-p6gnzjpyuq-uc.a.run.app'
+        ">
         <template #title>Next.js</template>
         <template #description>@scalar/nextjs-api-reference</template>
       </PageLink>
-      <PageLink href="http://localhost:5059">
+      <PageLink
+        :href="
+          inDevelopment
+            ? 'http://localhost:5059'
+            : 'https://scalar-example-react-p6gnzjpyuq-uc.a.run.app'
+        ">
         <template #title>React</template>
         <template #description>@scalar/api-reference</template>
       </PageLink>
-      <PageLink href="http://localhost:5053">
+      <PageLink
+        :href="
+          inDevelopment
+            ? 'http://localhost:5053/reference'
+            : 'https://scalar-example-fastify-p6gnzjpyuq-uc.a.run.app/reference'
+        ">
         <template #title>Fastify</template>
         <template #description>@scalar/fastify-api-reference</template>
       </PageLink>
-      <PageLink href="http://localhost:5054">
+      <PageLink
+        :href="
+          inDevelopment
+            ? 'http://localhost:5054'
+            : 'https://scalar-example-hono-p6gnzjpyuq-uc.a.run.app'
+        ">
         <template #title>Hono</template>
         <template #description>@scalar/hono-api-reference</template>
       </PageLink>
-      <PageLink href="http://localhost:5055">
+      <PageLink
+        :href="
+          inDevelopment
+            ? 'http://localhost:5055'
+            : 'https://scalar-example-express-p6gnzjpyuq-uc.a.run.app'
+        ">
         <template #title>Express</template>
         <template #description>@scalar/express-api-reference</template>
       </PageLink>
-      <PageLink href="http://localhost:5056">
+      <PageLink
+        :href="
+          inDevelopment
+            ? 'http://localhost:5056'
+            : 'https://scalar-example-nest-js-p6gnzjpyuq-uc.a.run.app'
+        ">
         <template #title>NestJS (Express)</template>
         <template #description>@scalar/nestjs-api-reference</template>
       </PageLink>
-      <PageLink href="http://localhost:5057">
+      <PageLink
+        :href="
+          inDevelopment
+            ? 'http://localhost:5057'
+            : 'https://scalar-example-nest-js-fastify-p6gnzjpyuq-uc.a.run.app'
+        ">
         <template #title>NestJS (Fastify)</template>
         <template #description>@scalar/nestjs-api-reference</template>
       </PageLink>
@@ -98,14 +149,23 @@ import PageLink from '../components/PageLink.vue'
         </template>
       </PageLink>
     </div>
+    <h1>@scalar/draggable</h1>
+    <div class="page-links">
+      <PageLink href="http://localhost:5064">
+        <template #title>Draggable</template>
+        <template #description>
+          Light vue wrapper around html5 drag and drop
+        </template>
+      </PageLink>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .main {
   font-family: 'Inter', sans-serif;
-  background-color: var(--default-theme-background-1);
-  color: var(--default-theme-color-1);
+  background-color: var(--scalar-background-1);
+  color: var(--scalar-color-1);
   min-height: 100vh;
   padding: 2rem;
   box-sizing: border-box;

@@ -1,5 +1,29 @@
 # @scalar/echo-server
 
+## 0.6.4
+
+### Patch Changes
+
+- 45dc04b: fix: can’t release packages
+
+## 0.6.3
+
+### Patch Changes
+
+- 05e2e27: chore: add provenance statement
+
+## 0.6.2
+
+### Patch Changes
+
+- 07211ad: chore: added new lint rule for type importing for better perf
+
+## 0.6.1
+
+### Patch Changes
+
+- 22f2858: chore: ran syncpack to update packages
+
 ## 0.6.0
 
 ### Minor Changes

@@ -18,6 +18,9 @@ export { default as ResetStyles } from './components/ResetStyles.vue'
 /** A scoped scrollbar style component. */
 export { default as ScrollbarStyles } from './components/ScrollbarStyles.vue'
 
+/**  */
+export { migrateThemeVariables } from './utilities/legacy'
+
 /**
  * Available theme IDs as a type.
  */
@@ -33,6 +36,23 @@ export type ThemeId =
   | 'kepler'
   | 'mars'
   | 'none'
+
+/**
+ * User readable theme names / labels
+ */
+export const themeLabels: Record<ThemeId, string> = {
+  default: 'Default',
+  alternate: 'Alternate',
+  moon: 'Moon',
+  purple: 'Purple',
+  solarized: 'Solarized',
+  bluePlanet: 'Blue Planet',
+  saturn: 'Saturn',
+  kepler: 'Kepler-11e',
+  mars: 'Mars',
+  deepSpace: 'Deep Space',
+  none: '',
+}
 
 /**
  * List of available theme presets.
@@ -55,13 +75,22 @@ export const presets: Record<Exclude<ThemeId, 'none'>, string> = {
  */
 export const availableThemes = Object.keys(presets) as ThemeId[]
 
+type GetThemeOpts = {
+  /**
+   * Optional cascade layer to assign the theme styles to
+   */
+  layer?: string
+}
+
 /**
  * Get the theme CSS for a given theme ID.
  */
-export const getThemeById = (themeId: ThemeId = 'default') => {
-  if (themeId === 'none') {
-    return ''
-  }
+export const getThemeById = (themeId?: ThemeId, opts?: GetThemeOpts) => {
+  if (themeId === 'none') return ''
 
-  return presets[themeId] ?? defaultTheme
+  const styles = presets[themeId || 'default'] ?? defaultTheme
+
+  // Wrap the styles in a layer if requested
+  if (opts?.layer) return `@layer ${opts.layer} {\n${styles}}`
+  return styles
 }

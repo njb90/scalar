@@ -7,7 +7,7 @@ const props = defineProps<{
   label?: string
 }>()
 
-const { getSectionId, hash, isIntersectionEnabled } = useNavState()
+const { getSectionId, hash, isIntersectionEnabled, pathRouting } = useNavState()
 const { setCollapsedSidebarItem } = useSidebar()
 
 function handleScroll() {
@@ -17,8 +17,15 @@ function handleScroll() {
   // this is why we set the hash value directly
   const newUrl = new URL(window.location.href)
   const id = props.id ?? ''
-  newUrl.hash = id
+
+  // If we are pathrouting, set path instead of hash
+  if (pathRouting.value) {
+    newUrl.pathname = pathRouting.value.basePath + '/' + id
+  } else {
+    newUrl.hash = id
+  }
   hash.value = id
+
   window.history.replaceState({}, '', newUrl)
 
   // Open models on scroll
@@ -61,7 +68,6 @@ function handleScroll() {
   }
 }
 .section:not(:last-of-type) {
-  border-bottom: 1px solid
-    var(--theme-border-color, var(--default-theme-border-color));
+  border-bottom: 1px solid var(--scalar-border-color);
 }
 </style>

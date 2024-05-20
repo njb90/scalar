@@ -7,25 +7,29 @@ import {
   type ThemeId,
   ThemeStyles,
 } from '@scalar/themes'
+import { ScalarToasts } from '@scalar/use-toasts'
 import { useDebounceFn, useMediaQuery, useResizeObserver } from '@vueuse/core'
 import {
   computed,
   getCurrentInstance,
+  onBeforeMount,
   onMounted,
   onServerPrefetch,
   provide,
   ref,
   useSSRContext,
+  watch,
 } from 'vue'
-import { toast } from 'vue-sonner'
 
 import {
   GLOBAL_SECURITY_SYMBOL,
+  HIDE_DOWNLOAD_BUTTON_SYMBOL,
   downloadSpecBus,
   downloadSpecFile,
+  scrollToId,
+  sleep,
 } from '../helpers'
-import { useNavState, useSidebar } from '../hooks'
-import { useToasts } from '../hooks/useToasts'
+import { useDeprecationWarnings, useNavState, useSidebar } from '../hooks'
 import type {
   ReferenceLayoutProps,
   ReferenceLayoutSlot,
@@ -33,14 +37,13 @@ import type {
 } from '../types'
 import { default as ApiClientModal } from './ApiClientModal.vue'
 import { Content } from './Content'
-import CustomToaster from './CustomToaster.vue'
 import GettingStarted from './GettingStarted.vue'
 import { Sidebar } from './Sidebar'
 
 const props = defineProps<Omit<ReferenceLayoutProps, 'isDark'>>()
 
 defineEmits<{
-  (e: 'changeTheme', value: ThemeId): void
+  (e: 'changeTheme', { id, label }: { id: ThemeId; label: string }): void
   (e: 'updateContent', value: string): void
   (e: 'loadSwaggerFile'): void
   (e: 'linkSwaggerFile'): void
@@ -49,12 +52,6 @@ defineEmits<{
 
 defineOptions({
   inheritAttrs: false,
-})
-
-// Configure Reference toasts to use vue-sonner
-const { initializeToasts } = useToasts()
-initializeToasts((message) => {
-  toast(message)
 })
 
 defineSlots<{
@@ -70,36 +67,56 @@ useResizeObserver(documentEl, (entries) => {
   elementHeight.value = entries[0].contentRect.height + 'px'
 })
 
-// Scroll to hash if exists
 const {
   breadcrumb,
   collapsedSidebarItems,
   isSidebarOpen,
   setCollapsedSidebarItem,
+  hideModels,
+  setParsedSpec,
 } = useSidebar()
-const { enableHashListener, getSectionId, getTagId, hash } = useNavState()
 
-enableHashListener()
+const {
+  getPathRoutingId,
+  getSectionId,
+  getTagId,
+  hash,
+  isIntersectionEnabled,
+  pathRouting,
+  updateHash,
+} = useNavState()
+
+pathRouting.value = props.configuration.pathRouting
+
+// Ideally this triggers absolutely first on the client so we can set hash value
+onBeforeMount(() => updateHash())
+
+// Disables intersection observer and scrolls to section
+const scrollToSection = async (id?: string) => {
+  isIntersectionEnabled.value = false
+  updateHash()
+
+  if (id) scrollToId(id)
+  else documentEl.value?.scrollTo(0, 0)
+
+  await sleep(100)
+  isIntersectionEnabled.value = true
+}
 
 onMounted(() => {
-  if (!hash.value) {
-    document.querySelector('#tippy')?.scrollTo({
-      top: 0,
-      left: 0,
-    })
-  }
-
-  // Ensure section is open for SSG
-  const firstTag = props.parsedSpec.tags?.[0]
-  let sectionId: string | null = null
-
-  if (hash.value) sectionId = getSectionId(hash.value)
-  else if (firstTag) sectionId = getTagId(firstTag)
-
-  if (sectionId) setCollapsedSidebarItem(sectionId, true)
-
   // Enable the spec download event bus
-  downloadSpecBus.on(() => downloadSpecFile(props.rawSpec))
+  downloadSpecBus.on(({ specTitle }) => {
+    downloadSpecFile(props.rawSpec, specTitle)
+  })
+
+  // This is what updates the hash ref from hash changes
+  window.onhashchange = () =>
+    scrollToSection(decodeURIComponent(window.location.hash.replace(/^#/, '')))
+
+  // Handle back for path routing
+  window.onpopstate = () =>
+    pathRouting.value &&
+    scrollToSection(getPathRoutingId(window.location.pathname))
 })
 
 const showRenderedContent = computed(
@@ -110,11 +127,11 @@ const showRenderedContent = computed(
 const debouncedScroll = useDebounceFn((value) => {
   const scrollDistance = value.target.scrollTop ?? 0
   if (scrollDistance < 50) {
-    window.history.replaceState(
-      {},
-      '',
-      window.location.pathname + window.location.search,
-    )
+    const basePath = props.configuration.pathRouting
+      ? props.configuration.pathRouting.basePath
+      : window.location.pathname
+
+    window.history.replaceState({}, '', basePath + window.location.search)
     hash.value = ''
   }
 })
@@ -125,17 +142,38 @@ const referenceSlotProps = computed<ReferenceSlotProps>(() => ({
   spec: props.parsedSpec,
 }))
 
+// Keep the parsed spec up to date
+watch(() => props.parsedSpec, setParsedSpec, { deep: true })
+
 // Initialize the server state
 onServerPrefetch(() => {
-  const firstTag = props.parsedSpec.tags?.[0]
-  if (firstTag) setCollapsedSidebarItem(getTagId(firstTag), true)
-
   const ctx = useSSRContext<SSRState>()
   if (!ctx) return
 
-  ctx.scalarState ||= defaultStateFactory()
-  ctx.scalarState['useSidebarContent-collapsedSidebarItems'] =
-    collapsedSidebarItems
+  ctx.payload.data ||= defaultStateFactory()
+
+  // Set initial hash value
+  if (props.configuration.pathRouting) {
+    const id = getPathRoutingId(ctx.url)
+    hash.value = id
+    ctx.payload.data.hash = id
+
+    // For sidebar items we need to reset the state as it persists between requests
+    // This is a temp hack, need to come up with a better solution
+    for (const key in collapsedSidebarItems) {
+      if (Object.hasOwn(collapsedSidebarItems, key))
+        delete collapsedSidebarItems[key]
+    }
+
+    if (id) {
+      setCollapsedSidebarItem(getSectionId(id), true)
+    } else {
+      const firstTag = props.parsedSpec.tags?.[0]
+      if (firstTag) setCollapsedSidebarItem(getTagId(firstTag), true)
+    }
+    ctx.payload.data['useSidebarContent-collapsedSidebarItems'] =
+      collapsedSidebarItems
+  }
 })
 
 /**
@@ -147,8 +185,10 @@ onServerPrefetch(() => {
 provideUseId(() => {
   const instance = getCurrentInstance()
   const ATTR_KEY = 'scalar-instance-id'
+
   if (!instance) return ATTR_KEY
   let instanceId = instance.uid
+
   // SSR: grab the instance ID from vue and set it as an attribute
   if (typeof window === 'undefined') {
     instance.attrs ||= {}
@@ -163,9 +203,19 @@ provideUseId(() => {
 
 // Provide global security
 provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
+provide(
+  HIDE_DOWNLOAD_BUTTON_SYMBOL,
+  () => props.configuration.hideDownloadButton,
+)
+
+hideModels.value = props.configuration.hideModels ?? false
+
+useDeprecationWarnings(props.configuration)
 </script>
 <template>
-  <ThemeStyles :id="configuration?.theme" />
+  <ThemeStyles
+    :id="configuration?.theme"
+    :withDefaultFonts="configuration?.withDefaultFonts" />
   <ResetStyles v-slot="{ styles: reset }">
     <ScrollbarStyles v-slot="{ styles: scrollbars }">
       <div
@@ -224,6 +274,7 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
         <template v-if="showRenderedContent">
           <div class="references-rendered">
             <Content
+              :baseServerURL="configuration.baseServerURL"
               :layout="
                 configuration.layout === 'classic' ? 'accordion' : 'default'
               "
@@ -259,6 +310,7 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
           </div>
         </template>
         <!-- REST API Client Overlay -->
+        <!-- Fonts are fetched by @scalar/api-reference already, we can safely set `withDefaultFonts: false` -->
         <ApiClientModal
           :parsedSpec="parsedSpec"
           :proxyUrl="configuration?.proxy">
@@ -276,20 +328,19 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
       </div>
     </ScrollbarStyles>
   </ResetStyles>
-  <!-- Initialize the vue-sonner instance -->
-  <CustomToaster />
+  <ScalarToasts />
 </template>
 <style scoped>
 /* Configurable Layout Variables */
 .scalar-api-reference {
-  --refs-sidebar-width: var(--theme-sidebar-width, 0px);
-  --refs-header-height: var(--theme-header-height, 0px);
-  --refs-content-max-width: var(--theme-content-max-width, 1540px);
+  --refs-sidebar-width: var(--scalar-sidebar-width, 0px);
+  --refs-header-height: var(--scalar-header-height, 0px);
+  --refs-content-max-width: var(--scalar-content-max-width, 1540px);
 }
 
 .scalar-api-reference.references-classic {
   /* Classic layout is wider */
-  --refs-content-max-width: var(--theme-content-max-width, 1420px);
+  --refs-content-max-width: var(--scalar-content-max-width, 1420px);
   min-height: 100dvh;
 }
 
@@ -323,7 +374,7 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
     'navigation rendered'
     'footer footer';
 
-  background: var(--theme-background-1, var(--default-theme-background-1));
+  background: var(--scalar-background-1);
 }
 
 .references-header {
@@ -339,7 +390,7 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
   grid-area: editor;
   display: flex;
   min-width: 0;
-  background: var(--theme-background-1, var(--default-theme-background-1));
+  background: var(--scalar-background-1);
   z-index: 1;
 }
 
@@ -351,7 +402,7 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
   position: relative;
   grid-area: rendered;
   min-width: 0;
-  background: var(--theme-background-1, var(--default-theme-background-1));
+  background: var(--scalar-background-1);
 }
 .scalar-api-reference.references-classic,
 .references-classic .references-rendered {
@@ -363,13 +414,7 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
   position: sticky;
   top: var(--refs-header-height);
   height: calc(var(--full-height) - var(--refs-header-height));
-  background: var(
-    --sidebar-background-1,
-    var(
-      --default-sidebar-background-1,
-      var(--theme-background-1, var(--default-theme-background-1))
-    )
-  );
+  background: var(--scalar-sidebar-background-1 var(--scalar-background-1));
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -396,7 +441,7 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
 
 .references-sidebar {
   /* Set a default width if references are enabled */
-  --refs-sidebar-width: var(--theme-sidebar-width, 280px);
+  --refs-sidebar-width: var(--scalar-sidebar-width, 280px);
 }
 
 /* Footer */
@@ -466,8 +511,7 @@ provide(GLOBAL_SECURITY_SYMBOL, () => props.parsedSpec.security)
     height: calc(var(--full-height) - var(--refs-header-height) + 1px);
     width: 100%;
 
-    border-top: 1px solid
-      var(--theme-border-color, var(--default-theme-border-color));
+    border-top: 1px solid var(--scalar-border-color);
     display: flex;
     flex-direction: column;
   }

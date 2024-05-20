@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { HttpMethod } from '@scalar/api-client'
 import { type Icon, ScalarIcon, ScalarIconButton } from '@scalar/components'
+
+import { scrollToId, sleep } from '../../helpers'
+import { useNavState } from '../../hooks'
+import SidebarHttpBadge from './SidebarHttpBadge.vue'
 
 const props = defineProps<{
   id: string
@@ -24,17 +27,59 @@ const emit = defineEmits<{
   (e: 'toggleOpen'): void
 }>()
 
+const { hash, isIntersectionEnabled, pathRouting } = useNavState()
+
 // We disable intersection observer on click
 const handleClick = async () => {
   if (props.hasChildren) emit('toggleOpen')
   props.item?.select?.()
+
+  // If the section was open, wait for a short delay before enabling intersection observer
+  if (props.open) {
+    isIntersectionEnabled.value = false
+    await sleep(100)
+    isIntersectionEnabled.value = true
+  }
 }
 
 // Build relative URL and add hash
-const generateLink = (hash: string) => {
-  const newUrl = new URL(window.location.href)
-  newUrl.hash = hash
-  return `${newUrl.pathname}${newUrl.search}${newUrl.hash}`
+const generateLink = () => {
+  if (pathRouting.value) {
+    return pathRouting.value.basePath + '/' + props.item.id
+  } else {
+    const newUrl = new URL(window.location.href)
+    newUrl.hash = props.item.id
+    return `${newUrl.pathname}${newUrl.search}${newUrl.hash}`
+  }
+}
+
+// For path routing we want to handle the clicks
+const onAnchorClick = async (ev: Event) => {
+  if (pathRouting.value) {
+    ev.preventDefault()
+
+    // Due to the prevent default
+    if (props.hasChildren) emit('toggleOpen')
+    props.item?.select?.()
+
+    // Make sure to open the section
+    emit('toggleOpen')
+
+    // Disable intersection observer before we scroll
+    isIntersectionEnabled.value = false
+
+    // Manually update "hash"
+    hash.value = props.item.id
+
+    const url = new URL(window.location.href)
+    url.pathname = pathRouting.value.basePath + '/' + props.item.id
+
+    window.history.pushState({}, '', url)
+    scrollToId(props.item.id)
+
+    await sleep(100)
+    isIntersectionEnabled.value = true
+  }
 }
 </script>
 <template>
@@ -58,13 +103,14 @@ const generateLink = (hash: string) => {
           class="toggle-nested-icon"
           :icon="open ? 'ChevronDown' : 'ChevronRight'"
           label="Toggle group"
-          size="sm"
+          size="xs"
           @click.stop="handleClick" />
         &hairsp;
       </p>
       <a
         class="sidebar-heading-link"
-        :href="generateLink(item.id)">
+        :href="generateLink()"
+        @click="onAnchorClick">
         <ScalarIcon
           v-if="item?.icon?.src"
           class="sidebar-icon"
@@ -73,15 +119,12 @@ const generateLink = (hash: string) => {
           {{ item.title }}
         </p>
         <p
-          v-if="item.httpVerb"
+          v-if="item.httpVerb && !hasChildren"
           class="sidebar-heading-link-method">
           &hairsp;
-          <HttpMethod
-            as="div"
-            class="sidebar-heading-type"
-            :method="item.httpVerb"
-            property="--method-color"
-            short />
+          <SidebarHttpBadge
+            :active="isActive"
+            :method="item.httpVerb" />
         </p>
       </a>
     </div>
@@ -98,84 +141,66 @@ const generateLink = (hash: string) => {
   display: flex;
   gap: 6px;
 
-  /* prettier-ignore */
-  color: var(--sidebar-color-2, var(--default-theme-color-2, var(--theme-color-2, var(--default-theme-color-2))));
-  font-size: var(--theme-mini, var(--default-theme-mini));
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
+  color: var(--scalar-sidebar-color-2, var(--scalar-color-2));
+  font-size: var(--scalar-mini);
+  font-weight: var(--scalar-semibold);
   word-break: break-word;
   line-height: 1.385;
   max-width: 100%;
   position: relative;
   cursor: pointer;
-  border-radius: var(--theme-radius, var(--default-theme-radius));
+  border-radius: var(--scalar-radius);
   flex: 1;
   padding-right: 9px;
   user-select: none;
 }
+.sidebar-heading-link-method {
+  margin: 0;
+}
 .sidebar-heading.deprecated .sidebar-heading-link-title {
   text-decoration: line-through;
 }
+.sidebar-heading-link-title {
+  margin: 0;
+}
 .sidebar-heading:hover {
-  /* prettier-ignore */
-  background: var(--sidebar-item-hover-background, var(--default-sidebar-item-hover-background, var(--theme-background-2, var(--default-theme-background-2))));
+  background: var(
+    --scalar-sidebar-item-hover-background,
+    var(--scalar-background-2)
+  );
 }
 .sidebar-heading:hover .sidebar-heading-link-title {
-  color: var(
-    --sidebar-item-hover-color,
-    var(--default-sidebar-item-hover-color, currentColor)
-  );
-}
-.sidebar-heading:hover span {
-  color: var(
-    --sidebar-item-hover-color,
-    var(
-      --default-sidebar-item-hover-color,
-      var(--theme-color-accent, var(--default-theme-color-accent))
-    )
-  );
+  color: var(--scalar-sidebar-item-hover-color);
 }
 
 .active_page.sidebar-heading:hover,
 .active_page.sidebar-heading {
-  /* prettier-ignore */
-  color: var(--sidebar-color-active, var(--default-sidebar-color-active, var(--theme-color-accent, var(--default-theme-color-accent))));
-  /* prettier-ignore */
-  background: var(--sidebar-item-active-background, var(--default-sidebar-item-active-background, var(--theme-background-accent, var(--default-theme-background-accent))));
+  color: var(--scalar-sidebar-color-active, var(--scalar-color-accent));
+
+  background: var(
+    --scalar-sidebar-item-active-background,
+    var(--scalar-background-accent)
+  );
 }
 .active_page.sidebar-heading:hover .sidebar-heading-link-title {
-  color: var(
-    --sidebar-color-active,
-    var(
-      --default-sidebar-color-active,
-      var(--theme-color-accent, var(--default-theme-color-accent))
-    )
-  );
+  color: var(--scalar-sidebar-color-active, var(--scalar-color-accent));
 }
 .sidebar-indent-nested .sidebar-indent-nested .sidebar-heading:before {
   content: '';
   position: absolute;
   top: 0;
-  left: calc((var(--sidebar-level, var(--default-sidebar-level)) * 12px));
+  left: calc((var(--scalar-sidebar-level) * 12px));
   width: 1px;
   height: 100%;
-  background: var(
-    --sidebar-indent-border,
-    var(--default-sidebar-indent-border)
-  );
+  background: var(--scalar-sidebar-indent-border);
 }
 .sidebar-indent-nested .sidebar-indent-nested .sidebar-heading:hover:before {
-  background: var(
-    --sidebar-indent-border-hover,
-    var(--default-sidebar-indent-border-hover)
-  );
+  background: var(--scalar-sidebar-indent-border-hover);
 }
 .sidebar-indent-nested
   .sidebar-indent-nested
   .active_page.sidebar-heading:before {
-  background: var(
-    --sidebar-indent-border-active,
-    var(--default-sidebar-indent-border-active)
-  );
+  background: var(--scalar-sidebar-indent-border-active);
 }
 
 .sidebar-heading-link {
@@ -229,16 +254,10 @@ const generateLink = (hash: string) => {
   border: none;
   color: currentColor;
   padding: 3px;
-  color: var(--sidebar-color-2, var(--default-sidebar-color-2));
+  color: var(--scalar-sidebar-color-2);
 }
 .active_page .toggle-nested-icon {
-  color: var(
-    --sidebar-color-active,
-    var(
-      --default-sidebar-color-active,
-      var(--theme-color-accent, var(--default-theme-color-accent))
-    )
-  );
+  color: var(--scalar-sidebar-color-active, var(--scalar-color-accent));
 }
 
 .toggle-nested-icon:hover,
@@ -271,61 +290,13 @@ const generateLink = (hash: string) => {
   opacity: 1;
 }
 .sidebar-heading:has(~ .action-menu:hover) {
-  /* prettier-ignore */
-  color: var(--sidebar-color-1, var(--default-sidebar-color-1), var(--theme-color-1, var(--default-theme-color-1)));
-  /* prettier-ignore */
-  background: var(--sidebar-item-hover-background, var(--default-sidebar-item-hover-background), var(--theme-background-2, var(--default-theme-background-2)));
-}
-
-.sidebar-heading-type {
-  min-width: 3.9em;
-  overflow: hidden;
-  border-radius: 30px;
-  padding: 0 3px;
-  line-height: 14px;
-  flex-shrink: 0;
-  color: white;
-  color: color-mix(
-    in srgb,
-    var(--method-color, var(--theme-color-1)),
-    transparent 0%
+  color: var(--scalar-sidebar-color-1, var(--scalar-color-1));
+  background: var(
+    --scalar-sidebar-item-hover-background,
+    var(--scalar-background-2)
   );
-  background: var(--method-color, var(--theme-background-3));
-  background: color-mix(
-    in srgb,
-    var(--method-color, var(--theme-background-3)),
-    transparent 90%
-  );
-  text-transform: uppercase;
-  font-size: 8.5px;
-  font-weight: bold;
-  text-align: center;
-  position: relative;
-  font-family: var(--theme-font-code, var(--default-theme-font-code));
-  white-space: nowrap;
-  margin-left: 3px;
-}
-.active_page .sidebar-heading-type {
-  background: transparent;
-}
-.active_page .sidebar-heading-type {
-  background: var(--method-color);
-  color: color-mix(in srgb, var(--method-color), white 85%);
-}
-.dark-mode .active_page .sidebar-heading-type {
-  background: var(--method-color);
-  color: color-mix(in srgb, var(--method-color), black 80%);
 }
 .sidebar-group-item__folder {
-  color: var(
-    --sidebar-color-1,
-    var(
-      --default-sidebar-color-1,
-      var(--theme-color-1, var(--default-theme-color-1))
-    )
-  );
-}
-.sidebar-group-item__folder .sidebar-heading-type {
-  display: none;
+  color: var(--scalar-sidebar-color-1, var(--scalar-color-1));
 }
 </style>

@@ -3,7 +3,6 @@
 [![Version](https://img.shields.io/npm/v/%40scalar/docusaurus)](https://www.npmjs.com/package/@scalar/docusaurus)
 [![Downloads](https://img.shields.io/npm/dm/%40scalar/docusaurus)](https://www.npmjs.com/package/@scalar/docusaurus)
 [![License](https://img.shields.io/npm/l/%40scalar%2Fdocusaurus)](https://www.npmjs.com/package/@scalar/docusaurus)
-
 [![Discord](https://img.shields.io/discord/1135330207960678410?style=flat&color=5865F2)](https://discord.gg/8HeZcRGPFS)
 
 ![scalasaurus](docusaurus.png)
@@ -24,15 +23,16 @@ import type { ScalarOptions } from '@scalar/docusaurus'
 
 plugins: [
   [
-    ['@scalar/docusaurus', {
+    '@scalar/docusaurus',
+    {
       label: 'Scalar',
       route: '/scalar',
       configuration: {
         spec: {
-          url: 'https://petstore3.swagger.io/api/v3/openapi.json',
+          url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.yaml',
         },
       },
-    } as ScalarOptions],
+    } as ScalarOptions,
   ],
 ],
 ```

@@ -5,8 +5,12 @@ import type {
 } from '@scalar/oas-utils'
 import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-parser'
 import type { ThemeId } from '@scalar/themes'
-import type { MetaFlatInput } from '@unhead/schema'
+import type { UseSeoMetaInput } from '@unhead/schema'
 import type { HarRequest } from 'httpsnippet-lite'
+import type {
+  ClientInfo,
+  TargetInfo,
+} from 'httpsnippet-lite/dist/types/targets/targets'
 import type { Slot } from 'vue'
 
 export type ReferenceProps = {
@@ -19,6 +23,12 @@ export type ReferenceLayoutProps = {
   rawSpec: string
   isDark: boolean
 }
+
+export type HiddenClients =
+  // Exclude whole targets or just specific clients
+  | Partial<Record<TargetInfo['key'], boolean | ClientInfo['key'][]>>
+  // Backwards compatibility with the previous behavior ['fetch', 'xhr']
+  | ClientInfo['key'][]
 
 export type ReferenceConfiguration = {
   /** A string to use one of the color presets */
@@ -33,9 +43,21 @@ export type ReferenceConfiguration = {
   isEditable?: boolean
   /** Whether to show the sidebar */
   showSidebar?: boolean
+  /**
+   * Whether to show models in the sidebar, search, and content.
+   *
+   * @default false
+   */
+  hideModels?: boolean
+  /**
+   * Whether to show the "Download OpenAPI Specification" button
+   *
+   * @default false
+   */
+  hideDownloadButton?: boolean
   /** Whether dark mode is on or off initially (light mode) */
   darkMode?: boolean
-  /** Key used with CNTRL/CMD to open the search modal (defaults to 'k' e.g. CMD+k) */
+  /** Key used with CTRL/CMD to open the search modal (defaults to 'k' e.g. CMD+k) */
   searchHotKey?:
     | 'a'
     | 'b'
@@ -67,19 +89,48 @@ export type ReferenceConfiguration = {
    * If used, passed data will be added to the HTML header
    * @see https://unhead.unjs.io/usage/composables/use-seo-meta
    * */
-  metaData?: MetaFlatInput
+  metaData?: UseSeoMetaInput
   /**
    * List of httpsnippet clients to hide from the clients menu
    * By default hides Unirest, pass `[]` to show all clients
-   * @see https://github.com/Kong/httpsnippet/wiki/Targets
    */
-  hiddenClients?: string[]
+  hiddenClients?: HiddenClients
   /** Custom CSS to be added to the page */
   customCss?: string
   /** onSpecUpdate is fired on spec/swagger content change */
   onSpecUpdate?: (spec: string) => void
   /** Prefill authentication */
   authentication?: Partial<AuthenticationState>
+  /**
+   * Route using paths instead of hashes, your server MUST support this
+   * for example vue router needs a catch all so any subpaths are included
+   *
+   * @example
+   * '/standalone-api-reference/:custom(.*)?'
+   *
+   * @experimental
+   * @default undefined
+   */
+  pathRouting?: PathRouting
+  /**
+   * The baseServerURL is used when the spec servers are relative paths and we are using SSR.
+   * On the client we can grab the window.location.origin but on the server we need
+   * to use this prop.
+   *
+   * @default undefined
+   * @example 'http://localhost:3000'
+   */
+  baseServerURL?: string
+  /**
+   * We’re using Inter and JetBrains Mono as the default fonts. If you want to use your own fonts, set this to false.
+   *
+   * @default true
+   */
+  withDefaultFonts?: boolean
+}
+
+export type PathRouting = {
+  basePath: string
 }
 
 export type SpecConfiguration = {
@@ -104,9 +155,10 @@ export type ExampleResponseHeaders = Record<
 >
 
 export type Tag = {
-  name: string
-  description: string
-  operations: TransformedOperation[]
+  'name': string
+  'description': string
+  'operations': TransformedOperation[]
+  'x-displayName'?: string
 }
 export type Parameter = {
   name: string
@@ -192,7 +244,12 @@ export type Definitions = OpenAPIV2.DefinitionsObject
 
 export type Webhooks = Record<
   string,
-  Record<OpenAPIV3_1.HttpMethods, TransformedOperation>
+  Record<
+    OpenAPIV3_1.HttpMethods,
+    TransformedOperation & {
+      'x-internal'?: boolean
+    }
+  >
 >
 
 export type Spec = {

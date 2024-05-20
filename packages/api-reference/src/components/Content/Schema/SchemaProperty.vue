@@ -11,6 +11,7 @@ withDefaults(
     required?: boolean
     compact?: boolean
     description?: string
+    additional?: boolean
   }>(),
   {
     level: 0,
@@ -41,6 +42,10 @@ const displayDescription = function (
   value?: Record<string, any>,
 ) {
   if (value?.properties) {
+    return null
+  }
+
+  if (value?.additionalProperties) {
     return null
   }
 
@@ -76,6 +81,7 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
       },
     ]">
     <SchemaPropertyHeading
+      :additional="additional"
       :enum="!!getEnumFromValue(value)"
       :required="required"
       :value="value">
@@ -175,9 +181,9 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
 
 <style scoped>
 .property {
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  color: var(--scalar-color-1);
   padding: 10px;
-  font-size: var(--theme-mini, var(--default-theme-mini));
+  font-size: var(--scalar-mini);
 }
 
 .property:last-of-type {
@@ -191,8 +197,8 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
 .property--deprecated {
   background: repeating-linear-gradient(
     -45deg,
-    var(--theme-background-2, var(--default-theme-background-2)) 0,
-    var(--theme-background-2, var(--default-theme-background-2)) 2px,
+    var(--scalar-background-2) 0,
+    var(--scalar-background-2) 2px,
     transparent 2px,
     transparent 5px
   );
@@ -206,15 +212,15 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
 .property-description {
   margin-top: 6px;
   line-height: 1.4;
+  font-size: var(--scalar-small);
 }
 
 :deep(.property-description) * {
-  color: var(--theme-color-2, var(--default-theme-color-2)) !important;
+  color: var(--scalar-color-2) !important;
 }
 
 .property:not(:last-of-type) {
-  border-bottom: 1px solid
-    var(--theme-border-color, var(--default-theme-border-color));
+  border-bottom: 1px solid var(--scalar-border-color);
 }
 .children {
   display: flex;
@@ -233,18 +239,18 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
 
   max-height: calc(((var(--full-height) - var(--refs-header-height))) / 2);
 
-  font-size: var(--default-theme-micro, var(--default-default-theme-micro));
-  border: 1px solid var(--theme-border-color, var(--default-theme-border-color));
-  background: var(--theme-background-2, var(--default-theme-background-2));
-  border-radius: var(--theme-radius-lg, var(--default-theme-radius-lg));
+  font-size: var(--scalar-micro);
+  border: 1px solid var(--scalar-border-color);
+  background: var(--scalar-background-2);
+  border-radius: var(--scalar-radius-lg);
 }
 
 .property-example-label {
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
-  color: var(--theme-color-3, var(--default-theme-color-3));
+  font-weight: var(--scalar-semibold);
+  color: var(--scalar-color-3);
 }
 .property-example-value {
-  font-family: var(--theme-font-code, var(--default-theme-font-code));
+  font-family: var(--scalar-font-code);
   white-space: pre;
 }
 
@@ -254,17 +260,17 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
   gap: 6px;
 
   margin-top: 12px;
-  border-radius: var(--theme-radius-lg, var(--default-theme-radius-lg));
+  border-radius: var(--scalar-radius-lg);
 }
 
 .property-enum-value {
   padding: 3px 0;
-  color: var(--theme-color-2, var(--default-theme-color-2));
+  color: var(--scalar-color-2);
 }
 .property-enum-value::before {
   content: '◼';
   margin-right: 6px;
-  color: var(--theme-color-3, var(--default-theme-color-3));
+  color: var(--scalar-color-3);
 }
 .property-enum-values {
   margin-top: 8px;

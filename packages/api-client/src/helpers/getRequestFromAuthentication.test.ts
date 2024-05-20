@@ -179,17 +179,16 @@ describe('getRequestFromAuthentication', () => {
     const request = getRequestFromAuthentication(
       {
         ...createEmptyAuthenticationState(),
-        preferredSecurityScheme: 'petstore_auth',
+        preferredSecurityScheme: 'my_custom_scheme',
         securitySchemes: {
-          petstore_auth: {
+          my_custom_scheme: {
             type: 'oauth2',
             flows: {
               implicit: {
-                authorizationUrl:
-                  'https://petstore3.swagger.io/oauth/authorize',
+                authorizationUrl: 'https://galaxy.scalar.com/oauth/authorize',
                 scopes: {
-                  'write:pets': 'modify pets in your account',
-                  'read:pets': 'read your pets',
+                  'write:planets': 'modify planets in your account',
+                  'read:planets': 'get all information about planets',
                 },
               },
             },
@@ -204,7 +203,7 @@ describe('getRequestFromAuthentication', () => {
       },
       [
         {
-          petstore_auth: [],
+          my_custom_scheme: [],
         },
       ],
     )
@@ -416,6 +415,40 @@ describe('getRequestFromAuthentication', () => {
         {
           name: 'X-Auth-Token',
           value: '123',
+        },
+      ],
+    })
+  })
+
+  it('doesn’t complain about token being null', () => {
+    const request = getRequestFromAuthentication(
+      {
+        ...createEmptyAuthenticationState(),
+        preferredSecurityScheme: 'api_key',
+        securitySchemes: {
+          api_key: {
+            type: 'apiKey',
+            name: 'api_key',
+            in: 'header',
+          },
+        },
+        apiKey: {
+          // @ts-ignore
+          token: null,
+        },
+      },
+      [
+        {
+          api_key: [],
+        },
+      ],
+    )
+
+    expect(request).toMatchObject({
+      headers: [
+        {
+          name: 'api_key',
+          value: 'YOUR_TOKEN',
         },
       ],
     })

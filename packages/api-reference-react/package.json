@@ -5,6 +5,11 @@
   "author": "Scalar (https://github.com/scalar)",
   "homepage": "https://github.com/scalar/scalar",
   "bugs": "https://github.com/scalar/scalar/issues/new/choose",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scalar/scalar.git",
+    "directory": "packages/api-reference-react"
+  },
   "keywords": [
     "api",
     "client",
@@ -13,7 +18,7 @@
     "testing",
     "react"
   ],
-  "version": "0.1.31",
+  "version": "0.1.79",
   "engines": {
     "node": ">=18"
   },
@@ -33,11 +38,6 @@
     "CHANGELOG.md"
   ],
   "module": "./dist/index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/scalar/scalar.git",
-    "directory": "packages/docusaurus"
-  },
   "dependencies": {
     "@scalar/api-reference": "workspace:*"
   },
@@ -48,14 +48,14 @@
     "character-entities": "^2.0.2",
     "decode-named-character-reference": "^1.0.2",
     "path": "^0.12.7",
+    "prismjs": "^1.29.0",
     "react": "^18.2.0",
-    "vite": "^5.1.1",
+    "vite": "^5.2.10",
     "vite-plugin-dts": "^3.6.3",
-    "vite-plugin-lib-inject-css": "^2.0.0",
-    "vue": "^3.3.0"
+    "vite-plugin-lib-inject-css": "^2.0.1",
+    "vue": "^3.4.21"
   },
   "peerDependencies": {
-    "react": "^18.0.0",
-    "vue": "^3.3.0"
+    "react": "^18.0.0"
   }
 }

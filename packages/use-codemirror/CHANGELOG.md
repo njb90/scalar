@@ -1,5 +1,39 @@
 # @scalar/use-codemirror
 
+## 0.10.4
+
+### Patch Changes
+
+- a13f853: feat: update api client ui
+
+## 0.10.3
+
+### Patch Changes
+
+- 45dc04b: fix: can’t release packages
+
+## 0.10.2
+
+### Patch Changes
+
+- 05e2e27: chore: add provenance statement
+
+## 0.10.1
+
+### Patch Changes
+
+- 96ded16: Externalize y-codemirror
+
+## 0.10.0
+
+### Minor Changes
+
+- 0e64a36: refactor: rename all --theme-_ variables to --scalar-_
+
+### Patch Changes
+
+- 22f2858: chore: ran syncpack to update packages
+
 ## 0.9.1
 
 ### Patch Changes

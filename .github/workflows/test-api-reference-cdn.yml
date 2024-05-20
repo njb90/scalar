@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
         with:
           version: 8
       - name: Use Node.js ${{ matrix.node-version }}
@@ -46,4 +46,4 @@ jobs:
       - name: Install Playwright browser binaries & OS dependencies
         run: pnpm exec playwright install --with-deps
       - name: Run e2e tests
-        run: CI=1 pnpm test:e2e
+        run: CI=1 pnpm test:e2e:cdn

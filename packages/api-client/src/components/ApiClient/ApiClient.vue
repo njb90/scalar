@@ -15,18 +15,24 @@ const props = withDefaults(
     proxyUrl?: string
     readOnly?: boolean
     theme?: ThemeId
+    withDefaultFonts: boolean
+    showSideBar?: boolean
   }>(),
   {
     readOnly: false,
+    withDefaultFonts: true,
+    showSideBar: false,
   },
 )
 
 const emit = defineEmits<{
   (e: 'escapeKeyPress'): void
+  (e: 'toggleSidebar'): void
 }>()
 
 const keys = useMagicKeys()
 whenever(keys.escape, () => emit('escapeKeyPress'))
+whenever(keys.meta_b, () => emit('toggleSidebar'))
 
 const { activeRequest, readOnly: stateReadOnly } = useRequestStore()
 
@@ -53,16 +59,24 @@ watch(
 </script>
 
 <template>
-  <ThemeStyles :id="theme" />
+  <ThemeStyles
+    :id="theme"
+    :withDefaultFonts="withDefaultFonts" />
   <HttpMethod
     class="scalar-api-client"
     :method="activeRequest.type ?? 'get'"
-    property="--default-scalar-api-client-color"
+    property="--scalar-api-client-color"
     @keydown.esc="emit('escapeKeyPress')">
-    <AddressBar
-      :proxyUrl="proxyUrl"
-      @onSend="changeTab(Tabs.Response)" />
+    <div>
+      <slot name="address-bar-controls" />
+      <AddressBar
+        :proxyUrl="proxyUrl"
+        @onSend="changeTab(Tabs.Response)" />
+    </div>
     <div class="scalar-api-client__main">
+      <slot
+        v-if="showSideBar"
+        name="sidebar" />
       <!-- Desktop-->
       <template v-if="!isSmallScreen">
         <Request />
@@ -112,13 +126,13 @@ watch(
 <style>
 .scalar-api-client,
 #headlessui-portal-root {
-  background: var(--theme-background-1, var(--default-theme-background-1));
+  background: var(--scalar-background-1);
   position: relative;
   height: 100%;
   overflow: hidden !important;
   display: flex;
   flex-direction: column;
-  font-family: var(--theme-font, var(--default-theme-font));
+  font-family: var(--scalar-font);
 
   /** Make sure box-sizing is set properly. */
   box-sizing: border-box;
@@ -139,15 +153,15 @@ watch(
   }
 }
 .scalar-api-client pre {
-  font-family: var(--theme-font-code, var(--default-theme-font-code));
+  font-family: var(--scalar-font-code);
 }
 
 .scalar-api-client__mobile-navigation {
   padding: 12px 12px 0 12px;
   display: flex;
-  font-size: var(--theme-small, var(--default-theme-small));
-  color: var(--theme-color-2, var(--default-theme-color-2));
-  font-weight: var(--theme-bold, var(--default-theme-bold));
+  font-size: var(--scalar-small);
+  color: var(--scalar-color-2);
+  font-weight: var(--scalar-bold);
 }
 
 .scalar-api-client__mobile-navigation__toggle {
@@ -155,17 +169,17 @@ watch(
   border: none;
   outline: none;
   background: transparent;
-  font-size: var(--theme-font-size-2);
-  color: var(--theme-color-2);
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
-  font-family: var(--theme-font, var(--default-theme-font));
+  font-size: var(--scalar-font-size-2);
+  color: var(--scalar-color-2);
+  font-weight: var(--scalar-semibold);
+  font-family: var(--scalar-font);
   padding: 0;
   margin-right: 9px;
   cursor: pointer;
 }
 
 .scalar-api-client__mobile-navigation--active {
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  color: var(--scalar-color-1);
 }
 
 .scalar-api-client__mobile-navigation--active:hover {
@@ -176,9 +190,8 @@ watch(
   display: flex;
   height: 100%;
   min-height: 0;
-  background: var(--theme-background-1, var(--default-theme-background-1));
-  border-top: 1px solid
-    var(--theme-border-color, var(--default-theme-border-color));
+  background: var(--scalar-background-1);
+  border-top: 1px solid var(--scalar-border-color);
 }
 
 @media screen and (max-width: 820px) {
@@ -188,43 +201,53 @@ watch(
 }
 
 /** TODO: Consider to make a Column component */
-.scalar-api-client__main__content {
-  padding: 12px 6px;
-  background: var(--theme-background-1, var(--default-theme-background-1));
-  top: 0;
+.scalar-api-client__main__content__header {
+  align-items: center;
+  background: var(--scalar-background-1);
+  border-bottom: 1px solid var(--scalar-border-color);
+  display: flex;
+  gap: 6px;
+  height: 50px;
+  padding: 16px 18px;
   position: sticky;
+  top: 0;
   z-index: 100;
 }
-.scalar-api-client__main__content label {
-  font-size: var(--theme-small, var(--default-theme-small));
-  color: var(--theme-color-1, var(--default-theme-color-1));
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
+.scalar-api-client__main__content__header label {
+  font-size: var(--scalar-mini);
+  color: var(--scalar-color-1);
+  font-weight: var(--scalar-semibold);
   display: flex;
   align-items: center;
 }
+.scalar-api-client__main__content:has(
+    .scalar-api-client__main__content.empty-state
+  ) {
+  height: 100%;
+}
+.scalar-api-client__main__content__body {
+  padding: 9px 9px 9px 18px;
+}
 @media screen and (max-width: 820px) {
-  .scalar-api-client__main__content {
-    padding: 3px 0 12px 0;
+  .scalar-api-client__main__content__header {
+    padding: 14px;
   }
-
   .scalar-api-client__main__content label {
     display: none;
   }
 }
 
 .meta {
+  color: var(--scalar-api-client-color);
   display: flex;
-  margin-top: 3px;
-  font-size: var(--theme-font-size-2, var(--default-theme-font-size-2));
-  font-weight: var(--theme-font-size-2, var(--default-theme-font-size-2));
-  color: var(
-    --scalar-api-client-color2,
-    var(--default-scalar-api-client-color2)
-  );
+  flex: 1;
+  font-size: var(--scalar-font-size-2);
+  font-weight: var(--scalar-font-size-2);
+  gap: 6px;
 }
 
 .meta-item svg {
-  fill: var(--theme-color-ghost, var(--default-theme-color-ghost));
+  fill: var(--scalar-color-ghost);
   height: 14px;
   width: 14px;
   margin-right: 6px;
@@ -233,18 +256,18 @@ watch(
 .meta-item {
   display: flex;
   align-items: center;
-  margin-right: 12px;
   white-space: nowrap;
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
-  font-size: var(--theme-small, var(--default-theme-small));
-  color: var(--theme-color-3, var(--default-theme-color-3));
+  font-weight: var(--scalar-semibold);
+  font-size: var(--scalar-mini);
+  color: var(--scalar-color-3);
   min-height: 17px;
 }
 
 .meta-item__input {
   background: transparent;
-  width: 100%;
+  flex: 1;
   margin-right: 0;
+  width: 100%;
 }
 
 .types {
@@ -270,15 +293,15 @@ watch(
   font-size: 24px;
 }
 .scalar-api-client__empty-state {
-  border: 1px dashed
-    var(--theme-border-color, var(--default-theme-border-color));
+  border: 1px solid var(--scalar-border-color);
   width: 100%;
   text-align: center;
-  border-radius: var(--theme-radius, var(--default-theme-radius));
-  font-size: var(--theme-small, var(--default-theme-small));
+  border-radius: 0 0 var(--scalar-radius) var(--scalar-radius);
+  font-size: var(--scalar-small);
   min-height: 58px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: var(--scalar-background-1);
 }
 </style>

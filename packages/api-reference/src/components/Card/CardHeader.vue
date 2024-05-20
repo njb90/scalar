@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import CardContent from './CardContent.vue'
-import { type CardContentProps } from './types'
+import type { CardContentProps } from './types'
 
 // eslint-disable-next-line vue/no-unused-properties
 const props = defineProps<CardContentProps>()
@@ -21,9 +21,9 @@ const props = defineProps<CardContentProps>()
 </template>
 <style scoped>
 .scalar-card-header {
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
-  font-size: var(--theme-mini, var(--default-theme-mini));
-  color: var(--theme-color-3, var(--default-theme-color-3));
+  font-weight: var(--scalar-semibold);
+  font-size: var(--scalar-mini);
+  color: var(--scalar-color-3);
   padding: 9px 0 9px 12px;
   flex-shrink: 0;
 }

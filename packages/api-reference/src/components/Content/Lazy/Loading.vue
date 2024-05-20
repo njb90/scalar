@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { type TransformedOperation } from '@scalar/oas-utils'
+import type { TransformedOperation } from '@scalar/oas-utils'
 import { onMounted, ref, watch } from 'vue'
 
-import { scrollToId } from '../../../helpers'
+import { getModels, scrollToId } from '../../../helpers'
 import { useNavState } from '../../../hooks'
-import type { Server, Spec, Tag as TagType } from '../../../types'
+import type { Spec, Tag as TagType } from '../../../types'
 import { Anchor } from '../../Anchor'
 import {
   Section,
@@ -34,22 +34,19 @@ const props = withDefaults(
   defineProps<{
     layout?: 'accordion' | 'default'
     parsedSpec: Spec
-    server: Server
   }>(),
   { layout: 'default' },
 )
 
 const hideTag = ref(false)
-const isLoading = ref(
-  typeof window !== 'undefined' &&
-    !!window.location.hash &&
-    props.layout !== 'accordion',
-)
+
 const tags = ref<(TagType & { lazyOperations: TransformedOperation[] })[]>([])
 const models = ref<string[]>([])
 
 const { getModelId, getSectionId, getTagId, hash, isIntersectionEnabled } =
   useNavState()
+
+const isLoading = ref(props.layout !== 'accordion' && hash.value)
 
 // Ensure we have a spec loaded
 watch(
@@ -96,8 +93,8 @@ watch(
       })
     }
     // Models
-    else {
-      const modelKeys = Object.keys(props.parsedSpec.components?.schemas ?? {})
+    else if (hash.value.startsWith('model')) {
+      const modelKeys = Object.keys(getModels(props.parsedSpec) ?? {})
       const [, modelKey] = hash.value.toLowerCase().split('/')
 
       // Find the right model to start at
@@ -110,6 +107,11 @@ watch(
 
       // Display a couple models
       models.value = modelKeys.slice(modelIndex, modelIndex + 3)
+    }
+    // Descriptions
+    else {
+      scrollToId(hash.value)
+      setTimeout(() => (isIntersectionEnabled.value = true), 1000)
     }
   },
   { immediate: true },
@@ -124,8 +126,9 @@ const unsubscribe = lazyBus.on(({ id }) => {
   unsubscribe()
 
   // Timeout is to allow codemirror to finish loading and prevent layout shift
+  // TODO mutation observer
   setTimeout(() => {
-    scrollToId(hashStr)
+    if (typeof window !== 'undefined') scrollToId(hashStr)
     isLoading.value = false
     setTimeout(() => (isIntersectionEnabled.value = true), 1000)
   }, 300)
@@ -156,7 +159,6 @@ onMounted(() => {
           v-for="operation in tag.lazyOperations"
           :key="`${operation.httpVerb}-${operation.operationId}`"
           :operation="operation"
-          :server="server"
           :tag="tag" />
       </Tag>
     </template>
@@ -167,19 +169,17 @@ onMounted(() => {
         v-for="name in models"
         :key="name"
         :label="name">
-        <template v-if="parsedSpec.components?.schemas?.[name]">
+        <template v-if="getModels(parsedSpec)?.[name]">
           <SectionContent>
             <SectionHeader :level="2">
               <Anchor :id="getModelId(name)">
-                {{
-                  (parsedSpec.components?.schemas?.[name] as any).title ?? name
-                }}
+                {{ (getModels(parsedSpec)?.[name] as any).title ?? name }}
               </Anchor>
             </SectionHeader>
             <Schema
               :name="name"
               noncollapsible
-              :value="parsedSpec.components?.schemas?.[name]" />
+              :value="getModels(parsedSpec)?.[name]" />
           </SectionContent>
         </template>
       </Section>
@@ -194,10 +194,15 @@ onMounted(() => {
   right: 0;
   z-index: 1;
   grid-area: rendered;
-  background: var(--theme-background-1, var(--default-theme-background-1));
+  background: var(--scalar-background-1);
 }
 .references-loading-top-spacer {
-  top: calc(var(--refs-header-height) - 1px);
+  top: -1px;
+}
+@media (min-width: 1001px) {
+  .references-loading-top-spacer {
+    top: calc(var(--refs-header-height) - 1px);
+  }
 }
 .references-loading-hidden-tag .section-container .section:first-child {
   display: none;

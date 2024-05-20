@@ -1,5 +1,54 @@
 # @scalar/oas-utils
 
+## 0.1.11
+
+### Patch Changes
+
+- 624604e: chore: move http status codes to oas-utils
+
+## 0.1.10
+
+### Patch Changes
+
+- 45dc04b: fix: can’t release packages
+
+## 0.1.9
+
+### Patch Changes
+
+- 05e2e27: chore: add provenance statement
+
+## 0.1.8
+
+### Patch Changes
+
+- 085a0c2: fix: mimetypes with charsets and variants are ignored
+- fa10d45: fix: failed to execute structuredClone
+
+## 0.1.7
+
+### Patch Changes
+
+- 07211ad: chore: added new lint rule for type importing for better perf
+
+## 0.1.6
+
+### Patch Changes
+
+- 22f2858: chore: ran syncpack to update packages
+
+## 0.1.5
+
+### Patch Changes
+
+- 3ba9774: feat: add path routing option to references
+
+## 0.1.4
+
+### Patch Changes
+
+- 24b3c2a: Add peer dependency for axios
+
 ## 0.1.3
 
 ### Patch Changes

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ScalarIcon } from '@scalar/components'
-import { type TargetId } from 'httpsnippet-lite'
+import type { TargetId } from 'httpsnippet-lite'
+import type { AvailableTarget } from 'httpsnippet-lite/dist/types/helpers/utils'
+import type { ClientInfo } from 'httpsnippet-lite/dist/types/targets/targets'
 import { ref } from 'vue'
 
 import { useHttpClients } from '../../../hooks'
-import { type HttpClientState, useHttpClientStore } from '../../../stores/'
+import { type HttpClientState, useHttpClientStore } from '../../../stores'
 
 // Use the template store to keep it accessible globally
 const { httpClient, setHttpClient, getClientTitle, getTargetTitle } =
@@ -14,32 +16,43 @@ const { availableTargets } = useHttpClients()
 const containerRef = ref<HTMLElement>()
 
 // Show popular clients with an icon, not just in a select.
-const featuredClients = [
-  {
-    targetKey: 'shell',
-    clientKey: 'curl',
-  },
-  {
-    targetKey: 'ruby',
-    clientKey: 'native',
-  },
-  {
-    targetKey: 'node',
-    clientKey: 'undici',
-  },
-  {
-    targetKey: 'php',
-    clientKey: 'guzzle',
-  },
-  {
-    targetKey: 'python',
-    clientKey: 'python3',
-  },
-  {
-    targetKey: 'c',
-    clientKey: 'libcurl',
-  },
-] as const
+const featuredClients = (
+  [
+    {
+      targetKey: 'shell',
+      clientKey: 'curl',
+    },
+    {
+      targetKey: 'ruby',
+      clientKey: 'native',
+    },
+    {
+      targetKey: 'node',
+      clientKey: 'undici',
+    },
+    {
+      targetKey: 'php',
+      clientKey: 'guzzle',
+    },
+    {
+      targetKey: 'python',
+      clientKey: 'python3',
+    },
+    {
+      targetKey: 'c',
+      clientKey: 'libcurl',
+    },
+  ] as const
+).filter((featuredClient) =>
+  availableTargets.value.find((target: AvailableTarget) => {
+    return (
+      target.key === featuredClient.targetKey &&
+      target.clients.find(
+        (client: ClientInfo) => client.key === featuredClient.clientKey,
+      )
+    )
+  }),
+)
 
 /**
  * Icons have longer names to appear in icon searches, e.g. "javascript-js" instead of just "javascript". This function
@@ -186,26 +199,16 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
   justify-content: center;
   position: relative;
   box-sizing: border-box;
-  color: var(
-    --theme-code-language-color-supersede,
-    var(--default-theme-code-language-color-supersede, #fff)
-  );
+  color: var(--scalar-code-language-color-supersede, #fff);
 }
 .code-languages-background {
   border-radius: 9px;
   position: relative;
   background: var(
-    --theme-code-languages-background-supersede,
-    var(
-      --default-theme-code-languages-background-supersede,
-      var(--code-languages-background)
-    )
+    --scalar-code-languages-background-supersede,
+    var(--code-languages-background)
   );
-  box-shadow: 0 0 0 1px
-    var(
-      --theme-code-languages-border-color,
-      var(--default-theme-code-languages-border-color)
-    );
+  box-shadow: 0 0 0 1px var(--scalar-code-languages-border-color);
 }
 .code-languages-background:before {
   content: '';
@@ -215,11 +218,9 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
   top: -1px;
   left: -1px;
   pointer-events: none;
+
   border-radius: 8px;
-  background: var(
-    --theme-code-languages-background-supersede,
-    var(--default-theme-code-languages-background-supersede)
-  );
+  background: var(--scalar-code-languages-background-supersede);
 }
 .code-languages-icon__shell {
   --code-languages-background: #000;
@@ -279,10 +280,7 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
   --code-languages-background: #f05138;
 }
 .code-languages-icon__more {
-  --code-languages-background: var(
-    --theme-background-3,
-    var(--default-theme-background-3)
-  );
+  --code-languages-background: var(--scalar-background-3);
 }
 .code-languages-icon__more svg {
   height: initial;
@@ -293,7 +291,7 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
   bottom: 0;
   height: 2px;
   width: 100%;
-  background: var(--theme-color-1, var(--default-theme-color-1));
+  background: var(--scalar-color-1);
 }
 @keyframes codeloader {
   0% {
@@ -305,14 +303,15 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
 }
 .code-languages span {
   margin-top: 6px;
-  color: var(--theme-color-2, var(--default-theme-color-2));
-  font-size: var(--theme-micro, var(--default-theme-micro));
+  color: var(--scalar-color-2);
+  font-size: var(--scalar-micro);
 }
 .code-languages__active span {
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  color: var(--scalar-color-1);
 }
 .code-languages__select select {
   opacity: 0;
+  height: 100%;
   width: 100%;
   aspect-ratio: 1;
   position: absolute;
@@ -323,6 +322,7 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
   -moz-appearance: none;
   -webkit-appearance: none;
   appearance: none;
+  border: none;
 }
 .code-languages__select span {
   position: relative;
@@ -333,7 +333,7 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
   content: '';
   width: 8px;
   height: 8px;
-  background: var(--theme-background-1, var(--default-theme-background-1));
+  background: var(--scalar-background-1);
   box-shadow: 1px 1px 0 currentColor;
   display: block;
   transform: rotate(45deg);
@@ -345,7 +345,7 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
   gap: 9px;
   max-width: initial;
   padding: 10px 0;
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
+  font-weight: var(--scalar-semibold);
 }
 .references-classic .code-languages span {
   margin-top: 0;
@@ -355,7 +355,7 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
   padding: 3px;
 }
 .references-classic .code-languages-background {
-  border-radius: var(--theme-radius, var(--default-theme-radius));
+  border-radius: var(--scalar-radius);
 }
 @media screen and (max-width: 600px) {
   .references-classic .code-languages {

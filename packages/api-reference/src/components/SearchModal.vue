@@ -1,26 +1,45 @@
 <script setup lang="ts">
-import { HttpMethod } from '@scalar/api-client'
-import { type TransformedOperation } from '@scalar/oas-utils'
+import {
+  type Icon,
+  ScalarSearchInput,
+  ScalarSearchResultItem,
+  ScalarSearchResultList,
+} from '@scalar/components'
+import type { TransformedOperation } from '@scalar/oas-utils'
 import type { OpenAPIV3_1 } from '@scalar/openapi-parser'
 import { FlowModal, type ModalState } from '@scalar/use-modal'
 import { useMagicKeys, whenever } from '@vueuse/core'
 import Fuse from 'fuse.js'
 import { computed, ref, toRef, watch } from 'vue'
 
-import { getHeadingsFromMarkdown } from '../helpers'
+import { getHeadingsFromMarkdown, getModels } from '../helpers'
 import { extractRequestBody } from '../helpers/specHelpers'
 import { type ParamMap, useNavState, useOperation, useSidebar } from '../hooks'
 import type { Spec } from '../types'
+import SidebarHttpBadge from './Sidebar/SidebarHttpBadge.vue'
 
-const props = defineProps<{ parsedSpec: Spec; modalState: ModalState }>()
+type EntryType = 'req' | 'webhook' | 'model' | 'heading' | 'tag'
+
+const props = defineProps<{
+  parsedSpec: Spec
+  modalState: ModalState
+}>()
 const reactiveSpec = toRef(props, 'parsedSpec')
+
+const ENTRY_ICONS: { [x in EntryType]: Icon } = {
+  heading: 'DocsPage',
+  model: 'JsonObject',
+  req: 'Terminal',
+  tag: 'CodeFolder',
+  webhook: 'Terminal',
+}
 
 const keys = useMagicKeys()
 
 type FuseData = {
   title: string
   href: string
-  type: 'req' | 'webhook' | 'model' | 'heading'
+  type: EntryType
   operationId?: string
   description: string
   body?: string | string[] | ParamMap
@@ -62,6 +81,8 @@ watch(
   },
 )
 
+const { setCollapsedSidebarItem, hideModels } = useSidebar()
+
 watch(
   reactiveSpec.value,
   async () => {
@@ -100,7 +121,7 @@ watch(
         title: tag.name,
         href: `#${getTagId(tag)}`,
         description: tag.description,
-        type: 'req',
+        type: 'tag',
         tag: tag.name,
         body: '',
       }
@@ -164,7 +185,7 @@ watch(
     }
 
     // Adding models as well
-    const schemas = props.parsedSpec.components?.schemas
+    const schemas = hideModels.value ? {} : getModels(props.parsedSpec)
     const modelData: FuseData[] = []
 
     if (schemas) {
@@ -262,7 +283,6 @@ const searchResultsWithPlaceholderResults = computed(
 )
 
 const tagRegex = /#(tag\/[^/]*)/
-const { setCollapsedSidebarItem } = useSidebar()
 
 // Ensure we open the section
 const onSearchResultClick = (entry: Fuse.FuseResult<FuseData>) => {
@@ -275,6 +295,16 @@ const onSearchResultClick = (entry: Fuse.FuseResult<FuseData>) => {
   setCollapsedSidebarItem(parentId, true)
   props.modalState.hide()
 }
+
+// given just a #hash-name, we grab the full URL to be explicit to
+// handle edge cases of other framework routers resetting to base URL on navigation
+function getFullUrlFromHash(href: string) {
+  const newUrl = new URL(window.location.href)
+
+  newUrl.hash = href
+
+  return newUrl.toString()
+}
 </script>
 <template>
   <FlowModal
@@ -283,58 +313,44 @@ const onSearchResultClick = (entry: Fuse.FuseResult<FuseData>) => {
     <div
       ref="searchModalRef"
       class="ref-search-container">
-      <input
+      <ScalarSearchInput
         v-model="searchText"
-        autocapitalize="off"
-        autocomplete="off"
-        autocorrect="off"
-        class="ref-search-input"
-        placeholder="Search …"
-        spellcheck="false"
-        type="text"
         @input="fuseSearch" />
     </div>
-    <div
-      v-if="searchResultsWithPlaceholderResults.length"
-      class="ref-search-list custom-scroll">
-      <a
+    <ScalarSearchResultList
+      class="ref-search-results custom-scroll"
+      :noResults="!searchResultsWithPlaceholderResults.length">
+      <ScalarSearchResultItem
         v-for="(entry, index) in searchResultsWithPlaceholderResults"
         :id="entry.item.href"
         :key="entry.refIndex"
-        class="item-entry"
-        :class="{
-          'item-entry--active': index === selectedSearchResult,
-          'item-entry--tag': !entry.item.httpVerb,
-        }"
-        :href="entry.item.href"
+        :active="selectedSearchResult === index"
+        :href="getFullUrlFromHash(entry.item.href)"
+        :icon="ENTRY_ICONS[entry.item.type]"
         @click="onSearchResultClick(entry)"
         @focus="selectedSearchResult = index">
-        <HttpMethod
-          as="div"
-          class="item-entry-http-verb"
-          :method="entry.item.httpVerb ?? 'get'"
-          short />
-        <div
-          v-if="entry.item.title"
-          class="item-entry-title">
-          {{ entry.item.title }}
-        </div>
-
-        <div
+        {{ entry.item.title }}
+        <template
           v-if="
             (entry.item.httpVerb || entry.item.path) &&
             entry.item.path !== entry.item.title
           "
-          class="item-entry-path">
+          #description>
           {{ entry.item.path }}
-        </div>
-        <div
+        </template>
+        <template
           v-else-if="entry.item.description"
-          class="item-entry-description">
+          #description>
           {{ entry.item.description }}
-        </div>
-      </a>
-    </div>
+        </template>
+        <template
+          v-if="entry.item.type === 'req'"
+          #addon>
+          <SidebarHttpBadge :method="entry.item.httpVerb ?? 'get'" />
+        </template>
+      </ScalarSearchResultItem>
+      <template #query>{{ searchText }}</template>
+    </ScalarSearchResultList>
     <div class="ref-search-meta">
       <span>↑↓ Navigate</span>
       <span>⏎ Select</span>
@@ -345,108 +361,21 @@ const onSearchResultClick = (entry: Fuse.FuseResult<FuseData>) => {
 a {
   text-decoration: none;
 }
-/** Input */
-.ref-search-input {
-  width: 100%;
-  background: transparent;
-  padding: 12px;
-  font-size: var(--theme-font-size-4, var(--default-theme-font-size-4));
-  outline: none;
-  border: 1px solid var(--theme-border-color, var(--default-theme-border-color));
-  border-radius: var(--theme-radius, var(--default-theme-radius));
-  color: var(--theme-color-1, var(--default-theme-color-1));
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
-  font-size: var(--theme-font-size-3, var(--default-theme-font-size-3));
-  font-family: var(--theme-font, var(--default-theme-font));
-  appearance: none;
-}
-.ref-search-input:focus {
-  border-color: var(--theme-color-1, var(--default-theme-color-1));
-}
-/** Results */
-.item-entry {
-  appearance: none;
-  background: transparent;
-  border: none;
-  outline: none;
-  padding: 9px 12px;
-  width: 100%;
-  color: var(--theme-color-3, var(--default-theme-color-3));
-  text-align: left;
-  border-radius: var(--theme-radius, var(--default-theme-radius));
-  display: flex;
-  align-items: center;
-  font-family: var(--theme-font);
-  min-height: 31px;
-  display: flex;
-  gap: 6px;
-  overflow: hidden;
-}
-.item-entry-http-verb:empty {
-  display: none;
-}
-.ref-search-list {
-  padding: 0 12px 12px 12px;
-}
 .ref-search-container {
-  padding: 12px;
-}
-.item-entry--active,
-.item-entry:hover {
-  background: var(--theme-background-2, var(--default-theme-background-2));
-  cursor: pointer;
-}
-
-/** If it’s a tag, let’s put a dash between the tag name and the description and set the margin to the gap size. */
-.item-entry--tag .item-entry-description::before {
-  content: '–';
-  margin-right: 6px;
-}
-.item-entry-description,
-.item-entry-title {
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
-  color: var(--theme-color-1, var(--default-theme-color-1));
-  font-size: var(--theme-font-size-4, var(--default-theme-font-size-4));
-  white-space: nowrap;
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.item-entry-title {
-  min-width: fit-content;
-}
-.item-entry-http-verb,
-.item-entry-subtitle {
   display: flex;
-  font-size: var(--theme-font-size-4, var(--default-theme-font-size-4));
-  font-family: var(--theme-font-code, var(--default-theme-font-code));
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  flex-direction: column;
+  padding: 12px;
+  padding-bottom: 0px;
 }
-.item-entry-http-verb {
-  text-transform: uppercase;
-  min-width: 45px;
-  position: relative;
-  /* optically center since all characters  above baseline*/
-  top: 0.5px;
-}
-.item-entry-path {
-  color: var(--theme-color-3, var(--default-theme-color-3));
-  font-size: var(--theme-font-size-4, var(--default-theme-font-size-4));
-  min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.ref-search-results {
+  padding: 12px;
 }
 .ref-search-meta {
-  background: var(--theme-background-3, var(--default-theme-background-3));
+  background: var(--scalar-background-3);
   padding: 6px 12px;
-  font-size: var(--theme-font-size-4, var(--default-theme-font-size-4));
-  color: var(--theme-color-3, var(--default-theme-color-3));
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
+  font-size: var(--scalar-font-size-4);
+  color: var(--scalar-color-3);
+  font-weight: var(--scalar-semibold);
   display: flex;
   gap: 12px;
 }

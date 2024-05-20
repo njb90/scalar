@@ -3,6 +3,7 @@ import {
   ApiReferenceLayout,
   type ReferenceConfiguration,
   type Spec,
+  createEmptySpecification,
   parse,
 } from '@scalar/api-reference'
 import { asyncComputed } from '@vueuse/core'
@@ -12,7 +13,6 @@ import DevReferencesOptions from '../components/DevReferencesOptions.vue'
 import DevToolbar from '../components/DevToolbar.vue'
 import MonacoEditor from '../components/MonacoEditor.vue'
 import SlotPlaceholder from '../components/SlotPlaceholder.vue'
-import { emptySpecGenerator } from '../fixtures/emptySpec'
 
 const content = ref('')
 
@@ -24,15 +24,13 @@ const configuration = reactive<ReferenceConfiguration>({
   layout: 'modern',
   spec: { content },
   // authentication: {
-  //   preferredSecurityScheme: 'petstore_auth',
-  //   oAuth2: {
-  //     clientId: 'foobar123',
-  //     scopes: ['read:pets', 'write:pets'],
+  //   // The OpenAPI file has keys for all security schemes:
+  //   // Which one should be used by default?
+  //   preferredSecurityScheme: 'my_custom_security_scheme',
+  //   // The `my_custom_security_scheme` security scheme is of type `apiKey`, so prefill the token:
+  //   apiKey: {
+  //     token: 'super-secret-token',
   //   },
-  //   // preferredSecurityScheme: 'api_key',
-  //   // apiKey: {
-  //   //   token: 'super-secret-token',
-  //   // },
   // },
 })
 
@@ -71,9 +69,9 @@ const parsedSpec = asyncComputed(
       })
       .catch((error) => {
         console.warn(error)
-        return emptySpecGenerator()
+        return createEmptySpecification()
       }),
-  emptySpecGenerator(),
+  createEmptySpecification(),
 )
 </script>
 <template>
@@ -81,7 +79,7 @@ const parsedSpec = asyncComputed(
     :configuration="configuration"
     :parsedSpec="parsedSpec"
     :rawSpec="content"
-    @changeTheme="configuration.theme = $event"
+    @changeTheme="configuration.theme = $event.id"
     @updateContent="(v) => (content = v)">
     <template #header>
       <DevToolbar>

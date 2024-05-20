@@ -1,5 +1,27 @@
 # @scalar/use-tooltip
 
+## 0.6.2
+
+### Patch Changes
+
+- 45dc04b: fix: can’t release packages
+
+## 0.6.1
+
+### Patch Changes
+
+- 05e2e27: chore: add provenance statement
+
+## 0.6.0
+
+### Minor Changes
+
+- 0e64a36: refactor: rename all --theme-_ variables to --scalar-_
+
+### Patch Changes
+
+- 22f2858: chore: ran syncpack to update packages
+
 ## 0.5.12
 
 ### Patch Changes

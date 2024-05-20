@@ -7,6 +7,7 @@ withDefaults(
     value?: Record<string, any>
     enum?: boolean
     required?: boolean
+    additional?: boolean
   }>(),
   {
     level: 0,
@@ -24,6 +25,11 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
       <slot name="name" />
     </div>
     <div
+      v-if="additional"
+      class="property-additional">
+      additional properties
+    </div>
+    <div
       v-if="value?.deprecated"
       class="property-deprecated">
       <Badge>deprecated</Badge>
@@ -36,8 +42,14 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
     <div
       v-if="value?.type"
       class="property-details">
+      <SchemaPropertyDetail v-if="additional">
+        <template #prefix>key:</template>
+        string
+      </SchemaPropertyDetail>
       <SchemaPropertyDetail>
-        <template v-if="value?.items && !['object'].includes(value.items.type)">
+        <!-- prettier-ignore -->
+        <template v-if="additional" #prefix>value:</template >
+        <template v-if="value?.items?.type">
           {{ value.type }}
           {{ value.items.type }}[]
         </template>
@@ -111,28 +123,31 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
 }
 
 .property-name {
-  font-family: var(--theme-font-code, var(--default-theme-font-code));
+  font-family: var(--scalar-font-code);
+}
+.property-additional {
+  font-size: var(--scalar-font-size-3);
 }
 
 .property-required,
 .property-optional {
-  color: var(--theme-color-2, var(--default-theme-color-2));
+  color: var(--scalar-color-2);
 }
 
 .property-required {
-  text-transform: uppercase;
-  color: var(--theme-color-orange, var(--default-theme-color-orange));
+  text-transform: capitalize;
+  color: var(--scalar-color-orange);
 }
 
 .property-read-only,
 .property-write-only {
-  font-size: var(--theme-font-size-3, var(--default-theme-font-size-3));
-  color: var(--theme-color-blue, var(--default-theme-color-blue));
+  font-size: var(--scalar-font-size-3);
+  color: var(--scalar-color-blue);
 }
 
 .property-details {
-  font-size: var(--theme-font-size-3, var(--default-theme-font-size-3));
-  color: var(--theme-color-2, var(--default-theme-color-2));
+  font-size: var(--scalar-font-size-3);
+  color: var(--scalar-color-2);
 
   display: flex;
   align-items: center;

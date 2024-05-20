@@ -1,5 +1,107 @@
 # @scalar/fastify-api-reference
 
+## 1.22.37
+
+## 1.22.36
+
+## 1.22.35
+
+## 1.22.34
+
+## 1.22.33
+
+## 1.22.32
+
+## 1.22.31
+
+## 1.22.30
+
+## 1.22.29
+
+## 1.22.28
+
+## 1.22.27
+
+## 1.22.26
+
+### Patch Changes
+
+- 670156e: chore: bump packages
+
+## 1.22.25
+
+## 1.22.24
+
+### Patch Changes
+
+- 45dc04b: fix: can’t release packages
+
+## 1.22.23
+
+### Patch Changes
+
+- 05e2e27: chore: add provenance statement
+
+## 1.22.22
+
+## 1.22.21
+
+### Patch Changes
+
+- 07211ad: chore: added new lint rule for type importing for better perf
+
+## 1.22.20
+
+### Patch Changes
+
+- 9201802: chore: update example page title
+
+## 1.22.3
+
+### Patch Changes
+
+- 85a0074: fix: hotfix integration fonts
+
+## 1.22.2
+
+### Patch Changes
+
+- d77acdd: fix: missing css font
+
+## 1.22.0
+
+### Minor Changes
+
+- 0e64a36: refactor: rename all --theme-_ variables to --scalar-_
+
+### Patch Changes
+
+- 22f2858: chore: ran syncpack to update packages
+
+## 1.21.0
+
+### Minor Changes
+
+- b58b83e: Improved fastify-api-reference plugin.
+
+## 1.20.27
+
+### Patch Changes
+
+- 605f522: feat: support tags with no operations
+
+## 1.20.26
+
+### Patch Changes
+
+- 050410a: feat: add config to hide download button
+
+## 1.20.25
+
+### Patch Changes
+
+- 1504d3b: feat: add config to hide models
+
 ## 1.20.22
 
 ### Patch Changes

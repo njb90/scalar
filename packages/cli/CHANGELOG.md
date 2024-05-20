@@ -1,5 +1,433 @@
 # @scalar/cli
 
+## 0.2.77
+
+### Patch Changes
+
+- Updated dependencies [e3a72bb]
+  - @scalar/api-reference@1.22.37
+
+## 0.2.76
+
+### Patch Changes
+
+- Updated dependencies [79e3caa]
+- Updated dependencies [5d0e06c]
+- Updated dependencies [c6ee654]
+  - @scalar/api-reference@1.22.36
+
+## 0.2.75
+
+### Patch Changes
+
+- Updated dependencies [624604e]
+  - @scalar/oas-utils@0.1.11
+  - @scalar/api-reference@1.22.35
+  - @scalar/mock-server@0.1.64
+
+## 0.2.74
+
+### Patch Changes
+
+- Updated dependencies [15625a2]
+  - @scalar/api-reference@1.22.34
+
+## 0.2.73
+
+### Patch Changes
+
+- @scalar/api-reference@1.22.33
+
+## 0.2.72
+
+### Patch Changes
+
+- @scalar/api-reference@1.22.32
+
+## 0.2.71
+
+### Patch Changes
+
+- Updated dependencies [3748dc5]
+  - @scalar/api-reference@1.22.31
+
+## 0.2.70
+
+### Patch Changes
+
+- Updated dependencies [36819a2]
+  - @scalar/api-reference@1.22.30
+
+## 0.2.69
+
+### Patch Changes
+
+- @scalar/api-reference@1.22.29
+
+## 0.2.68
+
+### Patch Changes
+
+- Updated dependencies [192f348]
+  - @scalar/api-reference@1.22.28
+
+## 0.2.67
+
+### Patch Changes
+
+- Updated dependencies [ce44360]
+- Updated dependencies [7622134]
+  - @scalar/api-reference@1.22.27
+
+## 0.2.66
+
+### Patch Changes
+
+- 670156e: chore: bump packages
+- Updated dependencies [26d9146]
+- Updated dependencies [670156e]
+  - @scalar/api-reference@1.22.26
+  - @scalar/mock-server@0.1.63
+
+## 0.2.65
+
+### Patch Changes
+
+- Updated dependencies [5b24896]
+- Updated dependencies [64024a5]
+- Updated dependencies [09b38c4]
+- Updated dependencies [36e1e66]
+- Updated dependencies [ea0eed3]
+- Updated dependencies [2e7b074]
+- Updated dependencies [298735f]
+  - @scalar/api-reference@1.22.25
+  - @scalar/mock-server@0.1.62
+
+## 0.2.64
+
+### Patch Changes
+
+- 5a2f0c9: fix: release workflow fails
+- Updated dependencies [5a2f0c9]
+  - @scalar/mock-server@0.1.61
+
+## 0.2.63
+
+### Patch Changes
+
+- 17841a8: fix: wrong repository URL in the package.json
+- Updated dependencies [17841a8]
+  - @scalar/mock-server@0.1.60
+
+## 0.2.62
+
+### Patch Changes
+
+- 45dc04b: fix: can’t release packages
+- Updated dependencies [9ba838b]
+- Updated dependencies [45dc04b]
+  - @scalar/api-reference@1.22.24
+  - @scalar/mock-server@0.1.59
+  - @scalar/oas-utils@0.1.10
+
+## 0.2.61
+
+### Patch Changes
+
+- 05e2e27: chore: add provenance statement
+- 7254f6e: feat: directory navigation on init command
+- Updated dependencies [05e2e27]
+  - @scalar/api-reference@1.22.23
+  - @scalar/mock-server@0.1.58
+  - @scalar/oas-utils@0.1.9
+
+## 0.2.60
+
+### Patch Changes
+
+- Updated dependencies [f1bf5bc]
+- Updated dependencies [085a0c2]
+- Updated dependencies [fa10d45]
+  - @scalar/api-reference@1.22.22
+  - @scalar/oas-utils@0.1.8
+  - @scalar/mock-server@0.1.57
+
+## 0.2.59
+
+### Patch Changes
+
+- Updated dependencies [07211ad]
+- Updated dependencies [801ad65]
+- Updated dependencies [d4fa19b]
+- Updated dependencies [b234d1d]
+  - @scalar/api-reference@1.22.21
+  - @scalar/oas-utils@0.1.7
+  - @scalar/mock-server@0.1.56
+
+## 0.2.58
+
+### Patch Changes
+
+- 9201802: chore: update example page title
+- Updated dependencies [a8c3045]
+- Updated dependencies [1324378]
+- Updated dependencies [9201802]
+  - @scalar/api-reference@1.22.20
+  - @scalar/mock-server@0.1.55
+
+## 0.2.57
+
+### Patch Changes
+
+- @scalar/api-reference@1.22.19
+- @scalar/mock-server@0.1.54
+
+## 0.2.56
+
+### Patch Changes
+
+- Updated dependencies [45dccb0]
+- Updated dependencies [abff1f4]
+  - @scalar/api-reference@1.22.18
+  - @scalar/mock-server@0.1.53
+
+## 0.2.55
+
+### Patch Changes
+
+- Updated dependencies [b42479c]
+- Updated dependencies [4c38ac1]
+  - @scalar/api-reference@1.22.17
+  - @scalar/mock-server@0.1.52
+
+## 0.2.54
+
+### Patch Changes
+
+- Updated dependencies [7e1d318]
+  - @scalar/api-reference@1.22.16
+  - @scalar/mock-server@0.1.51
+
+## 0.2.53
+
+### Patch Changes
+
+- Updated dependencies [fc2c90f]
+  - @scalar/api-reference@1.22.15
+  - @scalar/mock-server@0.1.50
+
+## 0.2.52
+
+### Patch Changes
+
+- Updated dependencies [b8e3f09]
+  - @scalar/api-reference@1.22.14
+  - @scalar/mock-server@0.1.49
+
+## 0.2.51
+
+### Patch Changes
+
+- Updated dependencies [c05c90e]
+- Updated dependencies [2700c5c]
+  - @scalar/api-reference@1.22.13
+  - @scalar/mock-server@0.1.48
+
+## 0.2.50
+
+### Patch Changes
+
+- Updated dependencies [55398db]
+  - @scalar/api-reference@1.22.12
+  - @scalar/mock-server@0.1.47
+
+## 0.2.49
+
+### Patch Changes
+
+- Updated dependencies [b24b455]
+- Updated dependencies [43e1217]
+  - @scalar/api-reference@1.22.11
+  - @scalar/mock-server@0.1.46
+
+## 0.2.48
+
+### Patch Changes
+
+- @scalar/api-reference@1.22.10
+- @scalar/mock-server@0.1.45
+
+## 0.2.47
+
+### Patch Changes
+
+- Updated dependencies [6f68b40]
+- Updated dependencies [4d31b19]
+  - @scalar/api-reference@1.22.9
+  - @scalar/mock-server@0.1.44
+
+## 0.2.46
+
+### Patch Changes
+
+- Updated dependencies [24662c3]
+  - @scalar/api-reference@1.22.8
+  - @scalar/mock-server@0.1.43
+
+## 0.2.45
+
+### Patch Changes
+
+- Updated dependencies [c408cf5]
+  - @scalar/api-reference@1.22.7
+  - @scalar/mock-server@0.1.42
+
+## 0.2.44
+
+### Patch Changes
+
+- Updated dependencies [cf12a95]
+- Updated dependencies [7b37c63]
+  - @scalar/api-reference@1.22.6
+  - @scalar/mock-server@0.1.41
+
+## 0.2.43
+
+### Patch Changes
+
+- Updated dependencies [d03ab0f]
+  - @scalar/api-reference@1.22.5
+  - @scalar/mock-server@0.1.40
+
+## 0.2.42
+
+### Patch Changes
+
+- Updated dependencies [adc0693]
+  - @scalar/api-reference@1.22.4
+  - @scalar/mock-server@0.1.39
+
+## 0.2.41
+
+### Patch Changes
+
+- @scalar/api-reference@1.22.3
+- @scalar/mock-server@0.1.38
+
+## 0.2.40
+
+### Patch Changes
+
+- @scalar/api-reference@1.22.2
+- @scalar/mock-server@0.1.37
+
+## 0.2.39
+
+### Patch Changes
+
+- Updated dependencies [8dc1640]
+  - @scalar/api-reference@1.22.1
+  - @scalar/mock-server@0.1.36
+
+## 0.2.38
+
+### Patch Changes
+
+- 22f2858: chore: ran syncpack to update packages
+- Updated dependencies [22f2858]
+- Updated dependencies [ced76e5]
+- Updated dependencies [0e64a36]
+- Updated dependencies [3afec45]
+  - @scalar/api-reference@1.22.0
+  - @scalar/mock-server@0.1.35
+  - @scalar/oas-utils@0.1.6
+
+## 0.2.37
+
+### Patch Changes
+
+- Updated dependencies [851017a]
+  - @scalar/api-reference@1.21.2
+  - @scalar/mock-server@0.1.34
+
+## 0.2.36
+
+### Patch Changes
+
+- Updated dependencies [b4abb34]
+  - @scalar/api-reference@1.21.1
+  - @scalar/mock-server@0.1.33
+
+## 0.2.35
+
+### Patch Changes
+
+- Updated dependencies [51d4997]
+  - @scalar/api-reference@1.20.32
+  - @scalar/mock-server@0.1.32
+
+## 0.2.34
+
+### Patch Changes
+
+- Updated dependencies [b903a2f]
+  - @scalar/api-reference@1.20.31
+  - @scalar/mock-server@0.1.31
+
+## 0.2.33
+
+### Patch Changes
+
+- Updated dependencies [deabe4c]
+- Updated dependencies [3ba9774]
+- Updated dependencies [a14fc32]
+- Updated dependencies [3d4d83e]
+  - @scalar/api-reference@1.20.30
+  - @scalar/oas-utils@0.1.5
+  - @scalar/mock-server@0.1.30
+
+## 0.2.32
+
+### Patch Changes
+
+- Updated dependencies [24b3c2a]
+  - @scalar/oas-utils@0.1.4
+  - @scalar/api-reference@1.20.29
+  - @scalar/mock-server@0.1.29
+
+## 0.2.31
+
+### Patch Changes
+
+- Updated dependencies [622f31b]
+- Updated dependencies [f2c2ce8]
+  - @scalar/api-reference@1.20.28
+  - @scalar/mock-server@0.1.28
+
+## 0.2.30
+
+### Patch Changes
+
+- Updated dependencies [605f522]
+  - @scalar/api-reference@1.20.27
+  - @scalar/mock-server@0.1.27
+
+## 0.2.29
+
+### Patch Changes
+
+- Updated dependencies [050410a]
+  - @scalar/api-reference@1.20.26
+  - @scalar/mock-server@0.1.26
+
+## 0.2.28
+
+### Patch Changes
+
+- Updated dependencies [1504d3b]
+  - @scalar/api-reference@1.20.25
+  - @scalar/mock-server@0.1.25
+
 ## 0.2.27
 
 ### Patch Changes

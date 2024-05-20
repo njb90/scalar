@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useMediaQuery } from '@vueuse/core'
-import { computed, ref, watch } from 'vue'
+import { watch } from 'vue'
 
 import { useNavState, useSidebar } from '../../hooks'
-import { type ReferenceLayoutProps, type ReferenceSlots } from '../../types'
+import type { ReferenceLayoutProps, ReferenceSlots } from '../../types'
 import ApiReferenceLayout from '../ApiReferenceLayout.vue'
 import { DarkModeToggle } from '../DarkModeToggle'
 import MobileHeader from '../MobileHeader.vue'
@@ -33,12 +33,16 @@ watch(hash, (newHash, oldHash) => {
 </script>
 <template>
   <ApiReferenceLayout
-    :class="{ 'scalar-api-references-standalone-mobile': isMobile }"
+    :class="{
+      'scalar-api-references-standalone-mobile': configuration.showSidebar,
+    }"
     :configuration="configuration"
     :parsedSpec="parsedSpec"
     :rawSpec="rawSpec">
     <template #header>
-      <MobileHeader v-model:open="isSidebarOpen" />
+      <MobileHeader
+        v-if="props.configuration.showSidebar"
+        v-model:open="isSidebarOpen" />
     </template>
     <template #sidebar-start="{ spec }">
       <div class="scalar-api-references-standalone-search">
@@ -59,7 +63,7 @@ watch(hash, (newHash, oldHash) => {
 <style>
 @media (max-width: 1000px) {
   .scalar-api-references-standalone-mobile {
-    --theme-header-height: 50px;
+    --scalar-header-height: 50px;
   }
 }
 </style>

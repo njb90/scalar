@@ -4,7 +4,7 @@ import prettyMilliseconds from 'pretty-ms'
 
 import { humanDiff } from '../../helpers'
 import { useRequestStore } from '../../stores'
-import { type ClientResponse } from '../../types'
+import type { ClientResponse } from '../../types'
 
 defineProps<{ history: string }>()
 
@@ -58,7 +58,7 @@ const getContentLength = (response: ClientResponse) => {
   text-transform: capitalize;
 }
 .navtable-item__active {
-  background: var(--theme-background-2, var(--default-theme-background-2));
+  background: var(--scalar-background-2);
   cursor: default;
 }
 </style>

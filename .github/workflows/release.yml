@@ -11,13 +11,16 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     strategy:
       matrix:
         node-version: [20]
 
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
         with:
           version: 8
       - name: Use Node.js ${{ matrix.node-version }}
@@ -31,6 +34,10 @@ jobs:
         uses: dtinth/setup-github-actions-caching-for-turbo@v1
       - name: Build
         run: pnpm turbo build
+      - name: Git Status
+        run: git status
+      - name: Stash changes
+        run: git stash
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1

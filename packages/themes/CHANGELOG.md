@@ -1,5 +1,69 @@
 # @scalar/themes
 
+## 0.7.9
+
+### Patch Changes
+
+- 45dc04b: fix: can’t release packages
+
+## 0.7.8
+
+### Patch Changes
+
+- 05e2e27: chore: add provenance statement
+
+## 0.7.7
+
+### Patch Changes
+
+- d4fa19b: feat: allow multiple configs for nuxt
+
+## 0.7.6
+
+### Patch Changes
+
+- 0a77380: fix: don't minify theme css
+
+## 0.7.5
+
+### Patch Changes
+
+- 2700c5c: feat: separate google fonts from theme, add withDefaultFonts setting
+
+## 0.7.4
+
+### Patch Changes
+
+- 86d1363: refactor: remove @layer from base theme files
+
+## 0.7.3
+
+### Patch Changes
+
+- 4d31b19: refactor: move theme labels to @scalar/themes
+
+## 0.7.2
+
+### Patch Changes
+
+- 85a0074: fix: hotfix integration fonts
+
+## 0.7.1
+
+### Patch Changes
+
+- d77acdd: fix: missing css font
+
+## 0.7.0
+
+### Minor Changes
+
+- 0e64a36: refactor: rename all --theme-_ variables to --scalar-_
+
+### Patch Changes
+
+- 22f2858: chore: ran syncpack to update packages
+
 ## 0.6.7
 
 ### Patch Changes

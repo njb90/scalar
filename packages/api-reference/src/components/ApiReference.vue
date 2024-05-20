@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { useAuthenticationStore } from '@scalar/api-client'
+import { migrateThemeVariables } from '@scalar/themes'
 import { createHead, useSeoMeta } from 'unhead'
 import { computed, toRef, watch } from 'vue'
 
 import { useDarkModeState, useHttpClients, useReactiveSpec } from '../hooks'
-import { type ReferenceConfiguration, type ReferenceProps } from '../types'
+import type { ReferenceConfiguration, ReferenceProps } from '../types'
 import Layouts from './Layouts/'
 
 const props = defineProps<ReferenceProps>()
@@ -18,6 +19,13 @@ const { toggleDarkMode, isDark } = useDarkModeState(
   props.configuration?.darkMode,
 )
 
+const customCss = computed(() => {
+  if (!props.configuration?.customCss) return undefined
+  return migrateThemeVariables(props.configuration?.customCss)
+})
+
+watch(customCss, () => console.log(customCss.value))
+
 // Set defaults as needed on the provided configuration
 const configuration = computed<ReferenceConfiguration>(() => ({
   spec: {
@@ -30,6 +38,7 @@ const configuration = computed<ReferenceConfiguration>(() => ({
   showSidebar: true,
   isEditable: false,
   ...props.configuration,
+  customCss: customCss.value,
 }))
 
 // Create the head tag if the configuration has meta data

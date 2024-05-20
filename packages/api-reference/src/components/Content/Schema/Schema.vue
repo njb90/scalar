@@ -3,6 +3,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { ScalarIcon } from '@scalar/components'
 import { computed } from 'vue'
 
+import { MarkdownRenderer } from '../../MarkdownRenderer'
 import SchemaHeading from './SchemaHeading.vue'
 import SchemaProperty from './SchemaProperty.vue'
 
@@ -26,17 +27,6 @@ const shouldShowToggle = computed(() => {
   return true
 })
 
-// Merge the (optional) `additionalProperties` into the schema
-const mergedSchema = computed(() => {
-  return {
-    ...(typeof props.value === 'object' ? props.value : {}),
-    ...(typeof props.value === 'object' &&
-    typeof props.value?.additionalProperties === 'object'
-      ? props.value?.additionalProperties
-      : {}),
-  }
-})
-
 // Prevent click action if noncollapsible
 const handleClick = (e: MouseEvent) =>
   props.noncollapsible && e.stopPropagation()
@@ -55,7 +45,7 @@ const handleClick = (e: MouseEvent) =>
       <div
         v-if="value?.description"
         class="schema-card-description">
-        {{ value.description }}
+        <MarkdownRenderer :value="value.description" />
       </div>
       <div
         class="schema-properties"
@@ -83,8 +73,12 @@ const handleClick = (e: MouseEvent) =>
                 fill-rule="nonzero"
                 points="14 8 8 8 8 14 6 14 6 8 0 8 0 6 6 6 6 0 8 0 8 6 14 6" />
             </svg>
-            <template v-if="open">Hide Child Attributes</template>
-            <template v-else>Show Child Attributes</template>
+            <template v-if="open">
+              Hide {{ value?.title ?? 'Child Attributes' }}
+            </template>
+            <template v-else>
+              Show {{ value?.title ?? 'Child Attributes' }}
+            </template>
           </template>
           <template v-else>
             <ScalarIcon
@@ -94,31 +88,58 @@ const handleClick = (e: MouseEvent) =>
               icon="ChevronRight"
               size="md" />
             <SchemaHeading
-              :name="name"
-              :value="mergedSchema" />
+              :name="value?.title ?? name"
+              :value="value" />
           </template>
         </DisclosureButton>
         <DisclosurePanel :static="noncollapsible">
-          <template v-if="mergedSchema?.properties">
-            <SchemaProperty
-              v-for="property in Object.keys(mergedSchema?.properties)"
-              :key="property"
-              :compact="compact"
-              :level="level"
-              :name="property"
-              :required="
-                mergedSchema.required &&
-                mergedSchema.required.length &&
-                mergedSchema.required.includes(property)
-              "
-              :value="mergedSchema.properties?.[property]" />
+          <template v-if="value.properties || value.additionalProperties">
+            <template v-if="value.properties">
+              <SchemaProperty
+                v-for="property in Object.keys(value?.properties)"
+                :key="property"
+                :compact="compact"
+                :level="level"
+                :name="property"
+                :required="
+                  value.required &&
+                  value.required.length &&
+                  value.required.includes(property)
+                "
+                :value="value.properties?.[property]" />
+            </template>
+            <template v-if="value.additionalProperties">
+              <!--
+                Allows any type of additional property value
+                @see https://swagger.io/docs/specification/data-models/dictionaries/#free-form
+               -->
+              <SchemaProperty
+                v-if="
+                  value.additionalProperties === true ||
+                  Object.keys(value.additionalProperties).length === 0 ||
+                  !value.additionalProperties.type
+                "
+                additional
+                :compact="compact"
+                :level="level"
+                noncollapsible
+                :value="{ type: 'any', ...value.additionalProperties }" />
+              <!-- Allows a specific type of additional property value -->
+              <SchemaProperty
+                v-else
+                additional
+                :compact="compact"
+                :level="level"
+                noncollapsible
+                :value="value.additionalProperties" />
+            </template>
           </template>
           <template v-else>
             <SchemaProperty
               :compact="compact"
               :level="level"
-              :name="mergedSchema?.name"
-              :value="mergedSchema" />
+              :name="value.name"
+              :value="value" />
           </template>
         </DisclosurePanel>
       </div>
@@ -127,13 +148,13 @@ const handleClick = (e: MouseEvent) =>
 </template>
 <style scoped>
 .error {
-  background-color: var(--theme-color-red, var(--default-theme-color-red));
+  background-color: var(--scalar-color-red);
 }
 .schema-card {
   z-index: 0;
   position: relative;
-  font-size: var(--theme-font-size-4, var(--default-theme-font-size-4));
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  font-size: var(--scalar-font-size-4);
+  color: var(--scalar-color-1);
 }
 
 .schema-card-title {
@@ -146,18 +167,18 @@ const handleClick = (e: MouseEvent) =>
   align-items: center;
   gap: 4px;
 
-  color: var(--theme-color-2, var(--default-theme-color-2));
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
-  font-size: var(--theme-micro, var(--default-theme-micro));
-  background: var(--theme-background-1, var(--default-theme-background-1));
-  border-radius: var(--theme-radius-lg, var(--default-theme-radius-lg));
+  color: var(--scalar-color-2);
+  font-weight: var(--scalar-semibold);
+  font-size: var(--scalar-micro);
+  background: var(--scalar-background-1);
+  border-radius: var(--scalar-radius-lg);
   border-bottom: 1px solid transparent;
 }
 button.schema-card-title {
   cursor: pointer;
 }
 button.schema-card-title:hover {
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  color: var(--scalar-color-1);
 }
 .schema-card-title-icon {
   margin-left: -4px;
@@ -172,8 +193,7 @@ button.schema-card-title:hover {
 
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  border-bottom: 1px solid
-    var(--theme-border-color, var(--default-theme-border-color));
+  border-bottom: 1px solid var(--scalar-border-color);
 }
 .schema-properties-open > .schema-properties {
   width: fit-content;
@@ -193,8 +213,8 @@ button.schema-card-title:hover {
   display: flex;
   flex-direction: column;
 
-  border: 1px solid var(--theme-border-color, var(--default-theme-border-color));
-  border-radius: var(--theme-radius-lg, var(--default-theme-radius-lg));
+  border: 1px solid var(--scalar-border-color);
+  border-radius: var(--scalar-radius-lg);
 }
 
 .schema-card--compact {
@@ -206,7 +226,7 @@ button.schema-card-title:hover {
 }
 
 .schema-card-title--compact {
-  color: var(--theme-color-3, var(--default-theme-color-3));
+  color: var(--scalar-color-3);
   padding: 6px 10px;
   height: auto;
   border-bottom: none;
@@ -230,13 +250,9 @@ button.schema-card-title:hover {
 .schema-card--compact.schema-card--level-0 > .schema-properties {
   border: none;
 }
-.schema-card-description {
-  font-size: var(
-    --font-size,
-    var(--default-font-size),
-    var(--theme-paragraph, var(--default-theme-paragraph))
-  );
-  color: var(--theme-color-2, var(--default-theme-color-2));
+:deep(.schema-card-description) p {
+  font-size: var(--scalar-mini, var(--scalar-paragraph));
+  color: var(--scalar-color-2);
   line-height: 1.5;
   margin-bottom: 0;
   display: block;

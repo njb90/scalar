@@ -1,5 +1,452 @@
 # @scalar/api-reference
 
+## 1.22.37
+
+### Patch Changes
+
+- e3a72bb: style: updated icon button size
+- Updated dependencies [e3a72bb]
+  - @scalar/components@0.7.9
+  - @scalar/api-client@1.2.26
+
+## 1.22.36
+
+### Patch Changes
+
+- 79e3caa: chore: replace petstore example with galaxy example
+- 5d0e06c: fix: api client blur, modal size, client contrast with clickout area
+- c6ee654: feat: hide operations with x-internal: true
+- Updated dependencies [79e3caa]
+- Updated dependencies [e022ee6]
+  - @scalar/api-client@1.2.25
+  - @scalar/components@0.7.8
+
+## 1.22.35
+
+### Patch Changes
+
+- Updated dependencies [624604e]
+- Updated dependencies [624604e]
+  - @scalar/api-client@1.2.24
+  - @scalar/oas-utils@0.1.11
+  - @scalar/components@0.7.7
+
+## 1.22.34
+
+### Patch Changes
+
+- 15625a2: feat: support <sub> tag in markdown
+
+## 1.22.33
+
+### Patch Changes
+
+- Updated dependencies [3a4ff3c]
+  - @scalar/api-client@1.2.23
+
+## 1.22.32
+
+### Patch Changes
+
+- Updated dependencies [a13f853]
+  - @scalar/api-client@1.2.22
+
+## 1.22.31
+
+### Patch Changes
+
+- 3748dc5: feat: api client toggle sidebar hotkey
+- Updated dependencies [f871c28]
+- Updated dependencies [3748dc5]
+  - @scalar/api-client@1.2.21
+
+## 1.22.30
+
+### Patch Changes
+
+- 36819a2: chore: lazy load api client
+- Updated dependencies [0640c52]
+- Updated dependencies [6e67167]
+- Updated dependencies [84399ab]
+- Updated dependencies [a80345a]
+  - @scalar/api-client@1.2.20
+  - @scalar/components@0.7.6
+
+## 1.22.29
+
+### Patch Changes
+
+- Updated dependencies [fa2cc5b]
+- Updated dependencies [836869b]
+  - @scalar/api-client@1.2.19
+  - @scalar/components@0.7.5
+
+## 1.22.28
+
+### Patch Changes
+
+- 192f348: feat: ship test button
+
+## 1.22.27
+
+### Patch Changes
+
+- ce44360: fix: support markdown <sup> tag
+- 7622134: fix: uppercase required property
+
+## 1.22.26
+
+### Patch Changes
+
+- 26d9146: feat: improved api client modal
+- Updated dependencies [26d9146]
+- Updated dependencies [670156e]
+  - @scalar/api-client@1.2.18
+  - @scalar/components@0.7.4
+  - @scalar/use-toasts@0.6.6
+
+## 1.22.25
+
+### Patch Changes
+
+- 5b24896: fix: sidebar doesn’t react to changes
+- 64024a5: refactor: use prismjs instead of highlightjs in the markdown component
+- 36e1e66: feat: include spec title in downloaded spec filename
+- 2e7b074: feat: clean up toast styles and colors
+- 298735f: fix: hide default caret on <summary> on Safari
+- Updated dependencies [d649691]
+- Updated dependencies [2e7b074]
+  - @scalar/api-client@1.2.17
+  - @scalar/use-toasts@0.6.5
+
+## 1.22.24
+
+### Patch Changes
+
+- 9ba838b: chore: fetch scalar galaxy example from jsdelivr
+- 45dc04b: fix: can’t release packages
+- Updated dependencies [45dc04b]
+  - @scalar/use-tooltip@0.6.2
+  - @scalar/api-client@1.2.16
+  - @scalar/components@0.7.3
+  - @scalar/use-toasts@0.6.4
+  - @scalar/oas-utils@0.1.10
+  - @scalar/use-modal@0.3.3
+  - @scalar/themes@0.7.9
+
+## 1.22.23
+
+### Patch Changes
+
+- 05e2e27: chore: add provenance statement
+- Updated dependencies [05e2e27]
+  - @scalar/api-client@1.2.15
+  - @scalar/components@0.7.2
+  - @scalar/galaxy@0.1.1
+  - @scalar/oas-utils@0.1.9
+  - @scalar/themes@0.7.8
+  - @scalar/use-modal@0.3.2
+  - @scalar/use-toasts@0.6.3
+  - @scalar/use-tooltip@0.6.1
+
+## 1.22.22
+
+### Patch Changes
+
+- f1bf5bc: fix: sidebar headings don’t reset
+- 085a0c2: fix: mimetypes with charsets and variants are ignored
+- Updated dependencies [085a0c2]
+- Updated dependencies [fa10d45]
+  - @scalar/oas-utils@0.1.8
+  - @scalar/api-client@1.2.14
+  - @scalar/components@0.7.1
+
+## 1.22.21
+
+### Patch Changes
+
+- 07211ad: chore: added new lint rule for type importing for better perf
+- 801ad65: feat: use schema property title if available
+- d4fa19b: feat: allow multiple configs for nuxt
+- b234d1d: feat: added two events to standalone references build with tests
+- Updated dependencies [c68939c]
+- Updated dependencies [07211ad]
+- Updated dependencies [d4fa19b]
+- Updated dependencies [1c18f77]
+- Updated dependencies [830b3c8]
+- Updated dependencies [b234d1d]
+  - @scalar/api-client@1.2.13
+  - @scalar/components@0.7.0
+  - @scalar/oas-utils@0.1.7
+  - @scalar/use-modal@0.3.1
+  - @scalar/themes@0.7.7
+  - @scalar/use-toasts@0.6.2
+
+## 1.22.20
+
+### Patch Changes
+
+- a8c3045: build: re-introduce @scalar/use-toasts package
+- 1324378: feat: show two levels of headings in the sidebar
+- 9201802: chore: update example page title
+- Updated dependencies [c6e4385]
+- Updated dependencies [a8c3045]
+  - @scalar/api-client@1.2.12
+  - @scalar/use-toasts@0.6.1
+
+## 1.22.19
+
+### Patch Changes
+
+- Updated dependencies [2706d57]
+  - @scalar/components@0.6.1
+  - @scalar/api-client@1.2.11
+
+## 1.22.18
+
+### Patch Changes
+
+- 45dccb0: fix: avoid prepending path when running standalone from an html file without a server
+- abff1f4: fix: swagger 2.0 definitions don’t show up in list of models
+
+## 1.22.17
+
+### Patch Changes
+
+- b42479c: fix: unused empty tags break the sidebar
+- 4c38ac1: fix: add label value in changeTheme event
+- Updated dependencies [53ba90d]
+  - @scalar/galaxy@0.1.0
+
+## 1.22.16
+
+### Patch Changes
+
+- 7e1d318: fix: addtional properties duplicate description
+
+## 1.22.15
+
+### Patch Changes
+
+- fc2c90f: feat: cleanup component library icons
+- Updated dependencies [fc2c90f]
+  - @scalar/components@0.6.0
+  - @scalar/api-client@1.2.10
+
+## 1.22.14
+
+### Patch Changes
+
+- b8e3f09: feat: add chevron for markdown summary
+- Updated dependencies [0a77380]
+  - @scalar/themes@0.7.6
+  - @scalar/api-client@1.2.9
+  - @scalar/components@0.5.5
+
+## 1.22.13
+
+### Patch Changes
+
+- c05c90e: feat: add image support to tag, operation and webhook descriptions
+- 2700c5c: feat: separate google fonts from theme, add withDefaultFonts setting
+- Updated dependencies [2700c5c]
+  - @scalar/components@0.5.5
+  - @scalar/themes@0.7.5
+  - @scalar/api-client@1.2.8
+
+## 1.22.12
+
+### Patch Changes
+
+- 55398db: fix: summary markdown, add default browser styling
+- Updated dependencies [79485ff]
+- Updated dependencies [92b5b2a]
+  - @scalar/components@0.5.4
+  - @scalar/api-client@1.2.7
+
+## 1.22.11
+
+### Patch Changes
+
+- b24b455: chore: beautiful license banner in the CDN version
+- 43e1217: feat: new scalar galaxy example specification
+- Updated dependencies [86d1363]
+- Updated dependencies [bc3f3af]
+  - @scalar/themes@0.7.4
+  - @scalar/components@0.5.3
+  - @scalar/api-client@1.2.6
+
+## 1.22.10
+
+### Patch Changes
+
+- Updated dependencies [e8ef57e]
+- Updated dependencies [1353154]
+  - @scalar/components@0.5.2
+  - @scalar/api-client@1.2.5
+
+## 1.22.9
+
+### Patch Changes
+
+- 6f68b40: fix: allow nullable additional properties
+- 4d31b19: refactor: move theme labels to @scalar/themes
+- Updated dependencies [4d31b19]
+  - @scalar/themes@0.7.3
+  - @scalar/api-client@1.2.4
+  - @scalar/components@0.5.1
+
+## 1.22.8
+
+### Patch Changes
+
+- 24662c3: feat: rebuild search modal
+- Updated dependencies [24662c3]
+  - @scalar/components@0.5.1
+  - @scalar/api-client@1.2.3
+
+## 1.22.7
+
+### Patch Changes
+
+- c408cf5: style: getting started integrations + themes
+
+## 1.22.6
+
+### Patch Changes
+
+- cf12a95: fix: sidebar models collapse
+- 7b37c63: fix: start section theme name
+
+## 1.22.5
+
+### Patch Changes
+
+- d03ab0f: feat: add better support for additional properties
+
+## 1.22.4
+
+### Patch Changes
+
+- adc0693: feat: use http as default scheme for Swagger 2.0 specifications
+
+## 1.22.3
+
+### Patch Changes
+
+- Updated dependencies [85a0074]
+  - @scalar/themes@0.7.2
+  - @scalar/api-client@1.2.2
+  - @scalar/components@0.5.0
+
+## 1.22.2
+
+### Patch Changes
+
+- Updated dependencies [d77acdd]
+  - @scalar/api-client@1.2.1
+  - @scalar/themes@0.7.1
+  - @scalar/components@0.5.0
+
+## 1.22.1
+
+### Patch Changes
+
+- 8dc1640: feat: moved toast component to client only
+
+## 1.22.0
+
+### Minor Changes
+
+- 0e64a36: refactor: rename all --theme-_ variables to --scalar-_
+
+### Patch Changes
+
+- 22f2858: chore: ran syncpack to update packages
+- ced76e5: fix: search key modifier incorrect on non macos machines
+- 3afec45: feat: render images in tag descriptions
+- Updated dependencies [22f2858]
+- Updated dependencies [0e64a36]
+  - @scalar/use-tooltip@0.6.0
+  - @scalar/api-client@1.2.0
+  - @scalar/components@0.5.0
+  - @scalar/oas-utils@0.1.6
+  - @scalar/use-modal@0.3.0
+  - @scalar/themes@0.7.0
+
+## 1.21.2
+
+### Patch Changes
+
+- 851017a: fix: give explicit URL to href in search modal
+
+## 1.21.1
+
+### Patch Changes
+
+- b4abb34: fix: object description markdown
+
+## 1.20.32
+
+### Patch Changes
+
+- 51d4997: fix: sidebar heading type remove hover color
+
+## 1.20.31
+
+### Patch Changes
+
+- b903a2f: fix: intersection observer detection
+
+## 1.20.30
+
+### Patch Changes
+
+- deabe4c: feat: made changes to support server side rendering
+- 3ba9774: feat: add path routing option to references
+- a14fc32: fix: hide mobile header when showSidebar: false
+- 3d4d83e: fix: show example picker if the list only has one example
+- Updated dependencies [e6d1b81]
+- Updated dependencies [3ba9774]
+- Updated dependencies [3ba9774]
+  - @scalar/use-modal@0.2.10
+  - @scalar/oas-utils@0.1.5
+  - @scalar/components@0.4.11
+  - @scalar/api-client@1.1.16
+
+## 1.20.29
+
+### Patch Changes
+
+- Updated dependencies [24b3c2a]
+  - @scalar/oas-utils@0.1.4
+  - @scalar/api-client@1.1.15
+
+## 1.20.28
+
+### Patch Changes
+
+- 622f31b: fix: endpoint navigation
+- f2c2ce8: fix: decode uri component when setting hash values from url
+
+## 1.20.27
+
+### Patch Changes
+
+- 605f522: feat: support tags with no operations
+
+## 1.20.26
+
+### Patch Changes
+
+- 050410a: feat: add config to hide download button
+
+## 1.20.25
+
+### Patch Changes
+
+- 1504d3b: feat: add config to hide models
+
 ## 1.20.24
 
 ### Patch Changes

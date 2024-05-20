@@ -6,7 +6,7 @@ function App() {
     <ApiReferenceReact
       configuration={{
         spec: {
-          url: 'https://petstore.swagger.io/v2/swagger.json',
+          url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.yaml',
         },
       }}
     />

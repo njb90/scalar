@@ -3,7 +3,7 @@
 [![Version](https://img.shields.io/npm/v/%40scalar/express-api-reference)](https://www.npmjs.com/package/@scalar/express-api-reference)
 [![Downloads](https://img.shields.io/npm/dm/%40scalar/express-api-reference)](https://www.npmjs.com/package/@scalar/express-api-reference)
 [![License](https://img.shields.io/npm/l/%40scalar%2Fexpress-api-reference)](https://www.npmjs.com/package/@scalar/express-api-reference)
-[![Discord](https://img.shields.io/discord/1135330207960678410?style=flat&color=5865F2)](https://discord.gg/8HeZcRGPFS)
+[![Discord](https://img.shields.io/discord/1135330207960678410?style=flat&color=5865F2)](https://discord.gg/scalar)
 
 This middleware provides an easy way to render a beautiful API reference based on an OpenAPI/Swagger file with Express.
 
@@ -44,7 +44,7 @@ app.use(
   '/reference',
   apiReference({
     spec: {
-      url: '/swagger.json',
+      url: '/openapi.json',
     },
   }),
 )
@@ -75,7 +75,7 @@ app.use(
 You can use a custom CDN ，default is `https://cdn.jsdelivr.net/npm/@scalar/api-reference`.
 
 ```ts
-import { apiReference } from '@scalar/nestjs-api-reference'
+import { apiReference } from '@scalar/express-api-reference'
 
 app.use(
   '/reference',

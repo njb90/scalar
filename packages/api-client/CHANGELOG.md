@@ -1,5 +1,266 @@
 # @scalar/api-client
 
+## 1.2.26
+
+### Patch Changes
+
+- Updated dependencies [e3a72bb]
+  - @scalar/components@0.7.9
+
+## 1.2.25
+
+### Patch Changes
+
+- 79e3caa: chore: replace petstore example with galaxy example
+- e022ee6: fix: color single security scheme
+- Updated dependencies [79e3caa]
+  - @scalar/components@0.7.8
+
+## 1.2.24
+
+### Patch Changes
+
+- 624604e: chore: move http status codes to oas-utils
+- Updated dependencies [624604e]
+- Updated dependencies [624604e]
+  - @scalar/oas-utils@0.1.11
+  - @scalar/components@0.7.7
+
+## 1.2.23
+
+### Patch Changes
+
+- 3a4ff3c: fix: required api client bg
+
+## 1.2.22
+
+### Patch Changes
+
+- a13f853: feat: update api client ui
+- Updated dependencies [a13f853]
+  - @scalar/use-codemirror@0.10.4
+
+## 1.2.21
+
+### Patch Changes
+
+- f871c28: fix: api client address bar url
+- 3748dc5: feat: api client toggle sidebar hotkey
+
+## 1.2.20
+
+### Patch Changes
+
+- 0640c52: feat: api client address bar style update
+- 84399ab: feat: add api client response empty state
+- a80345a: fix: vertical alignment of client response empty state
+- Updated dependencies [6e67167]
+  - @scalar/components@0.7.6
+
+## 1.2.19
+
+### Patch Changes
+
+- fa2cc5b: fix: history toggle location
+- Updated dependencies [836869b]
+  - @scalar/components@0.7.5
+
+## 1.2.18
+
+### Patch Changes
+
+- 26d9146: feat: improved api client modal
+- Updated dependencies [26d9146]
+  - @scalar/components@0.7.4
+
+## 1.2.17
+
+### Patch Changes
+
+- d649691: fix: request body display
+
+## 1.2.16
+
+### Patch Changes
+
+- 45dc04b: fix: can’t release packages
+- Updated dependencies [45dc04b]
+  - @scalar/use-codemirror@0.10.3
+  - @scalar/use-tooltip@0.6.2
+  - @scalar/components@0.7.3
+  - @scalar/oas-utils@0.1.10
+  - @scalar/use-modal@0.3.3
+  - @scalar/themes@0.7.9
+
+## 1.2.15
+
+### Patch Changes
+
+- 05e2e27: chore: add provenance statement
+- Updated dependencies [05e2e27]
+  - @scalar/components@0.7.2
+  - @scalar/oas-utils@0.1.9
+  - @scalar/themes@0.7.8
+  - @scalar/use-codemirror@0.10.2
+  - @scalar/use-modal@0.3.2
+  - @scalar/use-tooltip@0.6.1
+
+## 1.2.14
+
+### Patch Changes
+
+- Updated dependencies [085a0c2]
+- Updated dependencies [fa10d45]
+  - @scalar/oas-utils@0.1.8
+  - @scalar/components@0.7.1
+
+## 1.2.13
+
+### Patch Changes
+
+- c68939c: feat: allow toggling of password fields
+- 07211ad: chore: added new lint rule for type importing for better perf
+- Updated dependencies [c68939c]
+- Updated dependencies [07211ad]
+- Updated dependencies [d4fa19b]
+- Updated dependencies [1c18f77]
+- Updated dependencies [830b3c8]
+  - @scalar/components@0.7.0
+  - @scalar/oas-utils@0.1.7
+  - @scalar/use-modal@0.3.1
+  - @scalar/themes@0.7.7
+
+## 1.2.12
+
+### Patch Changes
+
+- c6e4385: fix: passing a prefilled token as null throws an exception
+
+## 1.2.11
+
+### Patch Changes
+
+- Updated dependencies [2706d57]
+  - @scalar/components@0.6.1
+
+## 1.2.10
+
+### Patch Changes
+
+- Updated dependencies [fc2c90f]
+  - @scalar/components@0.6.0
+
+## 1.2.9
+
+### Patch Changes
+
+- Updated dependencies [0a77380]
+  - @scalar/themes@0.7.6
+  - @scalar/components@0.5.5
+
+## 1.2.8
+
+### Patch Changes
+
+- Updated dependencies [2700c5c]
+  - @scalar/components@0.5.5
+  - @scalar/themes@0.7.5
+
+## 1.2.7
+
+### Patch Changes
+
+- Updated dependencies [79485ff]
+- Updated dependencies [92b5b2a]
+  - @scalar/components@0.5.4
+
+## 1.2.6
+
+### Patch Changes
+
+- Updated dependencies [86d1363]
+- Updated dependencies [bc3f3af]
+  - @scalar/themes@0.7.4
+  - @scalar/components@0.5.3
+
+## 1.2.5
+
+### Patch Changes
+
+- Updated dependencies [e8ef57e]
+- Updated dependencies [1353154]
+  - @scalar/components@0.5.2
+
+## 1.2.4
+
+### Patch Changes
+
+- Updated dependencies [4d31b19]
+  - @scalar/themes@0.7.3
+  - @scalar/components@0.5.1
+
+## 1.2.3
+
+### Patch Changes
+
+- Updated dependencies [96ded16]
+- Updated dependencies [24662c3]
+  - @scalar/use-codemirror@0.10.1
+  - @scalar/components@0.5.1
+
+## 1.2.2
+
+### Patch Changes
+
+- Updated dependencies [85a0074]
+  - @scalar/themes@0.7.2
+  - @scalar/components@0.5.0
+
+## 1.2.1
+
+### Patch Changes
+
+- d77acdd: fix: missing css font
+- Updated dependencies [d77acdd]
+  - @scalar/themes@0.7.1
+  - @scalar/components@0.5.0
+
+## 1.2.0
+
+### Minor Changes
+
+- 0e64a36: refactor: rename all --theme-_ variables to --scalar-_
+
+### Patch Changes
+
+- 22f2858: chore: ran syncpack to update packages
+- Updated dependencies [22f2858]
+- Updated dependencies [0e64a36]
+  - @scalar/use-codemirror@0.10.0
+  - @scalar/use-tooltip@0.6.0
+  - @scalar/components@0.5.0
+  - @scalar/oas-utils@0.1.6
+  - @scalar/use-modal@0.3.0
+  - @scalar/themes@0.7.0
+
+## 1.1.16
+
+### Patch Changes
+
+- Updated dependencies [e6d1b81]
+- Updated dependencies [3ba9774]
+- Updated dependencies [3ba9774]
+  - @scalar/use-modal@0.2.10
+  - @scalar/oas-utils@0.1.5
+  - @scalar/components@0.4.11
+
+## 1.1.15
+
+### Patch Changes
+
+- Updated dependencies [24b3c2a]
+  - @scalar/oas-utils@0.1.4
+
 ## 1.1.14
 
 ### Patch Changes

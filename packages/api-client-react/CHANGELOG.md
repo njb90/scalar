@@ -1,5 +1,207 @@
 # @scalar/api-client-react
 
+## 0.3.26
+
+### Patch Changes
+
+- @scalar/api-client@1.2.26
+
+## 0.3.25
+
+### Patch Changes
+
+- Updated dependencies [79e3caa]
+- Updated dependencies [e022ee6]
+  - @scalar/api-client@1.2.25
+
+## 0.3.24
+
+### Patch Changes
+
+- Updated dependencies [624604e]
+  - @scalar/api-client@1.2.24
+
+## 0.3.23
+
+### Patch Changes
+
+- Updated dependencies [3a4ff3c]
+  - @scalar/api-client@1.2.23
+
+## 0.3.22
+
+### Patch Changes
+
+- Updated dependencies [a13f853]
+  - @scalar/api-client@1.2.22
+
+## 0.3.21
+
+### Patch Changes
+
+- Updated dependencies [f871c28]
+- Updated dependencies [3748dc5]
+  - @scalar/api-client@1.2.21
+
+## 0.3.20
+
+### Patch Changes
+
+- Updated dependencies [0640c52]
+- Updated dependencies [84399ab]
+- Updated dependencies [a80345a]
+  - @scalar/api-client@1.2.20
+
+## 0.3.19
+
+### Patch Changes
+
+- Updated dependencies [fa2cc5b]
+  - @scalar/api-client@1.2.19
+
+## 0.3.18
+
+### Patch Changes
+
+- Updated dependencies [26d9146]
+  - @scalar/api-client@1.2.18
+
+## 0.3.17
+
+### Patch Changes
+
+- Updated dependencies [d649691]
+  - @scalar/api-client@1.2.17
+
+## 0.3.16
+
+### Patch Changes
+
+- 45dc04b: fix: can’t release packages
+- Updated dependencies [45dc04b]
+  - @scalar/api-client@1.2.16
+
+## 0.3.15
+
+### Patch Changes
+
+- 05e2e27: chore: add provenance statement
+- Updated dependencies [05e2e27]
+  - @scalar/api-client@1.2.15
+
+## 0.3.14
+
+### Patch Changes
+
+- @scalar/api-client@1.2.14
+
+## 0.3.13
+
+### Patch Changes
+
+- Updated dependencies [c68939c]
+- Updated dependencies [07211ad]
+  - @scalar/api-client@1.2.13
+
+## 0.3.12
+
+### Patch Changes
+
+- Updated dependencies [c6e4385]
+  - @scalar/api-client@1.2.12
+
+## 0.3.11
+
+### Patch Changes
+
+- @scalar/api-client@1.2.11
+
+## 0.3.10
+
+### Patch Changes
+
+- @scalar/api-client@1.2.10
+
+## 0.3.9
+
+### Patch Changes
+
+- @scalar/api-client@1.2.9
+
+## 0.3.8
+
+### Patch Changes
+
+- @scalar/api-client@1.2.8
+
+## 0.3.7
+
+### Patch Changes
+
+- @scalar/api-client@1.2.7
+
+## 0.3.6
+
+### Patch Changes
+
+- @scalar/api-client@1.2.6
+
+## 0.3.5
+
+### Patch Changes
+
+- @scalar/api-client@1.2.5
+
+## 0.3.4
+
+### Patch Changes
+
+- @scalar/api-client@1.2.4
+
+## 0.3.3
+
+### Patch Changes
+
+- @scalar/api-client@1.2.3
+
+## 0.3.2
+
+### Patch Changes
+
+- @scalar/api-client@1.2.2
+
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [d77acdd]
+  - @scalar/api-client@1.2.1
+
+## 0.3.0
+
+### Minor Changes
+
+- 0e64a36: refactor: rename all --theme-_ variables to --scalar-_
+
+### Patch Changes
+
+- 22f2858: chore: ran syncpack to update packages
+- Updated dependencies [22f2858]
+- Updated dependencies [0e64a36]
+  - @scalar/api-client@1.2.0
+
+## 0.2.22
+
+### Patch Changes
+
+- @scalar/api-client@1.1.16
+
+## 0.2.21
+
+### Patch Changes
+
+- @scalar/api-client@1.1.15
+
 ## 0.2.20
 
 ### Patch Changes

@@ -7,13 +7,24 @@ import {
 } from '@scalar/api-client'
 import { ScalarCodeBlock, ScalarIcon } from '@scalar/components'
 import {
+  type ExampleRequestSSRKey,
+  type SSRState,
   type TransformedOperation,
+  createHash,
   getHarRequest,
   getRequestFromOperation,
+  ssrState,
 } from '@scalar/oas-utils'
 import { snippetz } from '@scalar/snippetz'
 import { HTTPSnippet } from 'httpsnippet-lite'
-import { computed, inject, onServerPrefetch, ref, watch } from 'vue'
+import {
+  computed,
+  inject,
+  onServerPrefetch,
+  ref,
+  useSSRContext,
+  watch,
+} from 'vue'
 
 import {
   GLOBAL_SECURITY_SYMBOL,
@@ -31,8 +42,15 @@ const props = defineProps<{
   operation: TransformedOperation
 }>()
 
-const CodeMirrorValue = ref<string>('')
+const ssrHash = createHash(
+  props.operation.path + props.operation.httpVerb + props.operation.operationId,
+)
+const ssrStateKey =
+  `components-Content-Operation-Example-Request${ssrHash}` satisfies ExampleRequestSSRKey
+
+const generatedCode = ref<string>(ssrState[ssrStateKey] ?? '')
 const selectedExampleKey = ref<string>()
+
 const { copyToClipboard } = useClipboard()
 const { httpClient, setHttpClient, httpTargetTitle, httpClientTitle } =
   useHttpClientStore()
@@ -58,7 +76,7 @@ const generateSnippet = async (): Promise<string> => {
   // Generate a request object
   const request = getHarRequest(
     {
-      url: getUrlFromServerState(serverState) ?? window.location.origin,
+      url: getUrlFromServerState(serverState),
     },
     getRequestFromOperation(
       props.operation,
@@ -117,7 +135,7 @@ watch(
     () => selectedExampleKey,
   ],
   async () => {
-    CodeMirrorValue.value = await generateSnippet()
+    generatedCode.value = await generateSnippet()
   },
   {
     deep: true,
@@ -125,7 +143,11 @@ watch(
   },
 )
 
-onServerPrefetch(async () => await sleep(1))
+onServerPrefetch(async () => {
+  const ctx = useSSRContext<SSRState>()
+  await sleep(1)
+  ctx!.payload.data[ssrStateKey] = generatedCode.value
+})
 
 computed(() => {
   return getApiClientRequest({
@@ -175,7 +197,7 @@ computed(() => {
         <button
           class="copy-button"
           type="button"
-          @click="copyToClipboard(CodeMirrorValue)">
+          @click="copyToClipboard(generatedCode)">
           <ScalarIcon
             icon="Clipboard"
             width="10px" />
@@ -189,7 +211,7 @@ computed(() => {
       <!-- Multiple examples -->
       <div class="code-snippet">
         <ScalarCodeBlock
-          :content="CodeMirrorValue"
+          :content="generatedCode"
           :hideCredentials="
             getSecretCredentialsFromAuthentication(authenticationState)
           "
@@ -227,14 +249,13 @@ computed(() => {
   text-transform: initial;
 }
 .request-method {
-  font-family: var(--theme-font-code, var(--default-theme-font-code));
+  font-family: var(--scalar-font-code);
   text-transform: uppercase;
 }
 .request-client-picker {
   padding-left: 12px;
   padding-right: 9px;
-  border-right: 1px solid
-    var(--theme-border-color, var(--default-theme-border-color));
+  border-right: 1px solid var(--scalar-border-color);
 }
 
 .copy-button {
@@ -244,7 +265,7 @@ computed(() => {
   background: transparent;
   display: flex;
   cursor: pointer;
-  color: var(--theme-color-3, var(--default-theme-color-3));
+  color: var(--scalar-color-3);
   margin-left: 6px;
   margin-right: 10.5px;
   border: none;
@@ -258,12 +279,12 @@ computed(() => {
 .copy-button:after {
   content: '.';
   color: transparent;
-  font-size: var(--theme-mini, var(--default-theme-mini));
+  font-size: var(--scalar-mini);
   line-height: 1.35;
   width: 0px;
 }
 .copy-button:hover {
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  color: var(--scalar-color-1);
 }
 
 .copy-button svg {

@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { ScalarButton } from '@scalar/components'
-import { type ThemeId } from '@scalar/themes'
-
-import petstore from '../specs/petstorev3.json?raw'
+import { type ThemeId, themeLabels } from '@scalar/themes'
 
 defineProps<{
   theme: ThemeId
 }>()
-
 const emits = defineEmits<{
-  (e: 'changeTheme', value: ThemeId): void
+  (e: 'changeTheme', { id, label }: { id: ThemeId; label: string }): void
   (e: 'loadSwaggerFile'): void
   (e: 'linkSwaggerFile'): void
   (e: 'updateContent', value: string): void
@@ -28,8 +25,12 @@ const themeIds: ThemeId[] = [
   'deepSpace',
 ]
 
-function handleEmitPetstore() {
-  emits('updateContent', petstore)
+async function fetchExampleSpecification() {
+  const response = await fetch(
+    'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.yaml',
+  )
+
+  emits('updateContent', await response.text())
 }
 </script>
 <template>
@@ -56,8 +57,8 @@ function handleEmitPetstore() {
       <div class="start-cta">
         <ScalarButton
           fullWidth
-          @click="handleEmitPetstore">
-          Test Petstore
+          @click="fetchExampleSpecification">
+          Show Example
         </ScalarButton>
         <ScalarButton
           fullWidth
@@ -68,7 +69,7 @@ function handleEmitPetstore() {
       </div>
     </div>
     <div class="start-row">
-      <div class="start-section">
+      <div class="start-section start-section-integrations">
         <div class="start-h2">INTEGRATIONS</div>
         <a
           class="start-item"
@@ -178,8 +179,10 @@ function handleEmitPetstore() {
           :key="themeId"
           class="start-item"
           :class="{ 'start-item-active': themeId === theme }"
-          @click="$emit('changeTheme', themeId)">
-          {{ themeId.toLocaleLowerCase() }}
+          @click="
+            $emit('changeTheme', { id: themeId, label: themeLabels[themeId] })
+          ">
+          {{ themeLabels[themeId] }}
         </div>
       </div>
     </div>
@@ -225,38 +228,38 @@ function handleEmitPetstore() {
   padding-top: 24px;
 }
 .start-h1 {
-  font-size: var(--theme-heading-2, var(--default-theme-heading-2));
+  font-size: var(--scalar-heading-2);
   margin-top: 0;
   line-height: 1.45;
   margin-bottom: 0;
-  font-weight: var(--theme-bold, var(--default-theme-bold));
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  font-weight: var(--scalar-bold);
+  color: var(--scalar-color-1);
   width: 100%;
   position: relative;
 }
 .start-h3 {
-  font-size: var(--theme-paragraph, var(--default-theme-paragraph));
+  font-size: var(--scalar-paragraph);
   margin-top: 0;
   margin-bottom: 6px;
   display: block;
   line-height: 1.45;
-  font-weight: var(--theme-bold, var(--default-theme-bold));
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  font-weight: var(--scalar-bold);
+  color: var(--scalar-color-1);
   width: 100%;
 }
 .start-h1:not(:first-of-type) {
   margin-top: 24px;
 }
 .start-p {
-  font-size: var(--theme-paragraph, var(--default-theme-paragraph));
-  color: var(--theme-color-2, var(--default-theme-color-2));
+  font-size: var(--scalar-paragraph);
+  color: var(--scalar-color-2);
   line-height: 1.5;
   width: 100%;
   margin-top: 12px;
 }
 .start-ul {
   margin-top: 12px;
-  font-size: var(--theme-paragraph, var(--default-theme-paragraph));
+  font-size: var(--scalar-paragraph);
   line-height: 1.5;
   padding-left: 0;
   list-style: initial;
@@ -269,7 +272,7 @@ function handleEmitPetstore() {
   padding: 0;
   list-style: none;
   width: calc(50% - 24px);
-  color: var(--theme-color-2, var(--default-theme-color-2));
+  color: var(--scalar-color-2);
 }
 .start-ul li:first-of-type {
   margin-top: 0;
@@ -277,51 +280,54 @@ function handleEmitPetstore() {
 .start-section {
   width: 100%;
   margin-bottom: 12px;
-  border-radius: var(--theme-radius-lg, var(--default-theme-radius-lg));
-  border: 1px solid var(--theme-border-color, var(--default-theme-border-color));
   display: flex;
   flex-flow: wrap;
-  background: var(--theme-background-2, var(--default-theme-background-2));
 }
 .start-section:last-of-type {
   margin-bottom: 48px;
 }
 .start-h2 {
+  background: var(--scalar-background-2);
+  border-top-left-radius: var(--scalar-radius-lg);
+  border-top-right-radius: var(--scalar-radius-lg);
+  border: 1px solid var(--scalar-border-color);
+  color: var(--scalar-color-3);
+  font-size: var(--scalar-mini);
+  font-weight: var(--scalar-semibold);
   padding: 9px;
-  color: var(--theme-color-3, var(--default-theme-color-3));
-  font-size: var(--theme-mini, var(--default-theme-mini));
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
   width: 100%;
-  border-bottom: 1px solid
-    var(--theme-border-color, var(--default-theme-border-color));
 }
 .start-item {
-  padding: 9px;
-  display: flex;
   align-items: center;
-  user-select: none;
+  background: var(--scalar-background-2);
+  border-right: 1px solid var(--scalar-border-color);
+  border-bottom: 1px solid var(--scalar-border-color);
+  color: var(--scalar-color-1);
   cursor: pointer;
-  color: var(--theme-color-1, var(--default-theme-color-1));
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
-  font-size: var(--theme-mini, var(--default-theme-mini));
+  display: flex;
   flex: 1;
+  font-size: var(--scalar-mini);
+  font-weight: var(--scalar-semibold);
+  padding: 9px;
   text-transform: capitalize;
+  user-select: none;
+}
+.start-section-integrations .start-item:first-of-type {
+  border-bottom-left-radius: var(--scalar-radius-lg);
+  border-left: 1px solid var(--scalar-border-color);
+}
+.start-section-integrations .start-item:last-of-type {
+  border-bottom-right-radius: var(--scalar-radius-lg);
 }
 .start-section-colors .start-item {
   min-width: 33.33%;
 }
-.start-item:not(:last-of-type) {
-  border-right: 1px solid
-    var(--theme-border-color, var(--default-theme-border-color));
+.start-section-colors .start-item:nth-child(3n + 2) {
+  border-left: 1px solid var(--scalar-border-color);
 }
-.start-section-colors .start-item:not(:last-of-type) {
-  border-right: none;
-}
-.start-section-colors .start-item:not(:nth-of-type(3n)) {
-  border-right: 1px solid var(--default-theme-border-color);
-}
-.start-section-colors .start-item:nth-of-type(n + 4) {
-  border-top: 1px solid var(--default-theme-border-color);
+.start-section-colors .start-item:last-of-type,
+.start-section-colors .start-item-active:last-of-type::before {
+  border-radius: 0 0 var(--scalar-radius-lg) var(--scalar-radius-lg);
 }
 .start-item:empty {
   pointer-events: none;
@@ -332,13 +338,19 @@ function handleEmitPetstore() {
   margin-right: 6px;
 }
 .start-item:hover {
-  background: var(--theme-background-2, var(--default-theme-background-2));
+  background: var(--scalar-background-3);
 }
 .start-item-active {
-  box-shadow: 0 0 0 1px var(--theme-color-1, var(--default-theme-color-1));
   z-index: 10;
   position: relative;
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  color: var(--scalar-color-1);
+}
+.start-item-active::before {
+  border: 1px solid var(--scalar-color-1);
+  content: '';
+  inset: -1px -1px -1px -1px;
+  pointer-events: none;
+  position: absolute;
 }
 .start-section-color .start-item {
   text-transform: capitalize;
@@ -350,26 +362,20 @@ function handleEmitPetstore() {
   margin-top: 24px;
   margin-bottom: 0;
 }
-.start-section:nth-of-type(2) {
-  border-left: 1px solid
-    var(--theme-border-color, var(--default-theme-border-color));
-  border-right: 1px solid
-    var(--theme-border-color, var(--default-theme-border-color));
-}
 .start-row {
   width: 100%;
   margin-top: 12px;
   overflow: hidden;
 }
 .start-hero-copy {
-  background: var(--theme-background-2, var(--default-theme-background-2));
+  background: var(--scalar-background-2);
   padding: 12px;
-  border-radius: var(--theme-radius-lg, var(--default-theme-radius-lg));
+  border-radius: var(--scalar-radius-lg);
 }
 .start-p-small {
-  font-weight: var(--theme-semibold, var(--default-theme-semibold));
-  font-size: var(--theme-mini, var(--default-theme-mini));
-  color: var(--theme-color-2, var(--default-theme-color-2));
+  font-weight: var(--scalar-semibold);
+  font-size: var(--scalar-mini);
+  color: var(--scalar-color-2);
   margin-bottom: 12px;
   line-height: 1.4;
 }
@@ -387,12 +393,12 @@ function handleEmitPetstore() {
   text-align: center;
 }
 .start-logo {
-  color: var(--theme-color-1, var(--default-theme-color-1));
+  color: var(--scalar-color-1);
   margin-bottom: 24px;
   width: 72px;
   aspect-ratio: 1;
   position: relative;
-  box-shadow: var(--theme-shadow-2, var(--default-theme-shadow-2));
+  box-shadow: var(--scalar-shadow-2);
   border-radius: 50%;
 }
 .start-logo:before {
@@ -406,23 +412,19 @@ function handleEmitPetstore() {
   border-radius: 50%;
   background-size: 24px 24px;
   box-shadow:
-    inset 0 0 50px var(--theme-background-1, var(--default-theme-background-1)),
-    inset 0 0 50px var(--theme-background-1, var(--default-theme-background-1));
+    inset 0 0 50px var(--scalar-background-1),
+    inset 0 0 50px var(--scalar-background-1);
   background-image: linear-gradient(
       to right,
-      var(--theme-border-color, var(--default-theme-border-color)) 1px,
+      var(--scalar-border-color) 1px,
       transparent 1px
     ),
-    linear-gradient(
-      to bottom,
-      var(--theme-border-color, var(--default-theme-border-color)) 1px,
-      transparent 1px
-    );
+    linear-gradient(to bottom, var(--scalar-border-color) 1px, transparent 1px);
 }
 .start-logo svg {
   width: 100%;
   height: auto;
-  background: var(--theme-background-1, var(--default-theme-background-1));
+  background: var(--scalar-background-1);
   padding: 3px;
   border-radius: 50%;
   position: relative;
@@ -433,8 +435,7 @@ function handleEmitPetstore() {
     width: 100%;
     border-radius: 0;
     border-right: none;
-    border-top: 1px solid
-      var(--theme-border-color, var(--default-theme-border-color));
+    border-top: 1px solid var(--scalar-border-color);
   }
   .start-item:empty {
     display: none;

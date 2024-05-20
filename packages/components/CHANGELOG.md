@@ -1,5 +1,145 @@
 # @scalar/components
 
+## 0.7.9
+
+### Patch Changes
+
+- e3a72bb: style: updated icon button size
+
+## 0.7.8
+
+### Patch Changes
+
+- 79e3caa: chore: replace petstore example with galaxy example
+
+## 0.7.7
+
+### Patch Changes
+
+- 624604e: style: adjust some icon sizes and allow overwriting classes
+- Updated dependencies [624604e]
+  - @scalar/oas-utils@0.1.11
+
+## 0.7.6
+
+### Patch Changes
+
+- 6e67167: feat: added more icons to components package
+
+## 0.7.5
+
+### Patch Changes
+
+- 836869b: feat: add icons from Scalar Docs
+
+## 0.7.4
+
+### Patch Changes
+
+- 26d9146: feat: improved api client modal
+
+## 0.7.3
+
+### Patch Changes
+
+- 45dc04b: fix: can’t release packages
+- Updated dependencies [45dc04b]
+  - @scalar/oas-utils@0.1.10
+
+## 0.7.2
+
+### Patch Changes
+
+- 05e2e27: chore: add provenance statement
+- Updated dependencies [05e2e27]
+  - @scalar/oas-utils@0.1.9
+
+## 0.7.1
+
+### Patch Changes
+
+- Updated dependencies [085a0c2]
+- Updated dependencies [fa10d45]
+  - @scalar/oas-utils@0.1.8
+
+## 0.7.0
+
+### Minor Changes
+
+- 1c18f77: feat: add scalar popover
+
+### Patch Changes
+
+- c68939c: feat: allow toggling of password fields
+- 07211ad: chore: added new lint rule for type importing for better perf
+- 830b3c8: fix: remove ts extension from tailwind export
+- Updated dependencies [07211ad]
+  - @scalar/oas-utils@0.1.7
+
+## 0.6.1
+
+### Patch Changes
+
+- 2706d57: chore: update tailwind export to include commonjs
+
+## 0.6.0
+
+### Minor Changes
+
+- fc2c90f: feat: cleanup component library icons
+
+## 0.5.5
+
+### Patch Changes
+
+- 2700c5c: feat: separate google fonts from theme, add withDefaultFonts setting
+
+## 0.5.4
+
+### Patch Changes
+
+- 79485ff: fix: scalar package icon types
+- 92b5b2a: fix: truncate search results properly
+
+## 0.5.3
+
+### Patch Changes
+
+- bc3f3af: build: add icons to scalar components package
+
+## 0.5.2
+
+### Patch Changes
+
+- e8ef57e: chore: export tailwind config as ts
+- 1353154: fix: circular references in code blocks throw errors
+
+## 0.5.1
+
+### Patch Changes
+
+- 24662c3: feat: rebuild search modal
+
+## 0.5.0
+
+### Minor Changes
+
+- 0e64a36: refactor: rename all --theme-_ variables to --scalar-_
+
+### Patch Changes
+
+- 22f2858: chore: ran syncpack to update packages
+- Updated dependencies [22f2858]
+  - @scalar/oas-utils@0.1.6
+
+## 0.4.11
+
+### Patch Changes
+
+- 3ba9774: feat: add better SSR support to ScalarCodeBlock
+- Updated dependencies [3ba9774]
+  - @scalar/oas-utils@0.1.5
+
 ## 0.4.10
 
 ### Patch Changes
