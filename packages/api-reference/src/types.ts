@@ -57,7 +57,12 @@ export type ReferenceConfiguration = {
   hideDownloadButton?: boolean
   /** Whether dark mode is on or off initially (light mode) */
   darkMode?: boolean
-  /** Key used with CTRL/CMD to open the search modal (defaults to 'k' e.g. CMD+k) */
+  /** Whether to show the client libraries box */
+  clientLibraries?: boolean
+  /** Key used with CTRL/CMD to open the search modal (defaults to 'k' e.g. CMD+k)
+   *
+   * @default true
+   */
   searchHotKey?:
     | 'a'
     | 'b'
