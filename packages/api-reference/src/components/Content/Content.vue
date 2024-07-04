@@ -17,6 +17,8 @@ import { Webhooks } from './Webhooks'
 const props = defineProps<{
   parsedSpec: Spec
   layout?: 'default' | 'accordion'
+  baseServerURL?: string
+  clientLibraries?: boolean
 }>()
 
 const { getOperationId, getTagId } = useNavState()
@@ -93,7 +95,7 @@ const isLazy =
           class="introduction-cards"
           :class="{ 'introduction-cards-row': layout === 'accordion' }">
           <BaseUrl :value="localServers" />
-          <ClientLibraries />
+          <ClientLibraries v-if="props.clientLibraries !== false" />
           <Authentication :parsedSpec="parsedSpec" />
         </div>
       </template>
