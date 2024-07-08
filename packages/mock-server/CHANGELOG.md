@@ -1,5 +1,158 @@
 # @scalar/mock-server
 
+## 0.2.10
+
+### Patch Changes
+
+- Updated dependencies [d58841b]
+  - @scalar/oas-utils@0.2.10
+
+## 0.2.9
+
+### Patch Changes
+
+- Updated dependencies [d6a2a4d]
+- Updated dependencies [632d6f7]
+  - @scalar/oas-utils@0.2.9
+
+## 0.2.8
+
+### Patch Changes
+
+- Updated dependencies [a01df62]
+  - @scalar/oas-utils@0.2.8
+
+## 0.2.7
+
+### Patch Changes
+
+- Updated dependencies [7f4d22e]
+  - @scalar/oas-utils@0.2.7
+
+## 0.2.6
+
+### Patch Changes
+
+- Updated dependencies [cefe804]
+- Updated dependencies [fec6f8e]
+- Updated dependencies [d0aec62]
+  - @scalar/oas-utils@0.2.6
+
+## 0.2.5
+
+### Patch Changes
+
+- 94e68ab: chore: upgrade typescript to 5.5
+- Updated dependencies [a298195]
+- Updated dependencies [326bd3d]
+- Updated dependencies [94e68ab]
+  - @scalar/oas-utils@0.2.5
+
+## 0.2.4
+
+### Patch Changes
+
+- Updated dependencies [c20c7d0]
+  - @scalar/oas-utils@0.2.4
+
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [362d47a]
+  - @scalar/oas-utils@0.2.3
+
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [a2cb3c3]
+  - @scalar/oas-utils@0.2.2
+
+## 0.2.1
+
+### Patch Changes
+
+- e0fc110: chore: patch bump all package
+- f0acc89: chore: upgrade to new @scalar/openapi-parser version
+- Updated dependencies [e0fc110]
+- Updated dependencies [f0acc89]
+  - @scalar/oas-utils@0.2.1
+
+## 0.2.0
+
+### Minor Changes
+
+- 7f8ef74: chore: remove aliasing
+
+### Patch Changes
+
+- b38c7ed: Update build configs to a standardized format
+- 6fbb57e: feat: release all the packages
+- Updated dependencies [7f8ef74]
+- Updated dependencies [96347a1]
+- Updated dependencies [8494349]
+- Updated dependencies [6fbb57e]
+  - @scalar/oas-utils@0.2.0
+
+## 0.1.72
+
+### Patch Changes
+
+- Updated dependencies [c951512]
+  - @scalar/oas-utils@0.1.17
+
+## 0.1.71
+
+### Patch Changes
+
+- Updated dependencies [cc5402c]
+  - @scalar/oas-utils@0.1.16
+
+## 0.1.70
+
+### Patch Changes
+
+- 32b08ad: feat: http basic auth middleware
+
+## 0.1.69
+
+### Patch Changes
+
+- Updated dependencies [f472998]
+  - @scalar/oas-utils@0.1.15
+
+## 0.1.68
+
+### Patch Changes
+
+- Updated dependencies [7205137]
+- Updated dependencies [d369ac4]
+  - @scalar/oas-utils@0.1.14
+
+## 0.1.67
+
+### Patch Changes
+
+- Updated dependencies [5aa656f]
+  - @scalar/oas-utils@0.1.13
+
+## 0.1.66
+
+### Patch Changes
+
+- 165b901: feat: dynamic values for generated examples
+- Updated dependencies [61b8ddc]
+- Updated dependencies [165b901]
+  - @scalar/oas-utils@0.1.12
+
+## 0.1.65
+
+### Patch Changes
+
+- 742ef52: feat: add wildcard CORS headers
+- 46a3a94: feat: return responses other than 200
+
 ## 0.1.64
 
 ### Patch Changes

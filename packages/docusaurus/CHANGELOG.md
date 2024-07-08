@@ -1,5 +1,375 @@
 # @scalar/docusaurus
 
+## 0.4.31
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.29
+
+## 0.4.30
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.28
+
+## 0.4.29
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.27
+
+## 0.4.28
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.26
+
+## 0.4.27
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.25
+
+## 0.4.26
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.24
+
+## 0.4.25
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.23
+
+## 0.4.24
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.22
+
+## 0.4.23
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.21
+
+## 0.4.22
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.20
+
+## 0.4.21
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.19
+
+## 0.4.20
+
+### Patch Changes
+
+- 94e68ab: chore: upgrade typescript to 5.5
+- Updated dependencies [94e68ab]
+  - @scalar/api-reference-react@0.3.18
+
+## 0.4.19
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.17
+
+## 0.4.18
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.16
+
+## 0.4.17
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.15
+
+## 0.4.16
+
+### Patch Changes
+
+- 5812c2f: feat: allow custom headers
+- b11d4a9: feat: add support for relative URLs
+  - @scalar/api-reference-react@0.3.14
+
+## 0.4.15
+
+### Patch Changes
+
+- 40d7c3d: fix: remove layers in docusaurus and fix precedence issue
+  - @scalar/api-reference-react@0.3.13
+
+## 0.4.14
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.12
+
+## 0.4.13
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.11
+
+## 0.4.12
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.10
+
+## 0.4.11
+
+### Patch Changes
+
+- b351b08: fix: dont parse json from fetch just as text
+- a7ab350: fix: remove use effect from docusaurus
+
+## 0.4.10
+
+### Patch Changes
+
+- 738975e: fix: support commonjs docusaurus builds
+
+## 0.4.9
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.9
+
+## 0.4.8
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.8
+
+## 0.4.7
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.7
+
+## 0.4.6
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.6
+
+## 0.4.5
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.5
+
+## 0.4.4
+
+### Patch Changes
+
+- a2cb3c3: Migrate away from unintended peer dependencies
+- Updated dependencies [a2cb3c3]
+  - @scalar/api-reference-react@0.3.4
+
+## 0.4.3
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.3
+
+## 0.4.2
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.2
+
+## 0.4.1
+
+### Patch Changes
+
+- e0fc110: chore: patch bump all package
+- Updated dependencies [e0fc110]
+  - @scalar/api-reference-react@0.3.1
+
+## 0.4.0
+
+### Minor Changes
+
+- 7f8ef74: chore: remove aliasing
+
+### Patch Changes
+
+- 8494349: Migrate to highlightjs based syntax highlighting
+- 6fbb57e: feat: release all the packages
+- Updated dependencies [7f8ef74]
+- Updated dependencies [8494349]
+- Updated dependencies [6fbb57e]
+  - @scalar/api-reference-react@0.3.0
+
+## 0.3.5
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.2.5
+
+## 0.3.4
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.2.4
+
+## 0.3.3
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.2.3
+
+## 0.3.2
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.2.2
+
+## 0.3.1
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.2.1
+
+## 0.3.0
+
+### Minor Changes
+
+- 7d3bc16: feat: css files must be explicitly imported, check the docs
+
+### Patch Changes
+
+- Updated dependencies [7d3bc16]
+  - @scalar/api-reference-react@0.2.0
+
+## 0.2.56
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.98
+
+## 0.2.55
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.97
+
+## 0.2.54
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.96
+
+## 0.2.53
+
+### Patch Changes
+
+- 5a9c298: fix: apply docusaurus theme to body
+  - @scalar/api-reference-react@0.1.95
+
+## 0.2.52
+
+### Patch Changes
+
+- Updated dependencies [30953fa]
+  - @scalar/api-reference-react@0.1.94
+
+## 0.2.51
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.93
+
+## 0.2.50
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.92
+
+## 0.2.49
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.91
+
+## 0.2.48
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.90
+
+## 0.2.47
+
+### Patch Changes
+
+- 059598c: fix: docusaurus preffered color scheme bug
+  - @scalar/api-reference-react@0.1.89
+
+## 0.2.46
+
+### Patch Changes
+
+- 067e767: fix: remove ifm colour system from sidebar header
+  - @scalar/api-reference-react@0.1.88
+
+## 0.2.45
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.87
+
+## 0.2.44
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.86
+
+## 0.2.43
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.85
+
+## 0.2.42
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.84
+
+## 0.2.41
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.83
+
+## 0.2.40
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.82
+
+## 0.2.39
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.81
+
+## 0.2.38
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.1.80
+
 ## 0.2.37
 
 ### Patch Changes

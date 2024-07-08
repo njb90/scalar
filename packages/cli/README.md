@@ -15,7 +15,7 @@ Command-line interface to work with OpenAPI files
 - Upload your OpenAPI files to Scalar
 - Get a fully mocked API for testing purposes
 - Preview your API reference
-- Bundle multiple OpenAPI files
+- ~~Bundle multiple OpenAPI files~~ (work in progress)
 
 ## Quickstart
 
@@ -33,9 +33,29 @@ npm -g install @scalar/cli
 
 Otherwise just prefix all commands with `npx @scalar/cli` instead of `scalar`. That’s fine, too.
 
+### Conflict: EEXIST: file already exists
+
+There’s another `scalar` CLI, which is bundled with `git`. If you run into naming conflicts, but never use the other CLI anyway, you can replace it like this:
+
+```bash
+npm -g --force install @scalar/cli
+```
+
+Or, if you want to keep using the other `scalar` CLI, you can just stick to `npx` (or `pnpm dlx`):
+
+```bash
+# Execute without installation (npm)
+npx @scalar/cli help
+
+# Execute without installation (pnpm)
+pnpm dlx @scalar/cli help
+```
+
 ## Commands
 
 ### format
+
+![](./screenshots/format.png)
 
 The given JSON file will be formatted with Prettier.
 
@@ -47,6 +67,8 @@ scalar format https://example.com/openapi.json --output openapi.json
 
 ### validate
 
+![](./screenshots/validate.png)
+
 To check whether your OpenAPI file adheres to the Swagger 2.0, OpenAPI 3.0 or OpenAPI 3.1 specification, run the following command:
 
 ```bash
@@ -57,6 +79,8 @@ scalar validate https://example.com/openapi.json
 
 ### share
 
+![](./screenshots/share.png)
+
 To quickly share an OpenAPI file or reference with someone, you can use the share command:
 
 ```bash
@@ -66,19 +90,23 @@ scalar share openapi.json
 
 This will upload your OpenAPI file to the [Scalar Sandbox](https://sandbox.scalar.com/) to give you a public reference URL and a public URL to your OpenAPI JSON file.
 
-### reference
+### serve
+
+![](./screenshots/serve.png)
 
 You can quickly spin up a local server with an API reference based on your OpenAPI file.
 
 ```bash
-scalar reference
-scalar reference openapi.json
-scalar reference openapi.json --port 1234
-scalar reference openapi.json --watch
-scalar reference https://example.com/openapi.json --watch
+scalar serve
+scalar serve openapi.json
+scalar serve openapi.json --port 1234
+scalar serve openapi.json --watch
+scalar serve https://example.com/openapi.json --watch
 ```
 
 ### mock
+
+![](./screenshots/mock.png)
 
 We can even mock your API, and it’s just one command:
 
@@ -104,6 +132,22 @@ And it even works with URLs:
 
 ```bash
 scalar mock https://example.com/openapi.json --watch
+```
+
+### void
+
+![](./screenshots/void.png)
+
+Start a HTTP dummy server, that just responds with the request data.
+
+```bash
+scalar void
+```
+
+This will boot up a server on port 3000, but you can also change the port like this:
+
+```bash
+scalar void --port 8080
 ```
 
 ### bundle
@@ -140,6 +184,8 @@ scalar --version
 
 ### --help
 
+![](./screenshots/help.png)
+
 ```bash
 scalar --help
 ```
@@ -171,9 +217,9 @@ jobs:
         with:
           node-version: 20
       - name: Validate OpenAPI File
-        # Replace `./my-openapi-file.json` with the correct path and filename for your project.
+        # Replace `./my-openapi-file.yaml` with the correct path and filename for your project.
         # Or: run `npx @scalar/cli init` and add the config file to your repository.
-        run: npx @scalar/cli validate ./my-openapi-file.json
+        run: npx @scalar/cli validate ./my-openapi-file.yaml
 ```
 
 ## Development

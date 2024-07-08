@@ -18,7 +18,7 @@
     "openapi",
     "swagger"
   ],
-  "version": "0.3.37",
+  "version": "0.4.29",
   "engines": {
     "node": ">=18"
   },
@@ -42,7 +42,9 @@
   ],
   "module": "./dist/index.js",
   "dependencies": {
-    "@scalar/api-reference": "workspace:*"
+    "@scalar/api-reference": "workspace:*",
+    "next": "^14.1.1",
+    "react": "^18.3.1"
   },
   "devDependencies": {
     "@scalar/api-reference": "workspace:*",
@@ -51,13 +53,9 @@
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
     "next": "^14.1.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "vite": "^5.2.10",
     "vite-plugin-dts": "^3.6.3"
-  },
-  "peerDependencies": {
-    "next": "^13 || ^14",
-    "react": "^18"
   }
 }

@@ -5,15 +5,15 @@ import { cva } from '../../cva'
 export const styles: Record<string, Record<string, any>> = {
   solid: [
     'scalar-button-solid',
-    'bg-back-btn-1 text-fore-btn-1 shadow-sm active:bg-back-btn-1 active:shadow-none hocus:bg-hover-btn-1',
+    'bg-b-btn text-c-btn shadow-sm active:bg-b-btn active:shadow-none hocus:bg-h-btn',
   ],
   outlined: [
     'scalar-button-outlined',
-    'active:bg-btn-1 border border-solid border-border bg-transparent text-fore-1 hocus:bg-border',
+    'active:bg-btn-1 border border-solid border-border bg-transparent text-c-1 hocus:bg-border',
   ],
   ghost: [
     'scalar-button-ghost',
-    'bg-transparent text-fore-3 active:text-fore-2 hocus:text-fore-2',
+    'bg-transparent text-c-3 transition-colors active:text-c-1 hocus:text-c-1',
   ],
   danger: [
     'scalar-button-danger',
@@ -22,7 +22,7 @@ export const styles: Record<string, Record<string, any>> = {
 }
 
 export const variants = cva({
-  base: 'scalar-button row cursor-pointer items-center justify-center rounded font-medium',
+  base: 'scalar-button scalar-row cursor-pointer items-center justify-center rounded font-medium',
   variants: {
     disabled: {
       true: 'bg-background-2 text-color-3 cursor-not-allowed shadow-none',
@@ -35,7 +35,7 @@ export const variants = cva({
     {
       disabled: true,
       variant: 'ghost',
-      class: 'bg-transparent text-ghost',
+      class: 'text-ghost bg-transparent',
     },
   ],
 })

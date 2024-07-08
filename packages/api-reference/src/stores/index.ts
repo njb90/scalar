@@ -1,2 +1,2 @@
 export * from './useHttpClientStore'
-export * from './useServerStore'
+export * from '../legacy/stores/useAuthenticationStore'

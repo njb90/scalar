@@ -18,7 +18,7 @@
     "testing",
     "react"
   ],
-  "version": "0.1.79",
+  "version": "0.3.29",
   "engines": {
     "node": ">=18"
   },
@@ -32,14 +32,18 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": "./dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./style.css": "./dist/style.css"
+  },
   "files": [
     "dist",
     "CHANGELOG.md"
   ],
   "module": "./dist/index.js",
   "dependencies": {
-    "@scalar/api-reference": "workspace:*"
+    "@scalar/api-reference": "workspace:*",
+    "react": "^18.3.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.60",
@@ -48,14 +52,9 @@
     "character-entities": "^2.0.2",
     "decode-named-character-reference": "^1.0.2",
     "path": "^0.12.7",
-    "prismjs": "^1.29.0",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "vite": "^5.2.10",
     "vite-plugin-dts": "^3.6.3",
-    "vite-plugin-lib-inject-css": "^2.0.1",
-    "vue": "^3.4.21"
-  },
-  "peerDependencies": {
-    "react": "^18.0.0"
+    "vue": "^3.4.22"
   }
 }

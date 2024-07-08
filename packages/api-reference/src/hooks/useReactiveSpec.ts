@@ -1,9 +1,9 @@
-import { fetchSpecFromUrl } from '@scalar/oas-utils'
+import type { SpecConfiguration } from '@scalar/oas-utils'
+import { fetchSpecFromUrl, prettyPrintJson } from '@scalar/oas-utils/helpers'
 import { type MaybeRefOrGetter, reactive, ref, toValue, watch } from 'vue'
 
 import { createEmptySpecification, isValidUrl } from '../helpers'
 import { parse } from '../helpers/parse'
-import type { SpecConfiguration } from '../types'
 
 /**
  * Get the spec content from the provided configuration:
@@ -18,19 +18,29 @@ const getSpecContent = async (
   { url, content }: SpecConfiguration,
   proxy?: string,
 ): Promise<string | undefined> => {
+  // If the URL is provided, fetch the API definition from the URL
   if (url) {
     if (!isValidUrl(url)) {
-      // if the url is not valid, we can assume its a path
-      // and if it's a path we don't need to fetch from a proxy
-      // since it's served with the file
+      // If the url is not valid, we can assume its a path and
+      // if it’s a path we can skip the proxy.
       return await fetchSpecFromUrl(url)
     }
+
     return await fetchSpecFromUrl(url, proxy)
   }
 
+  // Callback
   const activeContent = typeof content === 'function' ? content() : content
-  if (typeof activeContent === 'string') return activeContent
-  if (typeof activeContent === 'object') return JSON.stringify(activeContent)
+
+  // Strings are fine
+  if (typeof activeContent === 'string') {
+    return activeContent
+  }
+
+  // Pretty print objects
+  if (typeof activeContent === 'object') {
+    return prettyPrintJson(activeContent)
+  }
 
   return undefined
 }
@@ -60,7 +70,9 @@ export function useReactiveSpec({
   function parseInput(value?: string) {
     if (!value) return Object.assign(parsedSpec, createEmptySpecification())
 
-    return parse(value)
+    return parse(value, {
+      proxy: proxy ? toValue(proxy) : undefined,
+    })
       .then((validSpec) => {
         specErrors.value = null
 

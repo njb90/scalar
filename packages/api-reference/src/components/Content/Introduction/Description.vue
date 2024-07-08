@@ -1,22 +1,19 @@
 <script setup lang="ts">
-import {
-  type DescriptionSectionSSRKey,
-  type SSRState,
-  createHash,
-  ssrState,
-} from '@scalar/oas-utils'
+import { ScalarMarkdown } from '@scalar/components'
+import type { DescriptionSectionSSRKey, SSRState } from '@scalar/oas-utils'
+import { createHash, ssrState } from '@scalar/oas-utils/helpers'
 import { computedAsync } from '@vueuse/core'
 import { onServerPrefetch, useSSRContext } from 'vue'
 
 import {
   getHeadingsFromMarkdown,
   getLowestHeadingLevel,
+  joinWithSlash,
   sleep,
   splitMarkdownInSections,
 } from '../../../helpers'
 import { useNavState } from '../../../hooks'
 import IntersectionObserver from '../../IntersectionObserver.vue'
-import { MarkdownRenderer } from '../../MarkdownRenderer'
 
 const props = defineProps<{
   value?: string
@@ -60,7 +57,7 @@ function handleScroll(headingId = '') {
 
   // If we are pathrouting, set path instead of hash
   if (pathRouting.value) {
-    newUrl.pathname = pathRouting.value.basePath + '/' + headingId
+    newUrl.pathname = joinWithSlash(pathRouting.value.basePath, headingId)
   } else {
     newUrl.hash = headingId
   }
@@ -91,14 +88,14 @@ onServerPrefetch(async () => {
           :id="getHeadingId(section.heading)"
           class="introduction-description-heading"
           @intersecting="() => handleScroll(getHeadingId(section.heading))">
-          <MarkdownRenderer
+          <ScalarMarkdown
             :value="section.content"
             withImages />
         </IntersectionObserver>
       </template>
       <!-- Without a heading -->
       <template v-else>
-        <MarkdownRenderer
+        <ScalarMarkdown
           :value="section.content"
           withImages />
       </template>

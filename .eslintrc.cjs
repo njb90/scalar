@@ -17,7 +17,7 @@ module.exports = {
     'prettier',
     'plugin:storybook/recommended',
   ],
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['@typescript-eslint', 'prettier', 'eslint-plugin-jsdoc'],
   ignorePatterns: [
     '**/dist/**',
     'api-reference/packages/swagger-parser/**',
@@ -28,6 +28,8 @@ module.exports = {
     '**/tailwind.config.ts',
     '**/vite.standalone.config.ts',
     '**/cdn/**',
+    '**/hydrateClient.d.ts',
+    '**/hydrateClient.d.mts',
   ],
   rules: {
     // ---------------------------------------------------------------------------
@@ -123,6 +125,20 @@ module.exports = {
             format: ['PascalCase'],
           },
         ],
+        'jsdoc/require-jsdoc': [
+          'warn',
+          { publicOnly: true, enableFixer: false },
+        ],
+        'jsdoc/check-alignment': 'warn',
+        'jsdoc/check-param-names': 'warn',
+        'jsdoc/check-property-names': 'warn',
+        'jsdoc/check-types': 'warn',
+        'jsdoc/check-values': 'warn',
+        'jsdoc/empty-tags': 'warn',
+        'jsdoc/implements-on-classes': 'warn',
+        'jsdoc/multiline-blocks': 'warn',
+        'jsdoc/no-multi-asterisks': 'warn',
+        'jsdoc/no-undefined-types': 'warn',
       },
     },
     /** Vue SFC linting rules */

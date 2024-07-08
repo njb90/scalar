@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import type { Spec } from '@scalar/oas-utils'
 import { onMounted, ref, watch } from 'vue'
 
 import { sleep } from '../../helpers'
 import { useNavState, useSidebar } from '../../hooks'
-import type { Spec } from '../../types'
 import SidebarElement from './SidebarElement.vue'
 import SidebarGroup from './SidebarGroup.vue'
 
@@ -103,7 +103,7 @@ onMounted(() => {
                   }
                 ">
                 <template v-if="group.children && group.children?.length > 0">
-                  <SidebarGroup :level="2">
+                  <SidebarGroup :level="1">
                     <template
                       v-for="child in group.children"
                       :key="child.id">
@@ -197,6 +197,7 @@ onMounted(() => {
 @media (max-width: 1000px) {
   .sidebar {
     min-height: 0;
+    border-right: none;
   }
   .sidebar-pages {
     padding-top: 12px;

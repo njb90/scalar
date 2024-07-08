@@ -1,18 +1,20 @@
 import {
   type ClientRequestConfig,
+  type ServerState,
   getRequestFromAuthentication,
-} from '@scalar/api-client'
+  getUrlFromServerState,
+} from '#legacy'
+import type {
+  AuthenticationState,
+  TransformedOperation,
+} from '@scalar/oas-utils'
 import {
-  type AuthenticationState,
-  type TransformedOperation,
-  getHarRequest,
   getParametersFromOperation,
   getRequestFromOperation,
-} from '@scalar/oas-utils'
+} from '@scalar/oas-utils/spec-getters'
 import type { OpenAPIV3 } from '@scalar/openapi-parser'
 
-import type { ServerState } from '../types'
-import { getUrlFromServerState } from './'
+import { getHarRequest } from '../helpers'
 
 /**
  * Generate parameters for the request

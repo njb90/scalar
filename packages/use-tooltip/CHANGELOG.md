@@ -1,5 +1,52 @@
 # @scalar/use-tooltip
 
+## 1.0.2
+
+### Patch Changes
+
+- e1af8ed: revert: scalar use tooltip dependency update
+
+## 1.0.1
+
+### Patch Changes
+
+- 94e68ab: chore: upgrade typescript to 5.5
+
+## 1.0.0
+
+### Major Changes
+
+- e5ac3e1: feat: update use-tooltip usage and dependencies
+
+## 0.7.3
+
+### Patch Changes
+
+- a2cb3c3: Migrate away from unintended peer dependencies
+
+## 0.7.2
+
+### Patch Changes
+
+- c65697c: fix: move tippy to dependencies
+
+## 0.7.1
+
+### Patch Changes
+
+- e0fc110: chore: patch bump all package
+
+## 0.7.0
+
+### Minor Changes
+
+- 7f8ef74: chore: remove aliasing
+
+### Patch Changes
+
+- b38c7ed: Update build configs to a standardized format
+- 6fbb57e: feat: release all the packages
+
 ## 0.6.2
 
 ### Patch Changes

@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { HttpMethod } from '@scalar/api-client'
-import type { TransformedOperation } from '@scalar/oas-utils'
+import { ScalarMarkdown } from '@scalar/components'
+import type { Tag, TransformedOperation } from '@scalar/oas-utils'
 
 import { useNavState, useSidebar } from '../../../hooks'
-import type { Tag } from '../../../types'
 import { Anchor } from '../../Anchor'
 import { Card, CardContent, CardHeader } from '../../Card'
-import { MarkdownRenderer } from '../../MarkdownRenderer'
+import { HttpMethod } from '../../HttpMethod'
 import {
   Section,
   SectionColumn,
@@ -43,10 +42,10 @@ async function scrollHandler(operation: TransformedOperation) {
         <SectionColumn>
           <SectionHeader :level="2">
             <Anchor :id="getTagId(tag)">
-              {{ tag.name }}
+              {{ tag['x-displayName'] ?? tag.name }}
             </Anchor>
           </SectionHeader>
-          <MarkdownRenderer
+          <ScalarMarkdown
             :value="tag.description"
             withImages />
         </SectionColumn>

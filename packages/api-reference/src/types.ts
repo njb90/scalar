@@ -1,17 +1,36 @@
 import type {
   AuthenticationState,
   ContentType,
-  TransformedOperation,
+  Spec,
+  SpecConfiguration,
 } from '@scalar/oas-utils'
-import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-parser'
 import type { ThemeId } from '@scalar/themes'
 import type { UseSeoMetaInput } from '@unhead/schema'
-import type { HarRequest } from 'httpsnippet-lite'
-import type {
-  ClientInfo,
-  TargetInfo,
-} from 'httpsnippet-lite/dist/types/targets/targets'
+import type { HarRequest, TargetId } from 'httpsnippet-lite'
 import type { Slot } from 'vue'
+
+import type { Server } from './features/BaseUrl'
+
+// ---------------------------------------------------------------------------
+// Types copied from package as they are not exported
+type ClientInfo = {
+  key: string
+  title: string
+  link: string
+  description: string
+}
+
+export type TargetInfo = {
+  key: TargetId
+  title: string
+  extname: `.${string}` | null
+  default: string
+}
+
+export type AvailableTarget = TargetInfo & {
+  clients: ClientInfo[]
+}
+// ---------------------------------------------------------------------------
 
 export type ReferenceProps = {
   configuration?: ReferenceConfiguration
@@ -25,6 +44,8 @@ export type ReferenceLayoutProps = {
 }
 
 export type HiddenClients =
+  // Just hide all
+  | true
   // Exclude whole targets or just specific clients
   | Partial<Record<TargetInfo['key'], boolean | ClientInfo['key'][]>>
   // Backwards compatibility with the previous behavior ['fetch', 'xhr']
@@ -59,7 +80,8 @@ export type ReferenceConfiguration = {
   darkMode?: boolean
   /** Whether to show the client libraries box */
   clientLibraries?: boolean
-  /** Key used with CTRL/CMD to open the search modal (defaults to 'k' e.g. CMD+k)
+  /**
+   * Key used with CTRL/CMD to open the search modal (defaults to 'k' e.g. CMD+k)
    *
    * @default true
    */
@@ -93,7 +115,7 @@ export type ReferenceConfiguration = {
   /**
    * If used, passed data will be added to the HTML header
    * @see https://unhead.unjs.io/usage/composables/use-seo-meta
-   * */
+   */
   metaData?: UseSeoMetaInput
   /**
    * List of httpsnippet clients to hide from the clients menu
@@ -127,6 +149,13 @@ export type ReferenceConfiguration = {
    */
   baseServerURL?: string
   /**
+   * List of servers to override the openapi spec servers
+   *
+   * @default undefined
+   * @example [{ url: 'https://api.scalar.com', description: 'Production server' }]
+   */
+  servers?: Server[]
+  /**
    * We’re using Inter and JetBrains Mono as the default fonts. If you want to use your own fonts, set this to false.
    *
    * @default true
@@ -136,13 +165,6 @@ export type ReferenceConfiguration = {
 
 export type PathRouting = {
   basePath: string
-}
-
-export type SpecConfiguration = {
-  /** URL to a Swagger/OpenAPI file */
-  url?: string
-  /** Swagger/Open API spec */
-  content?: string | Record<string, any> | (() => Record<string, any>)
 }
 
 export type GettingStartedExamples = 'Petstore' | 'CoinMarketCap'
@@ -159,12 +181,6 @@ export type ExampleResponseHeaders = Record<
   }
 >
 
-export type Tag = {
-  'name': string
-  'description': string
-  'operations': TransformedOperation[]
-  'x-displayName'?: string
-}
 export type Parameter = {
   name: string
   required: boolean
@@ -214,80 +230,6 @@ export type Info = {
   version?: string
 }
 
-export type ExternalDocs = {
-  description: string
-  url: string
-}
-
-export type ServerVariables = Record<
-  string,
-  {
-    default?: string | number
-    description?: string
-    enum?: (string | number)[]
-  }
->
-
-export type Server = {
-  url: string
-  description?: string
-  variables?: ServerVariables
-}
-
-export type TagGroup = {
-  name: string
-  tags: string[]
-}
-
-export type SecurityScheme =
-  | Record<string, never> // Empty objects
-  | OpenAPIV2.SecuritySchemeObject
-  | OpenAPIV3.SecuritySchemeObject
-  | OpenAPIV3_1.SecuritySchemeObject
-
-export type Definitions = OpenAPIV2.DefinitionsObject
-
-export type Webhooks = Record<
-  string,
-  Record<
-    OpenAPIV3_1.HttpMethods,
-    TransformedOperation & {
-      'x-internal'?: boolean
-    }
-  >
->
-
-export type Spec = {
-  'tags'?: Tag[]
-  'info':
-    | Partial<OpenAPIV2.Document['info']>
-    | Partial<OpenAPIV3.Document['info']>
-    | Partial<OpenAPIV3_1.Document['info']>
-  'host'?: OpenAPIV2.Document['host']
-  'basePath'?: OpenAPIV2.Document['basePath']
-  'schemes'?: OpenAPIV2.Document['schemes']
-  'externalDocs'?: ExternalDocs
-  'servers'?: Server[]
-  'components'?: OpenAPIV3.ComponentsObject | OpenAPIV3_1.ComponentsObject
-  'webhooks'?: Webhooks
-  'definitions'?: Definitions
-  'swagger'?: OpenAPIV2.Document['swagger']
-  'openapi'?: OpenAPIV3.Document['openapi'] | OpenAPIV3_1.Document['openapi']
-  'x-tagGroups'?: TagGroup[]
-  'security'?: OpenAPIV3.SecurityRequirementObject[]
-}
-
-export type Variable = {
-  [key: string]: string
-}
-
-export type ServerState = {
-  selectedServer: null | number
-  description?: string
-  servers: Server[]
-  variables: Variable[]
-}
-
 export type HarRequestWithPath = HarRequest & {
   path: string
 }
@@ -312,7 +254,19 @@ export type ReferenceLayoutSlot =
   | 'sidebar-start'
   | 'sidebar-end'
 
+export type ReferenceLayoutSlots = {
+  [x in ReferenceLayoutSlot]: (props: ReferenceSlotProps) => any
+}
+
 export type ReferenceSlotProps = {
   spec: Spec
   breadcrumb: string
+}
+
+export type ReferenceLayoutEvents = {
+  (e: 'changeTheme', value: ThemeId): void
+  (e: 'updateContent', value: string): void
+  (e: 'loadSwaggerFile'): void
+  (e: 'linkSwaggerFile'): void
+  (e: 'toggleDarkMode'): void
 }

@@ -1,44 +1,20 @@
+import { createViteBuildOptions } from '@scalar/build-tooling'
 import vue from '@vitejs/plugin-vue'
-import { libInjectCss } from 'vite-plugin-lib-inject-css'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
+import { readdirSync } from 'fs'
 import { defineConfig } from 'vitest/config'
 
+// Grab all presets
+const presets = readdirSync('src/presets').map(
+  (fileName) => `src/presets/${fileName}`,
+)
+
 export default defineConfig({
-  plugins: [
-    vue(),
-    libInjectCss(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'src/base.css',
-          dest: './',
-        },
-        {
-          src: 'src/fonts.css',
-          dest: './',
-        },
-        {
-          src: 'src/scrollbar.css',
-          dest: './',
-        },
-        {
-          src: 'src/presets',
-          dest: './',
-        },
-      ],
-    }),
-  ],
+  plugins: [vue()],
   build: {
-    lib: {
-      entry: ['src/index.ts'],
-      name: '@scalar/themes',
-      formats: ['es', 'cjs'],
-    },
-    rollupOptions: {
-      external: ['vue'],
-    },
-    // Don't minify CSS so we can use it in stuff like the theme editor
-    cssMinify: false,
+    ...createViteBuildOptions({
+      entry: ['src/index.ts', 'src/style.css', ...presets],
+    }),
+    cssCodeSplit: true,
   },
   test: {
     coverage: {

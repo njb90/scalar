@@ -19,12 +19,12 @@
     "testing",
     "react"
   ],
-  "version": "0.2.37",
+  "version": "0.4.31",
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "build": "tsc --declaration && cp ./src/theme.css ./dist/",
+    "build": "rm -Rf ./dist && tsc --declaration && cp ./src/theme.css ./dist/",
     "lint:check": "eslint .",
     "lint:fix": "eslint .  --fix",
     "types:check": "tsc --noEmit --skipLibCheck"
@@ -35,16 +35,14 @@
     "CHANGELOG.md"
   ],
   "dependencies": {
-    "@scalar/api-reference-react": "workspace:*"
+    "@scalar/api-reference-react": "workspace:*",
+    "react": "^18.3.1"
   },
   "devDependencies": {
-    "@docusaurus/types": "^3.1.1",
+    "@docusaurus/types": "^3.4.0",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",
     "path": "^0.12.7",
-    "react": "^18.2.0"
-  },
-  "peerDependencies": {
-    "react": "^18.0.0"
+    "react": "^18.3.1"
   }
 }

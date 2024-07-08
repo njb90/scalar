@@ -2,13 +2,6 @@
 
 Laravel Scribe is an amazing package to generate OpenAPI files from your existing code base. Clumsy annotations aren’t required, the package will just analyze your code.
 
-## Table of Contents
-
-- [Scalar API Reference for Laravel Scribe](#scalar-api-reference-for-laravel-scribe)
-  - [Table of Contents](#table-of-contents)
-  - [Set up Laravel (optional)](#set-up-laravel-optional)
-  - [Set up Laravel Scribe](#set-up-laravel-scribe)
-
 ## Create a new Laravel project (optional)
 
 If you’re starting fresh, download the Laravel installer with composer:
@@ -56,13 +49,13 @@ cd my-new-app
 
 I’ve selected SQLite, so I need to create an empty database:
 
-```
+```bash
 touch database/database.sqlite
 ```
 
 If you’ve choosen another database driver, add the required credentials to your `.env` file. Once you’re done, you can use [Laravel Herd](https://herd.laravel.com/) or just spin up a tiny PHP server from the command-line:
 
-```
+```bash
 php artisan serve
 ```
 

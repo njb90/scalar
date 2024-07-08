@@ -1,10 +1,14 @@
 <script lang="ts" setup>
-import type { TransformedOperation } from '@scalar/oas-utils'
+import type {
+  Spec,
+  Tag as TagType,
+  TransformedOperation,
+} from '@scalar/oas-utils'
+import type { OpenAPIV3 } from '@scalar/openapi-parser'
 import { onMounted, ref, watch } from 'vue'
 
 import { getModels, scrollToId } from '../../../helpers'
 import { useNavState } from '../../../hooks'
-import type { Spec, Tag as TagType } from '../../../types'
 import { Anchor } from '../../Anchor'
 import {
   Section,
@@ -110,7 +114,7 @@ watch(
     }
     // Descriptions
     else {
-      scrollToId(hash.value)
+      if (typeof window !== 'undefined') scrollToId(hash.value)
       setTimeout(() => (isIntersectionEnabled.value = true), 1000)
     }
   },
@@ -149,8 +153,8 @@ onMounted(() => {
     }">
     <!-- Tags -->
     <template
-      v-for="tag in tags"
-      :key="tag.id">
+      v-for="(tag, idx) in tags"
+      :key="tag.name + idx">
       <Tag
         v-if="tag.operations && tag.operations.length > 0"
         :spec="parsedSpec"
@@ -173,7 +177,10 @@ onMounted(() => {
           <SectionContent>
             <SectionHeader :level="2">
               <Anchor :id="getModelId(name)">
-                {{ (getModels(parsedSpec)?.[name] as any).title ?? name }}
+                {{
+                  (getModels(parsedSpec)?.[name] as OpenAPIV3.SchemaObject)
+                    .title ?? name
+                }}
               </Anchor>
             </SectionHeader>
             <Schema

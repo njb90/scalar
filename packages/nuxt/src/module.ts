@@ -14,7 +14,7 @@ export type ModuleOptions = {
    * For multiple references, pass an array of config objects into
    * configurations. These configurations will extend over the base config
    */
-  configurations: Configuration[]
+  configurations: Omit<Configuration, 'devtools'>[]
 } & Configuration
 
 export default defineNuxtModule<ModuleOptions>({
@@ -39,20 +39,19 @@ export default defineNuxtModule<ModuleOptions>({
     const resolver = createResolver(import.meta.url)
     let isOpenApiEnabled = false
 
-    // Ensure we transpile api-reference css
-    _nuxt.options.build.transpile.push('@scalar/api-reference')
+    /**
+     * Ensure we transpile yaml
+     * @see https://github.com/eemeli/yaml/issues/394#issuecomment-1151577111
+     */
+    _nuxt.options.build.transpile.push('yaml')
 
-    // Check if it exists and push else assign it
-    _nuxt.options.vite.optimizeDeps ||= {}
-    _nuxt.options.vite.optimizeDeps.include ||= []
-
-    // Ensure we transform these cjs dependencies, remove as they get converted to ejs
-    _nuxt.options.vite.optimizeDeps.include.push(
-      'debug',
-      'extend',
-      'stringify-object',
-      'rehype-prismjs',
-    )
+    /**
+     * Disable transforming references to fix
+     * redeclaration of import h
+     */
+    _nuxt.options.imports.transform ||= {}
+    _nuxt.options.imports.transform.exclude ||= []
+    _nuxt.options.imports.transform.exclude.push(/scalar/)
 
     // Also check for Nitro OpenAPI auto generation
     _nuxt.hook('nitro:config', (config) => {
@@ -109,7 +108,7 @@ export default defineNuxtModule<ModuleOptions>({
           category: 'server',
           view: {
             type: 'iframe',
-            src: _options.pathRouting!.basePath,
+            src: _options.pathRouting?.basePath ?? '/docs',
           },
         })
       })

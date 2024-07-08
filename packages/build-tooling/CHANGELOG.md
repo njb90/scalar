@@ -1,5 +1,32 @@
 # @scalar/build-tooling
 
+## 0.1.8
+
+### Patch Changes
+
+- 397faa4: Add property for workspace path to vite reload watcher
+
+## 0.1.7
+
+### Patch Changes
+
+- 94e68ab: chore: upgrade typescript to 5.5
+
+## 0.1.6
+
+### Patch Changes
+
+- e0fc110: chore: patch bump all package
+
+## 0.1.5
+
+### Patch Changes
+
+- 689677a: fix: auto importing css backup
+- 8494349: Migrate to highlightjs based syntax highlighting
+- b38c7ed: Update build configs to a standardized format
+- 6fbb57e: feat: release all the packages
+
 ## 0.1.4
 
 ### Patch Changes

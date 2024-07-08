@@ -1,11 +1,45 @@
+import { cancel, confirm, isCancel, text } from '@clack/prompts'
 import { Command } from 'commander'
-import { glob } from 'glob'
+import GithubSlugger from 'github-slugger'
 import kleur from 'kleur'
 import fs from 'node:fs'
 import path from 'node:path'
-import prompts from 'prompts'
 
 import { CONFIG_FILE } from '../../utils'
+
+/**
+ * Scalar configuration file (scalar.config.json)
+ */
+export type ScalarConfigurationFile = {
+  subdomain: string
+  references: ScalarReferenceEntry[]
+  guides: ScalarGuideEntry[]
+}
+
+/**
+ * Entry for an API reference
+ */
+export type ScalarReferenceEntry = {
+  name: string
+  path: string
+}
+
+/**
+ * Entry for the guide
+ */
+export type ScalarGuideEntry = {
+  name: string
+  sidebar: ScalarSidebarEntry[]
+}
+
+/**
+ * Entry for the sidebar (folder or page)
+ */
+export type ScalarSidebarEntry = {
+  path?: string
+  type: 'folder' | 'page'
+  items?: ScalarSidebarEntry[]
+}
 
 export function InitCommand() {
   const cmd = new Command('init')
@@ -14,15 +48,40 @@ export function InitCommand() {
     'Create a new `scalar.config.json` file to configure where your OpenAPI file is placed.',
   )
   cmd.option('-f, --file [file]', 'your OpenAPI file')
-  cmd.action(async ({ file }) => {
+  cmd.option('-s, --subdomain [url]', 'subdomain to publish on')
+  cmd.option('--force', 'override existing configuration')
+  cmd.action(async ({ file, subdomain, force }) => {
     // Path to `scalar.config.json` file
     const configFile = path.resolve(CONFIG_FILE)
-    let validInput = false
+    let validInput: boolean
     let input = file
+
+    const nextSteps = () => {
+      console.log('What to do next:')
+      console.log(
+        `  ${kleur.cyan('scalar format')} ${kleur.gray('[options] [file|url]')} to format your OpenAPI file`,
+      )
+      console.log(
+        `  ${kleur.cyan('scalar validate')} ${kleur.gray('[file|url]')} to validate your OpenAPI file`,
+      )
+      console.log(
+        `  ${kleur.cyan('scalar bundle')} ${kleur.gray('[options] [file]')} to bundle your OpenAPI file`,
+      )
+      console.log(
+        `  ${kleur.cyan('scalar serve')} ${kleur.gray('[options] [file|url]')} to serve your OpenAPI file`,
+      )
+      console.log()
+      console.log(
+        kleur.white(
+          `Run ${kleur.magenta('scalar --help')} to see all available commands.`,
+        ),
+      )
+    }
 
     // Handle cancel from the user
     const handleCancel = () => {
-      console.log()
+      cancel('Operation cancelled.')
+      nextSteps()
       process.exit(0)
     }
 
@@ -33,45 +92,80 @@ export function InitCommand() {
       return validExtensions.includes(extension)
     }
 
-    if (input && isValidFile(input)) {
-      validInput = true
-    }
-
     // Check if `scalar.config.json` already exists
     if (fs.existsSync(configFile)) {
       console.log(
-        `${kleur.green('✔')} Found Scalar configuration file: ${kleur.reset().green(`${CONFIG_FILE}`)}`,
+        `${kleur.green('⚠')} Found existing configuration: ${kleur.reset().green(`${CONFIG_FILE}`)}`,
       )
 
-      const { overwrite } = await prompts(
-        {
-          type: 'toggle',
-          name: 'overwrite',
+      if (force) {
+        console.log(`${kleur.green('✔')} Overwriting existing file…`)
+      }
+
+      const shouldOverwriteExisting =
+        force ??
+        (await confirm({
           message: 'Do you want to override the file?',
-          initial: false,
-          active: 'yes',
-          inactive: 'no',
-        },
-        { onCancel: handleCancel },
-      )
+          initialValue: false,
+        }))
 
-      if (overwrite === false) {
+      if (isCancel(shouldOverwriteExisting)) {
+        handleCancel()
+      }
+
+      if (!shouldOverwriteExisting) {
         handleCancel()
       }
     }
 
-    // Ask for the OpenAPI file
-    const configuration = {
+    // New configuration object
+    const configuration: ScalarConfigurationFile = {
+      subdomain: '',
       references: [],
+      guides: [],
     }
+
+    // Subdomain
+    validInput = !!subdomain
+
+    while (!validInput) {
+      const response = await text({
+        message: `What’s the name of your project? We’ll use that to create a custom subdomain for you.`,
+        validate(value) {
+          if (value.trim().length === 0) {
+            return `You didn’t provide a project name. Please provide a name!`
+          }
+
+          return null
+        },
+      })
+
+      // TODO: Check if the subdomain is available
+
+      if (isCancel(response)) {
+        handleCancel()
+      } else {
+        validInput = true
+      }
+
+      const slugger = new GithubSlugger()
+      const slug = slugger.slug(response.toString())
+
+      // eslint-disable-next-line no-param-reassign
+      subdomain = `${slug}.apidocumentation.com`
+
+      console.log(`${kleur.green('✔')} Subdomain: ${kleur.green(subdomain)}`)
+    }
+
+    configuration.subdomain = subdomain.trim()
+
+    // Reference
 
     // Check if the file option is provided and valid
     if (input) {
       const validExtensions = ['.json', '.yaml', '.yml']
       const extension = path.extname(input).toLowerCase()
-      if (validExtensions.includes(extension)) {
-        validInput = true
-      } else {
+      if (!validExtensions.includes(extension)) {
         console.log(
           kleur.red('✖'),
           `Please enter a valid file path ${validExtensions.join(', ')}.`,
@@ -79,142 +173,59 @@ export function InitCommand() {
       }
     }
 
+    // Ask for the file path
+    validInput = input && isValidFile(input)
+
     while (!validInput) {
-      const response = await prompts(
-        {
-          type: 'autocomplete',
-          name: 'input',
-          message: `Where is your OpenAPI file? ${kleur.reset().grey('(Use arrow keys or type)')}`,
-          initial: false,
-          choices: [
-            { title: `Current working directory`, value: process.cwd() },
-            { title: `Parent directory`, value: `../` },
-            { title: `Grand directory`, value: `../../` },
-            { title: `Home directory`, value: `~` },
-            { title: `Root directory`, value: `/` },
-            // Display more suggestions
-            { value: `/` },
-            { value: `/` },
-          ],
-          suggest: async (input, _choices) => {
-            const cwd = process.cwd()
-            const start = (
-              input.length === 0 ? cwd : path.resolve(cwd, input)
-            ).replace('~', process.env.HOME)
-            const files = await glob(`${start}/*`, {
-              cwd,
-              nodir: false,
-            })
-            const suggestions = files
-              .map((file) => {
-                const isDirectory = fs.lstatSync(file).isDirectory()
-                const ext = path.extname(file)
-                const isSpecFile =
-                  ['.json', '.yaml', '.yml'].includes(ext) && !isDirectory
-                return {
-                  title: path.relative(cwd, file) + (isDirectory ? '/' : ''),
-                  value: file,
-                  specFile: isSpecFile,
-                  isDirectory: isDirectory,
-                }
-              })
-              .filter((item) => item !== null)
-
-            // Sort to put specification file types at the top
-            suggestions.sort((a, b) => {
-              if (a.specFile === b.specFile) {
-                return a.title.localeCompare(b.title)
-              }
-              return Number(b.specFile) - Number(a.specFile)
-            })
-
-            if (
-              input.length > 0 &&
-              !suggestions.find((s) => s.value === input)
-            ) {
-              suggestions.unshift({
-                title: `${input}`,
-                value: input,
-                specFile: false,
-                isDirectory: false,
-              })
-            }
-
-            // Limit to 5 entries to leave space for the 'Cancel' option
-            const limitedSuggestions = suggestions.slice(0, 6)
-
-            limitedSuggestions.push({
-              title: 'Cancel',
-              value: 'cancel',
-              specFile: false,
-              isDirectory: false,
-            })
-
-            return limitedSuggestions
-          },
+      const response = await text({
+        message: `Where is your OpenAPI file? ${kleur.reset().grey('(Add a path to the file)')}`,
+        validate(value) {
+          if (value.length === 0) return `Value is required!`
+          return null
         },
-        {
-          onCancel: handleCancel,
-        },
-      )
+      })
 
-      input = response.input
+      input = response
 
-      // Validate the user's choice after the prompt
-      if (input) {
-        if (input === 'cancel') {
-          process.exit(0)
-        }
+      if (isCancel(response)) {
+        handleCancel()
+      }
 
-        if (isValidFile(input)) {
-          validInput = true
-        } else {
-          console.log()
-          console.log(
-            kleur.red('✖'),
-            `Invalid file extension. Expected: ${['.json', '.yaml', '.yml'].join(', ')}.`,
-          )
-          console.log()
-        }
+      if (isValidFile(input)) {
+        validInput = true
+      } else {
+        console.log(
+          kleur.red('✖'),
+          `Invalid file extension. Expected: ${['.json', '.yaml', '.yml'].join(', ')}.`,
+        )
       }
     }
 
-    // Convert absolute path to relative path
-    const relativePath = path.relative(process.cwd(), input)
-    const formattedRelativePath =
-      !relativePath.startsWith('../') && !relativePath.startsWith('/')
-        ? `./${relativePath}`
-        : relativePath
-
     configuration.references.push({
       name: 'API Reference',
-      path: formattedRelativePath,
+      path: input,
     })
 
     const content = JSON.stringify(configuration, null, 2)
 
     // Create `scalar.config.json` file
     fs.writeFileSync(configFile, content)
+    console.log(`${kleur.green('✔')} Configuration stored.`)
+    console.log()
 
-    console.log(
-      kleur.green('✔'),
-      'Scalar configuration file created:',
-      kleur.reset().green(`${CONFIG_FILE}`),
-    )
+    console.log(`${kleur.bold().green(`${CONFIG_FILE}`)}`)
     console.log()
     console.log(
-      content
-        .trim()
-        .split('\n')
-        .map((line) => kleur.grey(`  ${line}`))
-        .join('\n'),
+      `${kleur.grey(
+        content
+          .split('\n')
+          .map((line) => `  ${line}`)
+          .join('\n'),
+      )}`,
     )
+
     console.log()
-    console.log(
-      kleur.white(
-        `Run ${kleur.magenta('scalar --help')} to see all available commands.`,
-      ),
-    )
+    nextSteps()
     console.log()
   })
 

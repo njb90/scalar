@@ -1,5 +1,118 @@
 # @scalar/themes
 
+## 0.9.11
+
+### Patch Changes
+
+- 4250fe2: fix: build tailwind preset with vite before exporting
+
+## 0.9.10
+
+### Patch Changes
+
+- cdfb8c5: feat: focus visible outline style
+
+## 0.9.9
+
+### Patch Changes
+
+- 3b83b82: fix: empty html response show theme background
+
+## 0.9.8
+
+### Patch Changes
+
+- 94e68ab: chore: upgrade typescript to 5.5
+
+## 0.9.7
+
+### Patch Changes
+
+- 3b53db5: style(client-app): new authentication UI
+
+## 0.9.6
+
+### Patch Changes
+
+- e88a2c2: refactor(themes): internalize tailwind pixel preset
+
+## 0.9.5
+
+### Patch Changes
+
+- 5e92eab: feat(#doc-1996): themes css exports
+
+## 0.9.4
+
+### Patch Changes
+
+- 2ca1af2: fix: kepler theme darkmode
+
+## 0.9.3
+
+### Patch Changes
+
+- 0fae180: chore: move client app to use @scalar/themes tailwind preset
+
+## 0.9.2
+
+### Patch Changes
+
+- a2cb3c3: Migrate away from unintended peer dependencies
+
+## 0.9.1
+
+### Patch Changes
+
+- e0fc110: chore: patch bump all package
+
+## 0.9.0
+
+### Minor Changes
+
+- 7f8ef74: chore: remove aliasing
+
+### Patch Changes
+
+- 8494349: Migrate to highlightjs based syntax highlighting
+- b38c7ed: Update build configs to a standardized format
+- 6fbb57e: feat: release all the packages
+
+## 0.8.2
+
+### Patch Changes
+
+- 55e01dd: fix: copy fonts to dist directory
+
+## 0.8.1
+
+### Patch Changes
+
+- db7864a: feat: self host fonts on scalar cdn
+
+## 0.8.0
+
+### Minor Changes
+
+- 7d3bc16: feat: css files must be explicitly imported, check the docs
+- 7d3bc16: BREAKING CHANGE: css must now be explicitly imported, see docs for more details
+
+### Patch Changes
+
+- a839889: fix: also use cascade layers for CSS reset to avoid overriding tailwind
+
+## 0.7.11
+
+### Patch Changes
+
+- 69a617c: fix: remove yellow/blue autofill indicator
+
+## 0.7.10
+
+### Patch Changes
+
+- 1ce9661: feat: intro cards redesign
+
 ## 0.7.9
 
 ### Patch Changes

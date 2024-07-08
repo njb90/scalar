@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { computed, watch } from 'vue'
+import type { Spec } from '@scalar/oas-utils'
+import { computed } from 'vue'
 
+import { BaseUrl, type Server } from '../../features/BaseUrl'
 import { getModels, hasModels } from '../../helpers'
 import { useNavState, useSidebar } from '../../hooks'
-import { useServerStore } from '../../stores'
-import type { Server, Spec } from '../../types'
 import { Authentication } from './Authentication'
-import { BaseUrl } from './BaseUrl'
 import { ClientLibraries } from './ClientLibraries'
 import { Introduction } from './Introduction'
 import { Lazy, Loading } from './Lazy'
@@ -20,63 +19,21 @@ const props = defineProps<{
   layout?: 'default' | 'accordion'
   baseServerURL?: string
   clientLibraries?: boolean
+  servers?: Server[]
+  proxy?: string
 }>()
 
 const { getOperationId, getTagId, hash } = useNavState()
-const { setServer } = useServerStore()
 const { hideModels, collapsedSidebarItems } = useSidebar()
 
-const prependRelativePath = (server: Server) => {
-  // URLs that don't start with http[s]://
-  if (server.url.match(/^(?!(https?|file):\/\/).+/)) {
-    let baseURL = props.baseServerURL ?? window.location.origin
-
-    // Handle slashes
-    baseURL = baseURL.replace(/\/$/, '')
-    const url = server.url.startsWith('/') ? server.url : `/${server.url}`
-    server.url = `${baseURL}${url}`.replace(/\/$/, '')
-  }
-  return server
-}
-
-// Watch the spec and set the servers
-watch(
-  () => props.parsedSpec,
-  (parsedSpec) => {
-    let servers = [
-      { url: typeof window !== 'undefined' ? window.location.origin : '/' },
-    ]
-
-    if (parsedSpec.servers && parsedSpec.servers.length > 0) {
-      servers = parsedSpec.servers
-    } else if (props.parsedSpec.host) {
-      // Use the first scheme if available, otherwise default to http
-      const scheme = props.parsedSpec.schemes?.[0] ?? 'http'
-
-      servers = [
-        {
-          url: `${scheme}://${props.parsedSpec.host}${
-            props.parsedSpec?.basePath ?? ''
-          }`,
-        },
-      ]
-    }
-
-    // Pre-pend relative paths (if we can)
-    if (props.baseServerURL || typeof window !== 'undefined') {
-      servers = servers.map(prependRelativePath)
-    }
-
-    setServer({ servers })
-  },
-  { deep: true, immediate: true },
-)
 const tagLayout = computed<typeof Tag>(() =>
   props.layout === 'accordion' ? TagAccordion : Tag,
 )
+
 const endpointLayout = computed<typeof Operation>(() =>
   props.layout === 'accordion' ? OperationAccordion : Operation,
 )
+
 const introCardsSlot = computed(() =>
   props.layout === 'accordion' ? 'after' : 'aside',
 )
@@ -103,16 +60,21 @@ const isLazy = props.layout !== 'accordion' && !hash.value.startsWith('model')
       :parsedSpec="parsedSpec" />
 
     <Introduction
-      v-if="parsedSpec.info.title || parsedSpec.info.description"
+      v-if="parsedSpec?.info?.title || parsedSpec?.info?.description"
       :info="parsedSpec.info"
       :parsedSpec="parsedSpec">
       <template #[introCardsSlot]>
         <div
-          class="introduction-cards"
-          :class="{ 'introduction-cards-row': layout === 'accordion' }">
-          <BaseUrl />
+          class="introduction-card"
+          :class="{ 'introduction-card-row': layout === 'accordion' }">
+          <BaseUrl
+            :defaultServerUrl="baseServerURL"
+            :servers="props.servers"
+            :specification="parsedSpec" />
+          <Authentication
+            :parsedSpec="parsedSpec"
+            :proxy="proxy" />
           <ClientLibraries v-if="props.clientLibraries !== false" />
-          <Authentication :parsedSpec="parsedSpec" />
         </div>
       </template>
     </Introduction>
@@ -172,51 +134,67 @@ const isLazy = props.layout !== 'accordion' && !hash.value.startsWith('model')
   align-items: center;
   justify-content: center;
 }
-.introduction-cards {
+.introduction-card {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding: 12px 12px 0 12px;
+  background: var(--scalar-background-1);
+  border: 1px solid var(--scalar-border-color);
+  border-radius: var(--scalar-radius-lg);
 }
-.introduction-cards-row {
+.introduction-card :deep(.description) {
+  padding: 0;
+}
+.introduction-card-title {
+  font-weight: var(--scalar-semibold);
+  font-size: var(--scalar-mini);
+  color: var(--scalar-color-3);
+}
+.introduction-card-row {
   flex-flow: row wrap;
   gap: 24px;
 }
-.introduction-cards-row > * {
+.introduction-card-row > * {
   flex: 1;
 }
 @media (min-width: 600px) {
-  .introduction-cards-row > * {
+  .introduction-card-row > * {
     min-width: min-content;
   }
 }
 @media (max-width: 600px) {
-  .introduction-cards-row > * {
+  .introduction-card-row > * {
     max-width: 100%;
   }
 }
 @container (max-width: 900px) {
-  .introduction-cards-row {
+  .introduction-card-row {
     flex-direction: column;
     align-items: stretch;
   }
 }
-.references-classic .introduction-cards-row :deep(.card-footer),
-.references-classic .introduction-cards-row :deep(.scalar-card),
-.references-classic .introduction-cards-row :deep(.scalar-card--muted) {
+.introduction-card :deep(.security-scheme-label) {
+  text-transform: uppercase;
+  font-weight: var(--scalar-semibold);
+}
+.references-classic .introduction-card-row :deep(.card-footer),
+.references-classic .introduction-card-row :deep(.scalar-card),
+.references-classic .introduction-card-row :deep(.scalar-card--muted) {
   background: var(--scalar-background-1);
 }
 .references-classic
-  .introduction-cards-row
+  .introduction-card-row
   :deep(.scalar-card:nth-of-type(2) .scalar-card-header) {
   display: none;
 }
 .references-classic
-  .introduction-cards-row
+  .introduction-card-row
   :deep(.scalar-card:nth-of-type(2) .scalar-card-header) {
   display: none;
 }
 .references-classic
-  .introduction-cards-row
+  .introduction-card-row
   :deep(
     .scalar-card:nth-of-type(2)
       .scalar-card-header.scalar-card--borderless

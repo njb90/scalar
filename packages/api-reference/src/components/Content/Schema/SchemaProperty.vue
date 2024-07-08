@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { MarkdownRenderer } from '../../MarkdownRenderer'
+import { ScalarMarkdown } from '@scalar/components'
+
 import Schema from './Schema.vue'
 import SchemaPropertyHeading from './SchemaPropertyHeading.vue'
 
@@ -64,8 +65,8 @@ const generatePropertyDescription = function (property?: Record<string, any>) {
   return descriptions[property.type][property.format || '_default']
 }
 
-const getEnumFromValue = function (value?: Record<string, any>): any[] | null {
-  return value?.enum || value?.items?.enum || null
+const getEnumFromValue = function (value?: Record<string, any>): any[] | [] {
+  return value?.enum || value?.items?.enum || []
 }
 
 const rules = ['oneOf', 'anyOf', 'allOf', 'not']
@@ -82,7 +83,7 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
     ]">
     <SchemaPropertyHeading
       :additional="additional"
-      :enum="!!getEnumFromValue(value)"
+      :enum="getEnumFromValue(value).length > 1"
       :required="required"
       :value="value">
       <template
@@ -95,12 +96,12 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
     <div
       v-if="displayDescription(description, value)"
       class="property-description">
-      <MarkdownRenderer :value="displayDescription(description, value)" />
+      <ScalarMarkdown :value="displayDescription(description, value)" />
     </div>
     <div
       v-else-if="generatePropertyDescription(value)"
       class="property-description">
-      <MarkdownRenderer :value="generatePropertyDescription(value) || ''" />
+      <ScalarMarkdown :value="generatePropertyDescription(value) || ''" />
     </div>
     <!-- Example -->
     <div
@@ -113,16 +114,35 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
     </div>
     <!-- Enum -->
     <div
-      v-if="getEnumFromValue(value)"
+      v-if="getEnumFromValue(value)?.length > 1"
       class="property-enum">
-      <ul class="property-enum-values">
-        <li
-          v-for="enumValue in getEnumFromValue(value)"
-          :key="enumValue"
-          class="property-enum-value">
-          {{ enumValue }}
-        </li>
-      </ul>
+      <template v-if="value?.['x-enumDescriptions']">
+        <div class="property-list">
+          <div
+            v-for="enumValue in getEnumFromValue(value)"
+            :key="enumValue"
+            class="property">
+            <div class="property-heading">
+              <div class="property-name">
+                {{ enumValue }}
+              </div>
+            </div>
+            <div class="property-description">
+              <ScalarMarkdown :value="value['x-enumDescriptions'][enumValue]" />
+            </div>
+          </div>
+        </div>
+      </template>
+      <template v-else>
+        <ul class="property-enum-values">
+          <li
+            v-for="enumValue in getEnumFromValue(value)"
+            :key="enumValue"
+            class="property-enum-value">
+            {{ enumValue }}
+          </li>
+        </ul>
+      </template>
     </div>
     <!-- Object -->
     <div
@@ -279,5 +299,16 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
 
 .property--compact .property-example {
   display: none;
+}
+.property-list {
+  border: 1px solid var(--scalar-border-color);
+  border-radius: var(--scalar-radius);
+  margin-top: 10px;
+}
+.property-list .property:last-of-type {
+  padding-bottom: 10px;
+}
+.property-name {
+  font-family: var(--scalar-font-code);
 }
 </style>

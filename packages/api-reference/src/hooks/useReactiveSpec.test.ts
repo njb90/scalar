@@ -1,7 +1,8 @@
+import type { SpecConfiguration } from '@scalar/oas-utils'
+import { prettyPrintJson } from '@scalar/oas-utils/helpers'
 import { describe, expect, test, vi } from 'vitest'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
 
-import type { SpecConfiguration } from '../types'
 import { useReactiveSpec } from './useReactiveSpec'
 
 const basicSpec = {
@@ -22,7 +23,7 @@ describe('useReactiveSpec', () => {
 
     await nextTick()
 
-    expect(rawSpec.value).toBe(basicSpecString)
+    expect(rawSpec.value).toBe(prettyPrintJson(basicSpecString))
   })
 
   test('returns an empty string', async () => {
@@ -49,7 +50,7 @@ describe('useReactiveSpec', () => {
     await nextTick()
     await nextTick()
 
-    expect(rawSpec.value).toBe(basicSpecString)
+    expect(rawSpec.value).toBe(prettyPrintJson(basicSpecString))
   })
 
   test('works with strings', async () => {
@@ -121,7 +122,7 @@ describe('useReactiveSpec', () => {
 
     await nextTick()
 
-    expect(rawSpec.value).toBe(basicSpecString)
+    expect(rawSpec.value).toBe(prettyPrintJson(basicSpecString))
   })
 
   test('reacts to ref changes', async () => {
@@ -136,7 +137,7 @@ describe('useReactiveSpec', () => {
 
     await nextTick()
 
-    expect(rawSpec.value).toBe(basicSpecString)
+    expect(rawSpec.value).toBe(prettyPrintJson(basicSpecString))
 
     // Change the configuration …
     Object.assign(configurationRef, {
@@ -152,7 +153,7 @@ describe('useReactiveSpec', () => {
     await nextTick()
 
     expect(rawSpec.value).toBe(
-      basicSpecString.replace('Example', 'My Changed Title'),
+      prettyPrintJson(basicSpecString.replace('Example', 'My Changed Title')),
     )
 
     // Change the configuration to empty
@@ -172,7 +173,7 @@ describe('useReactiveSpec', () => {
 
     await nextTick()
 
-    expect(rawSpec.value).toBe(basicSpecString)
+    expect(rawSpec.value).toBe(prettyPrintJson(basicSpecString))
 
     // Change the configuration …
     Object.assign(configurationRef, {
@@ -182,7 +183,7 @@ describe('useReactiveSpec', () => {
     await nextTick()
 
     // … but the content shouldn’t be overwritten
-    expect(rawSpec.value).toBe(basicSpecString)
+    expect(rawSpec.value).toBe(prettyPrintJson(basicSpecString))
   })
 })
 
@@ -200,7 +201,7 @@ describe('useParser', () => {
     // Sleep for 10ms to wait for the parser to finish
     await new Promise((resolve) => setTimeout(resolve, 50))
 
-    expect(parsedSpec.info.title).toBe('Example')
+    expect(parsedSpec.info?.title).toBe('Example')
   })
 
   test('works with refs', async () => {
@@ -215,7 +216,7 @@ describe('useParser', () => {
     // Sleep for 300ms to wait for the debouncer and the parser
     await new Promise((resolve) => setTimeout(resolve, 300))
 
-    expect(parsedSpec.info.title).toBe('Example')
+    expect(parsedSpec.info?.title).toBe('Example')
   })
 
   test('watches the ref', async () => {
@@ -230,7 +231,7 @@ describe('useParser', () => {
     // Sleep for 300ms to wait for the debouncer and the parser
     await new Promise((resolve) => setTimeout(resolve, 300))
 
-    expect(parsedSpec.info.title).toBe('Example')
+    expect(parsedSpec.info?.title).toBe('Example')
 
     rawSpecConfig.value = {
       content: JSON.stringify(basicSpecString.replace('Example', 'Foobar')),
@@ -239,7 +240,7 @@ describe('useParser', () => {
     // Sleep for 300ms to wait for the debouncer and the parser
     await new Promise((resolve) => setTimeout(resolve, 300))
 
-    expect(parsedSpec.info.title).toBe('Foobar')
+    expect(parsedSpec.info?.title).toBe('Foobar')
   })
 
   test('deals with undefined input', async () => {
@@ -248,7 +249,7 @@ describe('useParser', () => {
     // Sleep for 10ms to wait for the parser to finish
     await new Promise((resolve) => setTimeout(resolve, 10))
 
-    expect(parsedSpec.info.title).toBe('')
+    expect(parsedSpec.info?.title).toBe('')
   })
 
   test('deals with empty input', async () => {
@@ -261,7 +262,7 @@ describe('useParser', () => {
     // Sleep for 10ms to wait for the parser to finish
     await new Promise((resolve) => setTimeout(resolve, 10))
 
-    expect(parsedSpec.info.title).toBe('')
+    expect(parsedSpec.info?.title).toBe('')
   })
 
   test('returns errors', async () => {

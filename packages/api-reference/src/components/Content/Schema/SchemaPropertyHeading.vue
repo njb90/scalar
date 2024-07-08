@@ -27,7 +27,10 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
     <div
       v-if="additional"
       class="property-additional">
-      additional properties
+      <template v-if="value?.['x-additionalPropertiesName']">
+        {{ value['x-additionalPropertiesName'] }}
+      </template>
+      <template v-else> additional properties </template>
     </div>
     <div
       v-if="value?.deprecated"
@@ -40,7 +43,15 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
       required
     </div>
     <div
-      v-if="value?.type"
+      v-if="value?.const || (value?.enum && value.enum.length === 1)"
+      class="property-const">
+      <SchemaPropertyDetail truncate>
+        <template #prefix>const:</template>
+        {{ value.const ?? value.enum[0] }}
+      </SchemaPropertyDetail>
+    </div>
+    <div
+      v-else-if="value?.type"
       class="property-details">
       <SchemaPropertyDetail v-if="additional">
         <template #prefix>key:</template>
@@ -75,11 +86,23 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
       <SchemaPropertyDetail v-if="value.format">{{
         value.format
       }}</SchemaPropertyDetail>
-      <SchemaPropertyDetail v-if="value.minimum">
+      <SchemaPropertyDetail
+        v-if="value.minimum !== undefined && value.exclusiveMinimum">
+        <template #prefix>greater than:</template>
+        {{ value.minimum }}
+      </SchemaPropertyDetail>
+      <SchemaPropertyDetail
+        v-if="value.minimum !== undefined && !value.exclusiveMinimum">
         <template #prefix>min:</template>
         {{ value.minimum }}
       </SchemaPropertyDetail>
-      <SchemaPropertyDetail v-if="value.maximum">
+      <SchemaPropertyDetail
+        v-if="value.maximum !== undefined && value.exclusiveMaximum">
+        <template #prefix>less than:</template>
+        {{ value.maximum }}
+      </SchemaPropertyDetail>
+      <SchemaPropertyDetail
+        v-if="value.maximum !== undefined && !value.exclusiveMaximum">
         <template #prefix>max:</template>
         {{ value.maximum }}
       </SchemaPropertyDetail>
@@ -153,5 +176,9 @@ const rules = ['oneOf', 'anyOf', 'allOf', 'not']
   align-items: center;
 
   min-width: 0;
+}
+
+.property-const {
+  color: var(--scalar-color-1);
 }
 </style>

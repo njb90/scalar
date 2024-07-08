@@ -2,6 +2,7 @@
  * This file is the entry point for the CDN version of the API Reference.
  * It’s responsible for finding the spec and configuration in the HTML, and mounting the Vue.js app.
  */
+import { createHead } from '@unhead/vue'
 import { createApp, h, reactive } from 'vue'
 
 import { default as ApiReference } from './components/ApiReference.vue'
@@ -58,13 +59,13 @@ const getSpecUrl = () => {
   return undefined
 }
 
-const getSpec = (): Record<string, any> | undefined => {
+const getSpec = (): string | undefined => {
   // <script id="api-reference" type="application/json">{"openapi":"3.1.0","info":{"title":"Example"},"paths":{}}</script>
   if (specScriptTag) {
     const specFromScriptTag = specScriptTag.innerHTML?.trim()
 
     if (specFromScriptTag) {
-      return JSON.parse(specFromScriptTag)
+      return specFromScriptTag
     }
   }
 
@@ -76,7 +77,7 @@ const getSpec = (): Record<string, any> | undefined => {
     const specFromSpecElement = specElement.getAttribute('data-spec')?.trim()
 
     if (specFromSpecElement) {
-      return JSON.parse(specFromSpecElement)
+      return specFromSpecElement
     }
   }
 
@@ -84,7 +85,7 @@ const getSpec = (): Record<string, any> | undefined => {
 }
 
 const getProxyUrl = () => {
-  // <script id="api-reference" data-proxy-url="https://api.scalar.com/request-proxy">…</script>
+  // <script id="api-reference" data-proxy-url="https://proxy.scalar.com">…</script>
   if (specScriptTag) {
     const proxyUrl = specScriptTag.getAttribute('data-proxy-url')
 
@@ -121,7 +122,11 @@ if (!specUrlElement && !specElement && !specScriptTag) {
     },
   })
 
-  document.body?.classList.add('light-mode')
+  if (getConfiguration().darkMode) {
+    document.body?.classList.add('dark-mode')
+  } else {
+    document.body?.classList.add('light-mode')
+  }
 
   // If it’s a script tag, we can’t mount the Vue.js app inside that tag.
   // We need to add a new container div before the script tag.
@@ -141,6 +146,9 @@ if (!specUrlElement && !specElement && !specScriptTag) {
   // Wrap create app in factory for re-loading
   const createAppFactory = () => {
     const _app = createApp(() => h(ApiReference, props))
+
+    const head = createHead()
+    _app.use(head)
 
     if (container) {
       _app.mount(container)

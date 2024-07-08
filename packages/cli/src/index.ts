@@ -7,9 +7,10 @@ import {
   FormatCommand,
   InitCommand,
   MockCommand,
-  ReferenceCommand,
+  ServeCommand,
   ShareCommand,
   ValidateCommand,
+  VoidCommand,
 } from './commands'
 
 const program = new Command()
@@ -19,14 +20,21 @@ program
   .description('CLI to work with your OpenAPI files')
   .version(version)
 
-program.addCommand(InitCommand(), {
-  isDefault: true,
-})
+/** display help in case of error */
+program.showHelpAfterError()
+
+program.addCommand(InitCommand())
 program.addCommand(FormatCommand())
 program.addCommand(ValidateCommand())
 program.addCommand(BundleCommand())
-program.addCommand(ReferenceCommand())
+program.addCommand(ServeCommand())
 program.addCommand(MockCommand())
+program.addCommand(VoidCommand())
 program.addCommand(ShareCommand())
+
+/** display help if no argument has been provided */
+if (process.argv.length === 2) {
+  program.help()
+}
 
 program.parse()

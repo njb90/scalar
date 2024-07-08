@@ -1,47 +1,31 @@
+import {
+  ViteWatchWorkspace,
+  createViteBuildOptions,
+  findEntryPoints,
+} from '@scalar/build-tooling'
 import vue from '@vitejs/plugin-vue'
-import path from 'path'
-import { libInjectCss } from 'vite-plugin-lib-inject-css'
-import { defineConfig } from 'vitest/config'
-
-import pkg from './package.json'
+import { URL, fileURLToPath } from 'node:url'
+import { defineConfig } from 'vite'
+import svgLoader from 'vite-svg-loader'
 
 export default defineConfig({
-  plugins: [vue(), libInjectCss()],
-  build: {
-    cssCodeSplit: false,
-    minify: false,
-    lib: {
-      entry: ['src/index.ts'],
-      name: '@scalar/api-client',
-      formats: ['es'],
-    },
-    rollupOptions: {
-      external: [
-        'vue',
-        ...Object.keys(pkg.dependencies || {}).filter(
-          (item) => !item.startsWith('@scalar'),
-        ),
-      ],
-    },
-  },
+  plugins: [vue(), svgLoader(), ViteWatchWorkspace()],
   resolve: {
-    alias: [
-      // Resolve the uncompiled source code for all @scalar packages
-      // It’s working with the alias, too. It’s just required to enable HMR.
-      // It also does not match components since we want the built version
-      {
-        // Resolve the uncompiled source code for all @scalar packages
-        // @scalar/* -> packages/*/
-        // (not @scalar/*/style.css)
-        find: /^@scalar\/(?!(openapi-parser|snippetz|galaxy|components\/style\.css|components\b))(.+)/,
-        replacement: path.resolve(__dirname, '../$2/src/index.ts'),
-      },
-    ],
-  },
-  test: {
-    coverage: {
-      enabled: true,
-      reporter: 'text',
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
+    dedupe: ['vue'],
   },
+  optimizeDeps: {
+    exclude: ['@scalar/*'],
+  },
+  server: {
+    port: 5065,
+  },
+  build: createViteBuildOptions({
+    entry: await findEntryPoints({ allowCss: true }),
+    options: {
+      ssr: false,
+    },
+  }),
 })

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type Icon, ScalarIcon, ScalarIconButton } from '@scalar/components'
 
-import { scrollToId, sleep } from '../../helpers'
+import { joinWithSlash, scrollToId, sleep } from '../../helpers'
 import { useNavState } from '../../hooks'
 import SidebarHttpBadge from './SidebarHttpBadge.vue'
 
@@ -45,12 +45,12 @@ const handleClick = async () => {
 // Build relative URL and add hash
 const generateLink = () => {
   if (pathRouting.value) {
-    return pathRouting.value.basePath + '/' + props.item.id
-  } else {
+    return joinWithSlash(pathRouting.value.basePath, props.item.id)
+  } else if (typeof window !== 'undefined') {
     const newUrl = new URL(window.location.href)
     newUrl.hash = props.item.id
     return `${newUrl.pathname}${newUrl.search}${newUrl.hash}`
-  }
+  } else return `#${props.item.id}`
 }
 
 // For path routing we want to handle the clicks
@@ -72,7 +72,7 @@ const onAnchorClick = async (ev: Event) => {
     hash.value = props.item.id
 
     const url = new URL(window.location.href)
-    url.pathname = pathRouting.value.basePath + '/' + props.item.id
+    url.pathname = joinWithSlash(pathRouting.value.basePath, props.item.id)
 
     window.history.pushState({}, '', url)
     scrollToId(props.item.id)
@@ -298,5 +298,6 @@ const onAnchorClick = async (ev: Event) => {
 }
 .sidebar-group-item__folder {
   color: var(--scalar-sidebar-color-1, var(--scalar-color-1));
+  text-transform: var(--scalar-tag-text-transform, initial);
 }
 </style>

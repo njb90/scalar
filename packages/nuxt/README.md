@@ -61,7 +61,7 @@ export default defineNuxtConfig({
     metaData: {
       title: 'API Documentation by Scalar',
     },
-    proxy: 'https://api.scalar.com/request-proxy',
+    proxy: 'https://proxy.scalar.com',
     searchHotKey: 'k',
     showSidebar: true,
     pathRouting: {
@@ -85,7 +85,7 @@ export default defineNuxtConfig({
     metaData: {
       title: 'API Documentation by Scalar',
     },
-    proxy: 'https://api.scalar.com/request-proxy',
+    proxy: 'https://proxy.scalar.com',
     configurations: [
       {
         spec: {
@@ -106,4 +106,16 @@ export default defineNuxtConfig({
     ],
   },
 })
+```
+
+## Troubleshooting
+
+If you come across any `**** not default export` errors, its likely you are using `pnpm`.
+A temporary fix for this would be to enable [shamefully-hoist](https://pnpm.io/npmrc#shamefully-hoist) until
+we sort out what is causing the package issues.
+
+To do this, just create a `.npmrc` file in your project root and fill it with:
+
+```bash
+shamefully-hoist=true
 ```

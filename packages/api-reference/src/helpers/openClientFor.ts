@@ -2,12 +2,12 @@ import {
   useApiClientStore,
   useOpenApiStore,
   useRequestStore,
-} from '@scalar/api-client'
+  useServerStore,
+} from '#legacy'
 import type { TransformedOperation } from '@scalar/oas-utils'
 import type { OpenAPIV3 } from '@scalar/openapi-parser'
 
 import { getApiClientRequest } from '../helpers'
-import { useServerStore } from '../stores/useServerStore'
 
 const { server: serverState } = useServerStore()
 const { setOperation, setGlobalSecurity } = useOpenApiStore()
@@ -16,6 +16,9 @@ const { toggleApiClient } = useApiClientStore()
 
 const { setActiveRequest, resetActiveResponse } = useRequestStore()
 
+/**
+ * Prepares all the data to open the API client for a specific operation.
+ */
 export function openClientFor(
   operation: TransformedOperation,
   globalSecurity?: OpenAPIV3.SecurityRequirementObject[],

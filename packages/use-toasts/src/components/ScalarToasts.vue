@@ -21,6 +21,7 @@ initializeToasts((message, level = 'info', options: ToastOptions = {}) => {
 
   toastAction(message, {
     duration: options.timeout || 3000,
+    description: options.description,
   })
 })
 </script>
@@ -28,7 +29,7 @@ initializeToasts((message, level = 'info', options: ToastOptions = {}) => {
 <template>
   <Toaster
     v-if="isClientMounted"
-    :toastOptions="{ className: 'toaster' }">
+    :toastOptions="{ class: 'toaster' }">
   </Toaster>
 </template>
 

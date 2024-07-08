@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { useAuthenticationStore } from '@scalar/api-client'
+import { useAuthenticationStore } from '#legacy'
 import { migrateThemeVariables } from '@scalar/themes'
-import { createHead, useSeoMeta } from 'unhead'
+import { useSeoMeta } from '@unhead/vue'
 import { computed, toRef, watch } from 'vue'
 
-import { useDarkModeState, useHttpClients, useReactiveSpec } from '../hooks'
+import { useDarkModeState, useReactiveSpec } from '../hooks'
+import { useHttpClientStore } from '../stores'
 import type { ReferenceConfiguration, ReferenceProps } from '../types'
-import Layouts from './Layouts/'
+import { Layouts } from './Layouts'
 
 const props = defineProps<ReferenceProps>()
 
@@ -17,6 +18,14 @@ defineEmits<{
 
 const { toggleDarkMode, isDark } = useDarkModeState(
   props.configuration?.darkMode,
+)
+
+/** Update the dark mode state when props change */
+watch(
+  () => props.configuration?.darkMode,
+  (_isDark) => {
+    if (_isDark !== isDark.value) toggleDarkMode()
+  },
 )
 
 const customCss = computed(() => {
@@ -41,9 +50,7 @@ const configuration = computed<ReferenceConfiguration>(() => ({
   customCss: customCss.value,
 }))
 
-// Create the head tag if the configuration has meta data
 if (configuration.value?.metaData) {
-  createHead()
   useSeoMeta(configuration.value.metaData)
 }
 
@@ -69,12 +76,12 @@ const { setAuthentication } = useAuthenticationStore()
 mapConfigToState('authentication', setAuthentication)
 
 // Hides any client snippets from the references
-const { setExcludedClients } = useHttpClients()
+const { setExcludedClients } = useHttpClientStore()
 mapConfigToState('hiddenClients', setExcludedClients)
 
 const { parsedSpec, rawSpec } = useReactiveSpec({
-  proxy: toRef(() => props.configuration?.proxy || ''),
-  specConfig: toRef(() => props.configuration?.spec || {}),
+  proxy: toRef(() => configuration.value.proxy || ''),
+  specConfig: toRef(() => configuration.value.spec || {}),
 })
 </script>
 <template>
@@ -84,8 +91,7 @@ const { parsedSpec, rawSpec } = useReactiveSpec({
     v-if="configuration?.customCss">
     {{ configuration.customCss }}
   </component>
-  <Component
-    :is="Layouts[configuration?.layout || 'modern']"
+  <Layouts
     :configuration="configuration"
     :isDark="isDark"
     :parsedSpec="parsedSpec"
@@ -93,7 +99,9 @@ const { parsedSpec, rawSpec } = useReactiveSpec({
     @toggleDarkMode="() => toggleDarkMode()"
     @updateContent="$emit('updateContent', $event)">
     <template #footer><slot name="footer" /></template>
-  </Component>
+    <!-- Expose the content end slot as a slot for the footer -->
+    <template #content-end><slot name="footer" /></template>
+  </Layouts>
 </template>
 <style>
 body {

@@ -1,5 +1,241 @@
 # @scalar/components
 
+## 0.12.9
+
+### Patch Changes
+
+- d58841b: feat: add props to scalar tooltip
+
+## 0.12.8
+
+### Patch Changes
+
+- a5aedf5: feat: lint workspace sidenav icons
+- a5aedf5: feat: add server icon
+- cd5d1a4: fix: made adding of scalar classes to headless more robust
+
+## 0.12.7
+
+### Patch Changes
+
+- 14e71cd: fix: api client top position on mobile
+  - @scalar/code-highlight@0.0.5
+
+## 0.12.6
+
+### Patch Changes
+
+- c533665: fix: move css imports to style tags
+  - @scalar/code-highlight@0.0.5
+
+## 0.12.5
+
+### Patch Changes
+
+- 4861362: chore: merge modal package into client-app
+
+## 0.12.4
+
+### Patch Changes
+
+- 94e68ab: chore: upgrade typescript to 5.5
+- Updated dependencies [a298195]
+- Updated dependencies [326bd3d]
+- Updated dependencies [94e68ab]
+  - @scalar/oas-utils@0.2.5
+  - @scalar/code-highlight@0.0.5
+
+## 0.12.3
+
+### Patch Changes
+
+- 132acd4: fix: file upload and binary file ui
+- b981770: chore: introduce the new @scalar/api-reference-editor
+- fd18932: fix: scalar button loading state
+- 06471ed: feat: add scalar listbox id prop
+  - @scalar/code-highlight@0.0.4
+
+## 0.12.2
+
+### Patch Changes
+
+- 65f7bf5: fix: scalar icon info update
+  - @scalar/code-highlight@0.0.4
+
+## 0.12.1
+
+### Patch Changes
+
+- c20c7d0: style: minor improvements to the dropdown and listbox comppnents
+- Updated dependencies [c20c7d0]
+  - @scalar/oas-utils@0.2.4
+
+## 0.12.0
+
+### Minor Changes
+
+- e4419ce: feat: add scalar tooltip component
+
+### Patch Changes
+
+- f2c1019: fix: center scalar modal component
+- fd0c93d: fix: shalow ref over ref in scalar icon
+- 7b87b8c: fix: components tailwind specificity
+- 512c815: feat: scalar listbox component full width
+
+## 0.11.6
+
+### Patch Changes
+
+- 5e92eab: feat(#doc-1996): themes css exports
+- Updated dependencies [5e92eab]
+  - @scalar/code-highlight@0.0.4
+
+## 0.11.5
+
+### Patch Changes
+
+- 627e0e5: fix: docusaurus scalar codeblock border radius
+- Updated dependencies [362d47a]
+  - @scalar/oas-utils@0.2.3
+  - @scalar/code-highlight@0.0.3
+
+## 0.11.4
+
+### Patch Changes
+
+- 3d6ca80: fix: scalar modal component padding reset
+- 0fae180: chore: move client app to use @scalar/themes tailwind preset
+  - @scalar/code-highlight@0.0.3
+
+## 0.11.3
+
+### Patch Changes
+
+- 7dbb241: fix: wrapped code blocks
+
+## 0.11.2
+
+### Patch Changes
+
+- a2cb3c3: Migrate away from unintended peer dependencies
+- Updated dependencies [a2cb3c3]
+  - @scalar/oas-utils@0.2.2
+  - @scalar/code-highlight@0.0.3
+
+## 0.11.1
+
+### Patch Changes
+
+- e0fc110: chore: patch bump all package
+- Updated dependencies [e0fc110]
+- Updated dependencies [f0acc89]
+  - @scalar/code-highlight@0.0.3
+  - @scalar/oas-utils@0.2.1
+
+## 0.11.0
+
+### Minor Changes
+
+- 7f8ef74: chore: remove aliasing
+
+### Patch Changes
+
+- 190bcb6: feat: scalar dropdown and listbox offset prop addition
+- f82a767: fix: update dropdown styles
+- 326dcfb: chore: remove @scalar/use-modal package
+- 8494349: Migrate to highlightjs based syntax highlighting
+- b38c7ed: Update build configs to a standardized format
+- 6fbb57e: feat: release all the packages
+- 94084bf: feat: scalar floating teleport
+- c5760b9: fix: focus state in scalar listbox
+- Updated dependencies [7f8ef74]
+- Updated dependencies [96347a1]
+- Updated dependencies [8494349]
+- Updated dependencies [6fbb57e]
+  - @scalar/oas-utils@0.2.0
+  - @scalar/code-highlight@0.0.2
+
+## 0.10.1
+
+### Patch Changes
+
+- 961690d: chore: export listbox component
+- Updated dependencies [c951512]
+  - @scalar/oas-utils@0.1.17
+
+## 0.10.0
+
+### Minor Changes
+
+- 843218d: feat: add listbox component
+
+### Patch Changes
+
+- 83bfad8: chore: lint icon svgs
+- 34eba38: fix: update storybook script
+- 195ca18: fix: align show hide icons with icon standards
+
+## 0.9.0
+
+### Minor Changes
+
+- 7d3bc16: feat: css files must be explicitly imported, check the docs
+- 7d3bc16: BREAKING CHANGE: css must now be explicitly imported, see docs for more details
+
+## 0.8.0
+
+### Minor Changes
+
+- 18ecd33: refactor: remove component app install
+- 26e2392: refactor: remove :where prefix in favor of cascade layers
+
+## 0.7.15
+
+### Patch Changes
+
+- Updated dependencies [cc5402c]
+  - @scalar/oas-utils@0.1.16
+
+## 0.7.14
+
+### Patch Changes
+
+- Updated dependencies [f472998]
+  - @scalar/oas-utils@0.1.15
+
+## 0.7.13
+
+### Patch Changes
+
+- be75488: fix: update password show hide icon
+
+## 0.7.12
+
+### Patch Changes
+
+- 50480c7: feat: set type prop in scalar button component
+- Updated dependencies [7205137]
+- Updated dependencies [d369ac4]
+  - @scalar/oas-utils@0.1.14
+
+## 0.7.11
+
+### Patch Changes
+
+- Updated dependencies [5aa656f]
+  - @scalar/oas-utils@0.1.13
+
+## 0.7.10
+
+### Patch Changes
+
+- dfe51b1: style: brightened ScalarButton ghost highlight color
+- 925572f: fix: add scalar component scope to missing components
+- Updated dependencies [61b8ddc]
+- Updated dependencies [165b901]
+  - @scalar/oas-utils@0.1.12
+
 ## 0.7.9
 
 ### Patch Changes

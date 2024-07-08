@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ScalarCodeBlock } from '@scalar/components'
-import { getExampleFromSchema, prettyPrintJson } from '@scalar/oas-utils'
+import { prettyPrintJson } from '@scalar/oas-utils/helpers'
+import { getExampleFromSchema } from '@scalar/oas-utils/spec-getters'
 
 defineProps<{
   response:
@@ -29,18 +30,6 @@ const mergeAllObjects = (items: Record<any, any>[]): any => {
       lang="json" />
   </div>
   <div v-else-if="response?.schema">
-    <!-- Single Schema -->
-    <ScalarCodeBlock
-      v-if="response?.schema.type"
-      :content="
-        prettyPrintJson(
-          getExampleFromSchema(response?.schema, {
-            emptyString: '…',
-            mode: 'read',
-          }),
-        )
-      "
-      lang="json" />
     <!-- oneOf, anyOf, not … -->
     <template
       v-for="rule in rules"
@@ -93,6 +82,31 @@ const mergeAllObjects = (items: Record<any, any>[]): any => {
               mode: 'read',
             }),
           ),
+        )
+      "
+      lang="json" />
+    <ScalarCodeBlock
+      v-if="response?.schema['items']?.['allOf']"
+      :content="
+        mergeAllObjects(
+          response?.schema['items']['allOf'].map((schema: any) =>
+            getExampleFromSchema(schema, {
+              emptyString: '…',
+              mode: 'read',
+            }),
+          ),
+        )
+      "
+      lang="json" />
+    <!-- Single Schema -->
+    <ScalarCodeBlock
+      v-else
+      :content="
+        prettyPrintJson(
+          getExampleFromSchema(response?.schema, {
+            emptyString: '…',
+            mode: 'read',
+          }),
         )
       "
       lang="json" />

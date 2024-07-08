@@ -1,7 +1,6 @@
 import type * as Preset from '@docusaurus/preset-classic'
 import type { Config } from '@docusaurus/types'
 import type { ScalarOptions } from '@scalar/docusaurus'
-import { themes as prismThemes } from 'prism-react-renderer'
 
 const config: Config = {
   title: 'My Site',
@@ -59,11 +58,63 @@ const config: Config = {
     [
       '@scalar/docusaurus',
       {
-        label: 'Scalar',
-        route: '/scalar',
+        id: 'json-url',
+        label: 'json-url',
+        route: '/json-url',
         configuration: {
           spec: {
             url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.json',
+          },
+        },
+      } as ScalarOptions,
+    ],
+    [
+      '@scalar/docusaurus',
+      {
+        id: 'yaml-url',
+        label: 'yaml-url',
+        route: '/yaml-url',
+        configuration: {
+          spec: {
+            url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.yaml',
+          },
+        },
+      } as ScalarOptions,
+    ],
+    [
+      '@scalar/docusaurus',
+      {
+        id: 'json-string',
+        label: 'json-string',
+        route: '/json-string',
+        configuration: {
+          spec: {
+            content: `{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Hello World",
+    "version": "1.0.0"
+  },
+  "paths": {}
+}`,
+          },
+        },
+      } as ScalarOptions,
+    ],
+    [
+      '@scalar/docusaurus',
+      {
+        id: 'yaml-string',
+        label: 'yaml-string',
+        route: '/yaml-string',
+        configuration: {
+          spec: {
+            content: `openapi: 3.1.0
+info:
+  title: Hello World
+  version: 1.0.0
+paths: {}
+`,
           },
         },
       } as ScalarOptions,
@@ -138,10 +189,6 @@ const config: Config = {
         },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
-    },
-    prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
     },
   } satisfies Preset.ThemeConfig,
 }

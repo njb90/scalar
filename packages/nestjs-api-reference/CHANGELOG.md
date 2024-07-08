@@ -1,5 +1,417 @@
 # @scalar/nestjs-api-reference
 
+## 0.3.92
+
+### Patch Changes
+
+- Updated dependencies [7662097]
+- Updated dependencies [f8982ed]
+  - @scalar/api-reference@1.24.31
+
+## 0.3.91
+
+### Patch Changes
+
+- Updated dependencies [b4d6d4a]
+  - @scalar/api-reference@1.24.30
+
+## 0.3.90
+
+### Patch Changes
+
+- Updated dependencies [ebf1ee9]
+- Updated dependencies [613def2]
+  - @scalar/api-reference@1.24.29
+
+## 0.3.89
+
+### Patch Changes
+
+- @scalar/api-reference@1.24.28
+
+## 0.3.88
+
+### Patch Changes
+
+- @scalar/api-reference@1.24.27
+
+## 0.3.87
+
+### Patch Changes
+
+- @scalar/api-reference@1.24.26
+
+## 0.3.86
+
+### Patch Changes
+
+- Updated dependencies [429e928]
+  - @scalar/api-reference@1.24.25
+
+## 0.3.85
+
+### Patch Changes
+
+- Updated dependencies [bbbabe6]
+  - @scalar/api-reference@1.24.24
+
+## 0.3.84
+
+### Patch Changes
+
+- Updated dependencies [b87617c]
+- Updated dependencies [975e555]
+- Updated dependencies [646dab2]
+- Updated dependencies [7f4d22e]
+- Updated dependencies [a32f137]
+  - @scalar/api-reference@1.24.23
+
+## 0.3.83
+
+### Patch Changes
+
+- @scalar/api-reference@1.24.22
+
+## 0.3.82
+
+### Patch Changes
+
+- Updated dependencies [cefe804]
+- Updated dependencies [4861362]
+- Updated dependencies [cefe804]
+- Updated dependencies [4126c40]
+  - @scalar/api-reference@1.24.21
+
+## 0.3.81
+
+### Patch Changes
+
+- 94e68ab: chore: upgrade typescript to 5.5
+- Updated dependencies [94e68ab]
+  - @scalar/api-reference@1.24.20
+
+## 0.3.80
+
+### Patch Changes
+
+- Updated dependencies [b981770]
+- Updated dependencies [89afbcf]
+- Updated dependencies [06471ed]
+- Updated dependencies [06471ed]
+  - @scalar/api-reference@1.24.19
+
+## 0.3.79
+
+### Patch Changes
+
+- @scalar/api-reference@1.24.18
+
+## 0.3.78
+
+### Patch Changes
+
+- @scalar/api-reference@1.24.17
+
+## 0.3.77
+
+### Patch Changes
+
+- Updated dependencies [716811f]
+- Updated dependencies [5812c2f]
+- Updated dependencies [ee5fdee]
+  - @scalar/api-reference@1.24.16
+
+## 0.3.76
+
+### Patch Changes
+
+- Updated dependencies [d7a011a]
+- Updated dependencies [40d7c3d]
+  - @scalar/api-reference@1.24.15
+
+## 0.3.75
+
+### Patch Changes
+
+- Updated dependencies [fb9baa5]
+  - @scalar/api-reference@1.24.14
+
+## 0.3.74
+
+### Patch Changes
+
+- Updated dependencies [5e92eab]
+  - @scalar/api-reference@1.24.13
+
+## 0.3.73
+
+### Patch Changes
+
+- Updated dependencies [bcbcfc5]
+  - @scalar/api-reference@1.24.12
+
+## 0.3.72
+
+### Patch Changes
+
+- Updated dependencies [f03b626]
+  - @scalar/api-reference@1.24.11
+
+## 0.3.71
+
+### Patch Changes
+
+- Updated dependencies [d982f18]
+  - @scalar/api-reference@1.24.10
+
+## 0.3.70
+
+### Patch Changes
+
+- @scalar/api-reference@1.24.9
+
+## 0.3.69
+
+### Patch Changes
+
+- @scalar/api-reference@1.24.8
+
+## 0.3.68
+
+### Patch Changes
+
+- Updated dependencies [43f0d4b]
+  - @scalar/api-reference@1.24.7
+
+## 0.3.67
+
+### Patch Changes
+
+- a2cb3c3: Migrate away from unintended peer dependencies
+- Updated dependencies [a2cb3c3]
+  - @scalar/api-reference@1.24.6
+
+## 0.3.66
+
+### Patch Changes
+
+- Updated dependencies [ee584b9]
+  - @scalar/api-reference@1.24.5
+
+## 0.3.65
+
+### Patch Changes
+
+- @scalar/api-reference@1.24.4
+
+## 0.3.64
+
+### Patch Changes
+
+- e0fc110: chore: patch bump all package
+- Updated dependencies [e0fc110]
+- Updated dependencies [f0acc89]
+  - @scalar/api-reference@1.24.3
+
+## 0.3.63
+
+### Patch Changes
+
+- 6fbb57e: feat: release all the packages
+- Updated dependencies [7f8ef74]
+- Updated dependencies [689677a]
+- Updated dependencies [326dcfb]
+- Updated dependencies [b4db5da]
+- Updated dependencies [d54eb42]
+- Updated dependencies [68eede9]
+- Updated dependencies [96347a1]
+- Updated dependencies [8494349]
+- Updated dependencies [b38c7ed]
+- Updated dependencies [6fbb57e]
+- Updated dependencies [6d11a8a]
+  - @scalar/api-reference@1.24.0
+
+## 0.3.62
+
+### Patch Changes
+
+- @scalar/api-reference@1.23.5
+
+## 0.3.61
+
+### Patch Changes
+
+- @scalar/api-reference@1.23.4
+
+## 0.3.60
+
+### Patch Changes
+
+- Updated dependencies [c951512]
+  - @scalar/api-reference@1.23.3
+
+## 0.3.59
+
+### Patch Changes
+
+- Updated dependencies [3619881]
+  - @scalar/api-reference@1.23.2
+
+## 0.3.58
+
+### Patch Changes
+
+- Updated dependencies [7d21723]
+  - @scalar/api-reference@1.23.1
+
+## 0.3.57
+
+### Patch Changes
+
+- Updated dependencies [7d3bc16]
+- Updated dependencies [7d3bc16]
+  - @scalar/api-reference@1.23.0
+
+## 0.3.56
+
+### Patch Changes
+
+- Updated dependencies [6c870da]
+  - @scalar/api-reference@1.22.56
+
+## 0.3.55
+
+### Patch Changes
+
+- @scalar/api-reference@1.22.55
+
+## 0.3.54
+
+### Patch Changes
+
+- Updated dependencies [cc5402c]
+- Updated dependencies [b3a46c7]
+  - @scalar/api-reference@1.22.54
+
+## 0.3.53
+
+### Patch Changes
+
+- Updated dependencies [5a9c298]
+- Updated dependencies [cad7eef]
+  - @scalar/api-reference@1.22.53
+
+## 0.3.52
+
+### Patch Changes
+
+- Updated dependencies [4bc33db]
+- Updated dependencies [30953fa]
+  - @scalar/api-reference@1.22.52
+
+## 0.3.51
+
+### Patch Changes
+
+- Updated dependencies [6ccdd5c]
+- Updated dependencies [4d01a2a]
+  - @scalar/api-reference@1.22.51
+
+## 0.3.50
+
+### Patch Changes
+
+- @scalar/api-reference@1.22.50
+
+## 0.3.49
+
+### Patch Changes
+
+- @scalar/api-reference@1.22.49
+
+## 0.3.48
+
+### Patch Changes
+
+- Updated dependencies [37471ee]
+  - @scalar/api-reference@1.22.48
+
+## 0.3.47
+
+### Patch Changes
+
+- Updated dependencies [4b78b40]
+- Updated dependencies [8865d12]
+  - @scalar/api-reference@1.22.47
+
+## 0.3.46
+
+### Patch Changes
+
+- Updated dependencies [594ac4e]
+  - @scalar/api-reference@1.22.46
+
+## 0.3.45
+
+### Patch Changes
+
+- Updated dependencies [5aa656f]
+  - @scalar/api-reference@1.22.45
+
+## 0.3.44
+
+### Patch Changes
+
+- Updated dependencies [496bca4]
+- Updated dependencies [f677ff5]
+- Updated dependencies [28c8dc5]
+  - @scalar/api-reference@1.22.44
+
+## 0.3.43
+
+### Patch Changes
+
+- @scalar/api-reference@1.22.43
+
+## 0.3.42
+
+### Patch Changes
+
+- Updated dependencies [a1cbb21]
+  - @scalar/api-reference@1.22.42
+
+## 0.3.41
+
+### Patch Changes
+
+- Updated dependencies [1ce9661]
+  - @scalar/api-reference@1.22.41
+
+## 0.3.40
+
+### Patch Changes
+
+- @scalar/api-reference@1.22.40
+
+## 0.3.39
+
+### Patch Changes
+
+- Updated dependencies [1305f28]
+- Updated dependencies [4ba9fed]
+- Updated dependencies [bf35da5]
+- Updated dependencies [ab5d017]
+- Updated dependencies [484bd33]
+- Updated dependencies [bf35da5]
+  - @scalar/api-reference@1.22.39
+
+## 0.3.38
+
+### Patch Changes
+
+- Updated dependencies [64cc35f]
+  - @scalar/api-reference@1.22.38
+
 ## 0.3.37
 
 ### Patch Changes

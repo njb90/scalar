@@ -1,5 +1,27 @@
 # @scalar/echo-server
 
+## 0.7.2
+
+### Patch Changes
+
+- 94e68ab: chore: upgrade typescript to 5.5
+
+## 0.7.1
+
+### Patch Changes
+
+- e0fc110: chore: patch bump all package
+
+## 0.7.0
+
+### Minor Changes
+
+- 7f8ef74: chore: remove aliasing
+
+### Patch Changes
+
+- 6fbb57e: feat: release all the packages
+
 ## 0.6.4
 
 ### Patch Changes

@@ -15,8 +15,7 @@ npm install @scalar/docusaurus
 
 ## Usage
 
-Simple add to the plugins section of your Docusaurus config. If you are using
-typescript you can import the type options type as well
+Simply add to the plugins section of your Docusaurus config. If you are using Typescript you can import the type options type as well.
 
 ```ts
 import type { ScalarOptions } from '@scalar/docusaurus'
@@ -30,6 +29,49 @@ plugins: [
       configuration: {
         spec: {
           url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.yaml',
+        },
+      },
+    } as ScalarOptions,
+  ],
+],
+```
+
+We wrote a [detailed integration guide for Docusaurus](https://github.com/scalar/scalar/tree/main/documentation/docusaurus.md).
+
+### Multiple API descriptions
+
+Is it possible to show multiple API descriptions? Yes, it is! :)
+
+```ts
+import type { ScalarOptions } from '@scalar/docusaurus'
+
+plugins: [
+  // First API definition
+  [
+    '@scalar/docusaurus',
+    {
+      // the `id` is required if you have multiple instances of the @scalar/docusaurus plugin
+      id: 'scalar/galaxy',
+      label: 'Scalar',
+      route: '/scalar',
+      configuration: {
+        spec: {
+          url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.json',
+        },
+      },
+    } as ScalarOptions,
+  ],
+  // Second API definition
+  [
+    '@scalar/docusaurus',
+    {
+      // the `id` is required if you have multiple instances of the @scalar/docusaurus plugin
+      id: 'petstore',
+      label: 'Petstore',
+      route: '/petstore',
+      configuration: {
+        spec: {
+          url: 'https://petstore3.swagger.io/api/v3/openapi.json',
         },
       },
     } as ScalarOptions,

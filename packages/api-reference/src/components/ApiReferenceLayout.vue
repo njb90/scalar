@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import { provideUseId } from '@headlessui/vue'
-import { type SSRState, defaultStateFactory } from '@scalar/oas-utils'
-import {
-  ResetStyles,
-  ScrollbarStyles,
-  type ThemeId,
-  ThemeStyles,
-} from '@scalar/themes'
-import { ScalarToasts } from '@scalar/use-toasts'
+import { addScalarClassesToHeadless } from '@scalar/components'
+import type { SSRState } from '@scalar/oas-utils'
+import { defaultStateFactory } from '@scalar/oas-utils/helpers'
+import { type ThemeId, getThemeStyles } from '@scalar/themes'
+import { ScalarToasts, useToasts } from '@scalar/use-toasts'
 import { useDebounceFn, useMediaQuery, useResizeObserver } from '@vueuse/core'
 import {
   computed,
@@ -35,10 +32,11 @@ import type {
   ReferenceLayoutSlot,
   ReferenceSlotProps,
 } from '../types'
-import { default as ApiClientModal } from './ApiClientModal.vue'
+import ApiClientModal from './ApiClientModal.vue'
 import { Content } from './Content'
 import GettingStarted from './GettingStarted.vue'
 import { Sidebar } from './Sidebar'
+import { Style } from './Util'
 
 const props = defineProps<Omit<ReferenceLayoutProps, 'isDark'>>()
 
@@ -49,6 +47,10 @@ defineEmits<{
   (e: 'linkSwaggerFile'): void
   (e: 'toggleDarkMode'): void
 }>()
+
+// Configure Reference toasts to use vue-sonner
+const { initializeToasts, toast } = useToasts()
+initializeToasts((message) => toast(message))
 
 defineOptions({
   inheritAttrs: false,
@@ -65,6 +67,16 @@ const elementHeight = ref('100dvh')
 const documentEl = ref<HTMLElement | null>(null)
 useResizeObserver(documentEl, (entries) => {
   elementHeight.value = entries[0].contentRect.height + 'px'
+})
+// Find scalar Y offset to support users who have tried to add their own headers
+const yPosition = ref(0)
+onMounted(() => {
+  const pbcr = documentEl.value?.parentElement?.getBoundingClientRect()
+  const bcr = documentEl.value?.getBoundingClientRect()
+  if (pbcr && bcr) {
+    const difference = bcr.top - pbcr.top
+    yPosition.value = difference < 2 ? 0 : difference
+  }
 })
 
 const {
@@ -102,6 +114,12 @@ const scrollToSection = async (id?: string) => {
   await sleep(100)
   isIntersectionEnabled.value = true
 }
+
+/**
+ * Ensure we add our scalar wrapper class to the headless ui root
+ * mounted is too late
+ */
+onBeforeMount(() => addScalarClassesToHeadless())
 
 onMounted(() => {
   // Enable the spec download event bus
@@ -150,6 +168,7 @@ onServerPrefetch(() => {
   const ctx = useSSRContext<SSRState>()
   if (!ctx) return
 
+  ctx.payload ||= { data: defaultStateFactory() }
   ctx.payload.data ||= defaultStateFactory()
 
   // Set initial hash value
@@ -213,108 +232,43 @@ hideModels.value = props.configuration.hideModels ?? false
 useDeprecationWarnings(props.configuration)
 </script>
 <template>
-  <ThemeStyles
-    :id="configuration?.theme"
-    :withDefaultFonts="configuration?.withDefaultFonts" />
-  <ResetStyles v-slot="{ styles: reset }">
-    <ScrollbarStyles v-slot="{ styles: scrollbars }">
-      <div
-        ref="documentEl"
-        class="scalar-api-reference references-layout"
-        :class="[
-          {
-            'references-editable': configuration.isEditable,
-            'references-sidebar': configuration.showSidebar,
-            'references-sidebar-mobile-open': isSidebarOpen,
-            'references-classic': configuration.layout === 'classic',
-          },
-          reset,
-          scrollbars,
-          $attrs.class,
-        ]"
-        :style="{ '--full-height': elementHeight }"
-        @scroll.passive="debouncedScroll">
-        <!-- Header -->
-        <div class="references-header">
-          <slot
-            v-bind="referenceSlotProps"
-            name="header" />
-        </div>
-        <!-- Navigation (sidebar) wrapper -->
-        <aside
-          v-if="configuration.showSidebar"
-          class="references-navigation t-doc__sidebar">
-          <!-- Navigation tree / Table of Contents -->
-          <div class="references-navigation-list">
-            <Sidebar :parsedSpec="parsedSpec">
-              <template #sidebar-start>
-                <slot
-                  v-bind="referenceSlotProps"
-                  name="sidebar-start" />
-              </template>
-              <template #sidebar-end>
-                <slot
-                  v-bind="referenceSlotProps"
-                  name="sidebar-end" />
-              </template>
-            </Sidebar>
-          </div>
-        </aside>
-        <!-- Swagger file editing -->
-        <div
-          v-show="configuration.isEditable"
-          class="references-editor">
-          <div class="references-editor-textarea">
-            <slot
-              v-bind="referenceSlotProps"
-              name="editor" />
-          </div>
-        </div>
-        <!-- Rendered reference -->
-        <template v-if="showRenderedContent">
-          <div class="references-rendered">
-            <Content
-              :baseServerURL="configuration.baseServerURL"
-              :clientLibraries="configuration.clientLibraries"
-              :layout="
-                configuration.layout === 'classic' ? 'accordion' : 'default'
-              "
-              :parsedSpec="parsedSpec">
-              <template #start>
-                <slot
-                  v-bind="referenceSlotProps"
-                  name="content-start" />
-              </template>
-              <template
-                v-if="configuration?.isEditable"
-                #empty-state>
-                <GettingStarted
-                  :theme="configuration?.theme || 'default'"
-                  @changeTheme="$emit('changeTheme', $event)"
-                  @linkSwaggerFile="$emit('linkSwaggerFile')"
-                  @loadSwaggerFile="$emit('loadSwaggerFile')"
-                  @updateContent="$emit('updateContent', $event)" />
-              </template>
-              <template #end>
-                <slot
-                  v-bind="referenceSlotProps"
-                  name="content-end" />
-              </template>
-            </Content>
-          </div>
-          <div
-            v-if="$slots.footer"
-            class="references-footer">
-            <slot
-              v-bind="referenceSlotProps"
-              name="footer" />
-          </div>
-        </template>
-        <!-- REST API Client Overlay -->
-        <!-- Fonts are fetched by @scalar/api-reference already, we can safely set `withDefaultFonts: false` -->
-        <ApiClientModal
-          :parsedSpec="parsedSpec"
-          :proxyUrl="configuration?.proxy">
+  <Style
+    v-if="props.configuration.withDefaultFonts || props.configuration.theme">
+    {{
+      getThemeStyles(configuration.theme, {
+        fonts: configuration.withDefaultFonts,
+      })
+    }}
+  </Style>
+  <div
+    ref="documentEl"
+    class="scalar-app scalar-api-reference references-layout"
+    :class="[
+      {
+        'references-editable': configuration.isEditable,
+        'references-sidebar': configuration.showSidebar,
+        'references-sidebar-mobile-open': isSidebarOpen,
+        'references-classic': configuration.layout === 'classic',
+      },
+      $attrs.class,
+    ]"
+    :style="{
+      '--scalar-y-offset': `var(--scalar-custom-header-height, ${yPosition}px)`,
+    }"
+    @scroll.passive="debouncedScroll">
+    <!-- Header -->
+    <div class="references-header">
+      <slot
+        v-bind="referenceSlotProps"
+        name="header" />
+    </div>
+    <!-- Navigation (sidebar) wrapper -->
+    <aside
+      v-if="configuration.showSidebar"
+      class="references-navigation t-doc__sidebar">
+      <!-- Navigation tree / Table of Contents -->
+      <div class="references-navigation-list">
+        <Sidebar :parsedSpec="parsedSpec">
           <template #sidebar-start>
             <slot
               v-bind="referenceSlotProps"
@@ -325,40 +279,102 @@ useDeprecationWarnings(props.configuration)
               v-bind="referenceSlotProps"
               name="sidebar-end" />
           </template>
-        </ApiClientModal>
+        </Sidebar>
       </div>
-    </ScrollbarStyles>
-  </ResetStyles>
+    </aside>
+    <!-- Swagger file editing -->
+    <div
+      v-show="configuration.isEditable"
+      class="references-editor">
+      <div class="references-editor-textarea">
+        <slot
+          v-bind="referenceSlotProps"
+          name="editor" />
+      </div>
+    </div>
+    <!-- Rendered reference -->
+    <template v-if="showRenderedContent">
+      <div class="references-rendered">
+        <Content
+          :baseServerURL="configuration.baseServerURL"
+          :layout="configuration.layout === 'classic' ? 'accordion' : 'default'"
+          :parsedSpec="parsedSpec"
+          :proxy="configuration.proxy"
+          :servers="configuration.servers">
+          <template #start>
+            <slot
+              v-bind="referenceSlotProps"
+              name="content-start" />
+          </template>
+          <template
+            v-if="configuration?.isEditable"
+            #empty-state>
+            <GettingStarted
+              :theme="configuration?.theme || 'default'"
+              @changeTheme="$emit('changeTheme', $event)"
+              @linkSwaggerFile="$emit('linkSwaggerFile')"
+              @loadSwaggerFile="$emit('loadSwaggerFile')"
+              @updateContent="$emit('updateContent', $event)" />
+          </template>
+          <template #end>
+            <slot
+              v-bind="referenceSlotProps"
+              name="content-end" />
+          </template>
+        </Content>
+      </div>
+      <div
+        v-if="$slots.footer"
+        class="references-footer">
+        <slot
+          v-bind="referenceSlotProps"
+          name="footer" />
+      </div>
+    </template>
+    <!-- REST API Client Overlay -->
+    <!-- Fonts are fetched by @scalar/api-reference already, we can safely set `withDefaultFonts: false` -->
+    <ApiClientModal
+      :proxyUrl="configuration.proxy"
+      :spec="configuration.spec" />
+  </div>
   <ScalarToasts />
 </template>
+<style>
+@import '@scalar/components/style.css';
+@import '@scalar/themes/style.css';
+
+/** Used to check if css is loaded */
+:root {
+  --scalar-loaded-api-reference: true;
+}
+</style>
 <style scoped>
 /* Configurable Layout Variables */
-.scalar-api-reference {
-  --refs-sidebar-width: var(--scalar-sidebar-width, 0px);
-  --refs-header-height: var(--scalar-header-height, 0px);
-  --refs-content-max-width: var(--scalar-content-max-width, 1540px);
-}
+@layer scalar-config {
+  .scalar-api-reference {
+    --refs-sidebar-width: var(--scalar-sidebar-width, 0px);
+    --refs-header-height: calc(
+      var(--scalar-y-offset) + var(--scalar-header-height, 0px)
+    );
+    --refs-content-max-width: var(--scalar-content-max-width, 1540px);
+  }
 
-.scalar-api-reference.references-classic {
-  /* Classic layout is wider */
-  --refs-content-max-width: var(--scalar-content-max-width, 1420px);
-  min-height: 100dvh;
+  .scalar-api-reference.references-classic {
+    /* Classic layout is wider */
+    --refs-content-max-width: var(--scalar-content-max-width, 1420px);
+    min-height: 100dvh;
+    --refs-sidebar-width: 0;
+  }
 }
 
 /* ----------------------------------------------------- */
 /* References Layout */
 .references-layout {
   /* Try to fill the container */
-  height: 100dvh;
-  max-height: 100%;
-  width: 100dvw;
+  min-height: 100dvh;
+  min-width: 100%;
   max-width: 100%;
   flex: 1;
-
-  /* Scroll vertically */
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-gutter: stable;
 
   /*
   Calculated by a resize observer and set in the style attribute
@@ -368,7 +384,7 @@ useDeprecationWarnings(props.configuration)
 
   /* Grid layout */
   display: grid;
-  grid-template-rows: var(--refs-header-height) repeat(2, auto);
+  grid-template-rows: var(--scalar-header-height, 0px) repeat(2, auto);
   grid-template-columns: var(--refs-sidebar-width) 1fr;
   grid-template-areas:
     'header header'
@@ -382,9 +398,9 @@ useDeprecationWarnings(props.configuration)
   grid-area: header;
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: 10;
 
-  height: var(--refs-header-height);
+  height: var(--scalar-header-height, 0px);
 }
 
 .references-editor {
@@ -414,7 +430,7 @@ useDeprecationWarnings(props.configuration)
 .references-navigation-list {
   position: sticky;
   top: var(--refs-header-height);
-  height: calc(var(--full-height) - var(--refs-header-height));
+  height: calc(100dvh - var(--refs-header-height));
   background: var(--scalar-sidebar-background-1 var(--scalar-background-1));
   overflow-y: auto;
   display: flex;
@@ -439,10 +455,11 @@ useDeprecationWarnings(props.configuration)
     'navigation editor rendered'
     'footer footer footer';
 }
-
-.references-sidebar {
-  /* Set a default width if references are enabled */
-  --refs-sidebar-width: var(--scalar-sidebar-width, 280px);
+@layer scalar-config {
+  .references-sidebar {
+    /* Set a default width if references are enabled */
+    --refs-sidebar-width: var(--scalar-sidebar-width, 280px);
+  }
 }
 
 /* Footer */
@@ -463,16 +480,13 @@ useDeprecationWarnings(props.configuration)
   /* Stack view on mobile */
   .references-layout {
     grid-template-columns: auto;
-    grid-template-rows: var(--refs-header-height) 0px auto auto;
+    grid-template-rows: var(--scalar-header-height, 0px) 0px auto auto;
 
     grid-template-areas:
       'header'
       'navigation'
       'rendered'
       'footer';
-  }
-  .references-sidebar.references-sidebar-mobile-open {
-    overflow-y: hidden;
   }
   .references-editable {
     grid-template-areas:
@@ -492,14 +506,15 @@ useDeprecationWarnings(props.configuration)
 
   .references-navigation {
     display: none;
-    position: sticky;
-    top: var(--refs-header-height);
-    height: 0px;
     z-index: 10;
   }
 
   .references-sidebar-mobile-open .references-navigation {
     display: block;
+    top: var(--refs-header-height);
+    height: calc(100dvh - var(--refs-header-height));
+    width: 100%;
+    position: sticky;
   }
 
   .references-navigation-list {

@@ -13,9 +13,14 @@ npm install @scalar/api-reference-react
 
 ## Usage
 
+The API Reference package is written in Vue. That shouldn’t stop you from using it in React, though. We have created a client side wrapper in React:
+
+> [!WARNING]\
+> This is untested on SSR/SSG!
+
 ```ts
 import { ApiReferenceReact } from '@scalar/api-reference-react'
-import React from 'react'
+import '@scalar/api-reference-react/style.css'
 
 function App() {
   return (
@@ -31,6 +36,8 @@ function App() {
 
 export default App
 ```
+
+We wrote a [detailed integration guide for React](https://github.com/scalar/scalar/tree/main/documentation/react.md), too.
 
 ### Example
 

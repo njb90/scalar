@@ -2,34 +2,58 @@
  * Unfortunately, this file is very messy. I think we should get rid of it entirely. :)
  * TODO: Slowly remove all the transformed properties and use the raw output of @scalar/openapi-parser instead.
  */
-import { type RequestMethod, validRequestMethods } from '@scalar/api-client'
+import {
+  type RequestMethod,
+  normalizeRequestMethod,
+  validRequestMethods,
+} from '#legacy'
+import type { Spec } from '@scalar/oas-utils'
+import { redirectToProxy } from '@scalar/oas-utils/helpers'
 import {
   type AnyObject,
+  type OpenAPI,
   type OpenAPIV2,
   type OpenAPIV3,
   type OpenAPIV3_1,
-  type ResolvedOpenAPI,
-  openapi,
+  dereference,
+  load,
 } from '@scalar/openapi-parser'
+import { fetchUrls } from '@scalar/openapi-parser/plugins/fetch-urls'
 
 import { createEmptySpecification } from '../helpers'
-// AnyStringOrObject
-import type { Spec, Tag } from '../types'
 
-export const parse = (specification: any): Promise<Spec> => {
+export const parse = (
+  specification: any,
+  {
+    proxy,
+  }: {
+    proxy?: string
+  } = {},
+): Promise<Spec> => {
   // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     try {
       // Return an empty resolved specification if the given specification is empty
       if (!specification) {
         return resolve(
-          transformResult(
-            createEmptySpecification() as ResolvedOpenAPI.Document,
-          ),
+          transformResult(createEmptySpecification() as OpenAPI.Document),
         )
       }
 
-      const { schema, errors } = await openapi().load(specification).resolve()
+      const start = performance.now()
+
+      const { filesystem } = await load(specification, {
+        plugins: [
+          fetchUrls({
+            fetch: (url) => fetch(proxy ? redirectToProxy(proxy, url) : url),
+          }),
+        ],
+      })
+
+      const { schema, errors } = await dereference(filesystem)
+
+      const end = performance.now()
+      console.log(`dereference: ${Math.round(end - start)} ms`)
 
       if (errors?.length) {
         console.warn(
@@ -40,12 +64,10 @@ export const parse = (specification: any): Promise<Spec> => {
       }
 
       if (schema === undefined) {
-        reject(errors?.[0]?.error ?? 'Failed to parse the OpenAPI file.')
+        reject(errors?.[0]?.message ?? 'Failed to parse the OpenAPI file.')
 
         return resolve(
-          transformResult(
-            createEmptySpecification() as ResolvedOpenAPI.Document,
-          ),
+          transformResult(createEmptySpecification() as OpenAPI.Document),
         )
       }
 
@@ -55,12 +77,12 @@ export const parse = (specification: any): Promise<Spec> => {
     }
 
     return resolve(
-      transformResult(createEmptySpecification() as ResolvedOpenAPI.Document),
+      transformResult(createEmptySpecification() as OpenAPI.Document),
     )
   })
 }
 
-const transformResult = (originalSchema: ResolvedOpenAPI.Document): Spec => {
+const transformResult = (originalSchema: OpenAPI.Document): Spec => {
   // Make it an object
   let schema = {} as AnyObject
 
@@ -89,7 +111,7 @@ const transformResult = (originalSchema: ResolvedOpenAPI.Document): Spec => {
       Object.keys(schema.webhooks?.[name] ?? {}) as OpenAPIV3_1.HttpMethods[]
     ).forEach((httpVerb) => {
       const originalWebhook =
-        (schema.webhooks?.[name] as (OpenAPIV3_1.PathItemObject[typeof httpVerb]) & {
+        (schema.webhooks?.[name][httpVerb] as (OpenAPIV3_1.PathItemObject[typeof httpVerb]) & {
           'x-internal'?: boolean
         })
 
@@ -104,7 +126,7 @@ const transformResult = (originalSchema: ResolvedOpenAPI.Document): Spec => {
 
       newWebhooks[name][httpVerb] = {
         // Transformed data
-        httpVerb: httpVerb,
+        httpVerb: normalizeRequestMethod(httpVerb),
         path: name,
         operationId: originalWebhook?.operationId || name,
         name: originalWebhook?.summary || name || '',
@@ -153,7 +175,7 @@ const transformResult = (originalSchema: ResolvedOpenAPI.Document): Spec => {
 
       // Transform the operation
       const newOperation = {
-        httpVerb: requestMethod,
+        httpVerb: normalizeRequestMethod(requestMethod),
         path,
         operationId: operation.operationId || path,
         name: operation.summary || path || '',

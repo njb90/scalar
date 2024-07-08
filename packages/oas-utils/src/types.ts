@@ -1,4 +1,6 @@
-import type { OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-parser'
+import type { ExternalDocumentation } from '@/entities/workspace/collection'
+import type { RequestMethod } from '@/helpers'
+import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-parser'
 import type { HarRequest } from 'httpsnippet-lite'
 
 export type AnyObject = Record<string, any>
@@ -56,20 +58,20 @@ export type Information = {
   'deprecated'?: boolean
   /**
    * Scalar
-   **/
+   */
   'x-custom-examples'?: CustomRequestExample[]
   /**
    * Redocly, current
-   **/
+   */
   'x-codeSamples'?: CustomRequestExample[]
   /**
    * Redocly, deprecated
-   **/
+   */
   'x-code-samples'?: CustomRequestExample[]
 }
 
 export type Operation = {
-  httpVerb: string
+  httpVerb: RequestMethod
   path: string
   operationId?: string
   name?: string
@@ -118,6 +120,14 @@ export type RequestBody = {
   content?: RequestBodyMimeTypes
 }
 
+/** For providing a OAS spec object or url to be fetched */
+export type SpecConfiguration = {
+  /** URL to a Swagger/OpenAPI file */
+  url?: string
+  /** Swagger/Open API spec */
+  content?: string | Record<string, any> | (() => Record<string, any>)
+}
+
 export type Schema = {
   type: string
   name?: string
@@ -138,6 +148,7 @@ export type AuthenticationState = {
   customSecurity: boolean
   preferredSecurityScheme: string | null
   securitySchemes?:
+    | OpenAPIV2.SecurityDefinitionsObject
     | OpenAPIV3.ComponentsObject['securitySchemes']
     | OpenAPIV3_1.ComponentsObject['securitySchemes']
   http: {
@@ -157,6 +168,8 @@ export type AuthenticationState = {
     scopes: string[]
     accessToken: string
     state: string
+    username: string
+    password: string
   }
 }
 
@@ -189,4 +202,54 @@ export type SSRState = {
     data: ScalarState
   }
   url: string
+}
+
+export type Tag = {
+  'name': string
+  'description': string
+  'operations': TransformedOperation[]
+  'x-displayName'?: string
+}
+
+export type TagGroup = {
+  name: string
+  tags: string[]
+}
+
+export type SecurityScheme =
+  | Record<string, never> // Empty objects
+  | OpenAPIV2.SecuritySchemeObject
+  | OpenAPIV3.SecuritySchemeObject
+  | OpenAPIV3_1.SecuritySchemeObject
+
+export type Definitions = OpenAPIV2.DefinitionsObject
+
+export type Webhooks = Record<
+  string,
+  Record<
+    OpenAPIV3_1.HttpMethods,
+    TransformedOperation & {
+      'x-internal'?: boolean
+    }
+  >
+>
+
+export type Spec = {
+  'tags'?: Tag[]
+  'info':
+    | Partial<OpenAPIV2.Document['info']>
+    | Partial<OpenAPIV3.Document['info']>
+    | Partial<OpenAPIV3_1.Document['info']>
+  'host'?: OpenAPIV2.Document['host']
+  'basePath'?: OpenAPIV2.Document['basePath']
+  'schemes'?: OpenAPIV2.Document['schemes']
+  'externalDocs'?: ExternalDocumentation
+  'servers'?: OpenAPIV3.Document['servers'] | OpenAPIV3_1.Document['servers']
+  'components'?: OpenAPIV3.ComponentsObject | OpenAPIV3_1.ComponentsObject
+  'webhooks'?: Webhooks
+  'definitions'?: Definitions
+  'swagger'?: OpenAPIV2.Document['swagger']
+  'openapi'?: OpenAPIV3.Document['openapi'] | OpenAPIV3_1.Document['openapi']
+  'x-tagGroups'?: TagGroup[]
+  'security'?: OpenAPIV3.SecurityRequirementObject[]
 }

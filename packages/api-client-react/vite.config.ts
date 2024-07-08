@@ -2,7 +2,8 @@ import react from '@vitejs/plugin-react'
 import * as path from 'path'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
-import { libInjectCss } from 'vite-plugin-lib-inject-css'
+
+import pkg from './package.json'
 
 export default defineConfig({
   build: {
@@ -19,7 +20,7 @@ export default defineConfig({
       },
       // make sure to externalize deps that shouldn't be bundled
       // into your library
-      external: ['react', 'react-dom'],
+      external: [...Object.keys(pkg.dependencies)],
       output: {
         // Provide global variables to use in the UMD build
         // for externalized deps
@@ -31,9 +32,5 @@ export default defineConfig({
       },
     },
   },
-  plugins: [
-    react(),
-    libInjectCss(),
-    dts({ insertTypesEntry: true, rollupTypes: true }),
-  ],
+  plugins: [react(), dts({ insertTypesEntry: true, rollupTypes: true })],
 })

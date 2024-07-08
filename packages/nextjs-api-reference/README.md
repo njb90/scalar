@@ -46,7 +46,9 @@ const config = {
 }
 ```
 
-The Next.js handler takes our universal configuration object, [read more about configuration](https://github.com/scalar/scalar/tree/main/packages/api-reference#configuration) in the core package README.
+We wrote a [detailed integration guide for Next.js](/documentation/nextjs.md).
+
+The Next.js handler takes our universal configuration object, [read more about configuration](https://github.com/scalar/scalar/tree/main/documentation/configuration.md) in the core package README.
 
 ## Themes
 
@@ -55,5 +57,30 @@ By default, we’re using a custom Next.js theme and it’s beautiful. But you c
 ```ts
 const config = {
   theme: 'purple',
+}
+```
+
+## Pages router
+
+If you are using the pages router, you can import the React component
+
+```bash
+npm install @scalar/api-reference-react
+```
+
+```tsx
+import { ApiReferenceReact } from '@scalar/api-reference-react'
+import '@scalar/api-reference-react/style.css'
+
+export default function References() {
+  return (
+    <ApiReferenceReact
+      configuration={{
+        spec: {
+          url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.json',
+        },
+      }}
+    />
+  )
 }
 ```

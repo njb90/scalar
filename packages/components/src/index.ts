@@ -1,5 +1,3 @@
-import type { App } from 'vue'
-
 import { ScalarButton } from './components/ScalarButton'
 import { ScalarCodeBlock } from './components/ScalarCodeBlock'
 import {
@@ -10,8 +8,17 @@ import {
 import { ScalarFloating } from './components/ScalarFloating'
 import { type Icon, ScalarIcon } from './components/ScalarIcon'
 import { ScalarIconButton } from './components/ScalarIconButton'
+import {
+  ScalarListbox,
+  type ScalarListboxOption,
+} from './components/ScalarListbox'
 import { ScalarLoading, useLoadingState } from './components/ScalarLoading'
-import { ScalarModal, useModal } from './components/ScalarModal'
+import { ScalarMarkdown } from './components/ScalarMarkdown'
+import {
+  type ModalState,
+  ScalarModal,
+  useModal,
+} from './components/ScalarModal'
 import { ScalarPopover } from './components/ScalarPopover'
 import { ScalarSearchInput } from './components/ScalarSearchInput'
 import {
@@ -19,36 +26,22 @@ import {
   ScalarSearchResultList,
 } from './components/ScalarSearchResults'
 import { ScalarTextField } from './components/ScalarTextField'
+import { ScalarTooltip } from './components/ScalarTooltip'
 import './tailwind/tailwind.css'
 
-export default {
-  install: (app: App) => {
-    app.component('ScalarButton', ScalarButton)
-    app.component('ScalarDropdown', ScalarDropdown)
-    app.component('ScalarDropdownDivider', ScalarDropdownDivider)
-    app.component('ScalarDropdownItem', ScalarDropdownItem)
-    app.component('ScalarFloating', ScalarFloating)
-    app.component('ScalarIcon', ScalarIcon)
-    app.component('ScalarIconButton', ScalarIconButton)
-    app.component('ScalarLoading', ScalarLoading)
-    app.component('ScalarModal', ScalarModal)
-    app.component('ScalarPopover', ScalarPopover)
-    app.component('ScalarSearchInput', ScalarSearchInput)
-    app.component('ScalarSearchResultItem', ScalarSearchResultItem)
-    app.component('ScalarSearchResultList', ScalarSearchResultList)
-    app.component('ScalarTextField', ScalarTextField)
-  },
-}
+export * from './helpers'
 
 export {
   ScalarButton,
   ScalarCodeBlock,
+  ScalarMarkdown,
   ScalarDropdown,
   ScalarDropdownDivider,
   ScalarDropdownItem,
   ScalarFloating,
   ScalarIcon,
   ScalarIconButton,
+  ScalarListbox,
   ScalarLoading,
   ScalarModal,
   ScalarPopover,
@@ -56,7 +49,10 @@ export {
   ScalarSearchResultItem,
   ScalarSearchResultList,
   ScalarTextField,
+  ScalarTooltip,
   type Icon,
+  type ScalarListboxOption,
+  type ModalState,
   useLoadingState,
   useModal,
 }

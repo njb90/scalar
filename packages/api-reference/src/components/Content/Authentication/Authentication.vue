@@ -1,18 +1,14 @@
 <script setup lang="ts">
-import {
-  SecurityScheme,
-  SecuritySchemeSelector,
-  useAuthenticationStore,
-} from '@scalar/api-client'
-import type { SSRState } from '@scalar/oas-utils'
+import { useAuthenticationStore } from '#legacy'
+import type { SSRState, Spec } from '@scalar/oas-utils'
 import type { OpenAPIV3_1 } from '@scalar/openapi-parser'
 import { computed, onServerPrefetch, useSSRContext, watch } from 'vue'
 
 import { hasSecuritySchemes, sleep } from '../../../helpers'
-import type { Spec } from '../../../types'
-import { Card, CardContent, CardHeader } from '../../Card'
+import SecurityScheme from '../../../legacy/components/SecurityScheme.vue'
+import SecuritySchemeSelector from '../../../legacy/components/SecuritySchemeSelector.vue'
 
-const props = defineProps<{ parsedSpec?: Spec }>()
+const props = defineProps<{ parsedSpec?: Spec; proxy?: string }>()
 
 const { authentication, setAuthentication } = useAuthenticationStore()
 
@@ -49,43 +45,36 @@ onServerPrefetch(async () => {
 </script>
 
 <template>
-  <Card v-if="hasSecuritySchemes(parsedSpec)">
-    <CardHeader
-      borderless
-      class="authentication-header"
-      transparent>
-      Authentication
-      <template #actions>
-        <div class="selector">
-          <SecuritySchemeSelector
-            :value="
-              parsedSpec?.components?.securitySchemes
-            "></SecuritySchemeSelector>
-        </div>
-      </template>
-    </CardHeader>
-    <CardContent
+  <div v-if="hasSecuritySchemes(parsedSpec)">
+    <div class="authentication-header">
+      <!-- <template #actions> -->
+      <div class="selector">
+        <SecuritySchemeSelector
+          :value="
+            parsedSpec?.components?.securitySchemes
+          "></SecuritySchemeSelector>
+      </div>
+      <!-- </template> -->
+    </div>
+    <div
       v-if="showSecurityScheme"
-      class="authentication-content"
-      transparent>
+      class="authentication-content">
       <SecurityScheme
         v-if="authentication.preferredSecurityScheme"
+        :proxy="proxy"
         :value="
           parsedSpec?.components?.securitySchemes?.[
             authentication.preferredSecurityScheme
           ] as OpenAPIV3_1.SecuritySchemeObject
         " />
-    </CardContent>
-  </Card>
+    </div>
+  </div>
 </template>
 <style scoped>
 .authentication-header {
   white-space: nowrap;
 }
-.authentication-content {
-  padding: 9px;
-}
 .selector {
-  margin-right: 12px;
+  margin-bottom: 6px;
 }
 </style>

@@ -1,4 +1,4 @@
-name: Check build, types, and units tests are passing
+name: Check build, types, and units tests
 
 on:
   pull_request:
@@ -6,17 +6,42 @@ on:
       - main
 
 jobs:
+  # Always use Node 20
+  # Add Node 18 to the matrix if we’re in the release PR
+  define-matrix:
+    runs-on: ubuntu-latest
+
+    outputs:
+      node-versions: ${{ steps.node-versions.outputs.node-versions }}
+
+    steps:
+      - name: Node version matrix
+        id: node-versions
+        run: |
+          if [ "${{ github.head_ref }}" == "changeset-release/main" ]; then
+            echo 'node-versions=[18, 20]' >> "$GITHUB_OUTPUT"
+          else
+            echo 'node-versions=[20]' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Print Node version matrix
+        run: echo "node-versions=${{ steps.node-versions.outputs.node-versions }}"
+      - name: Check Node version matrix
+        run: |
+          if [ "${{ steps.node-versions.outputs.node-versions }}" != "[18, 20]" ] && [ "${{ steps.node-versions.outputs.node-versions }}" != "[20]" ]; then
+            echo "Node version matrix is not [18, 20] or [20]"
+            exit 1
+          fi
+
   ci:
     runs-on: ubuntu-20.04
+    needs: define-matrix
     strategy:
       matrix:
-        node-version: [18, 20, 21]
+        node-version: ${{ fromJSON(needs.define-matrix.outputs.node-versions) }}
 
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: 8
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -25,13 +50,19 @@ jobs:
       - name: Install dependencies
         run: pnpm install
       - name: Turborepo cache
-        uses: dtinth/setup-github-actions-caching-for-turbo@v1
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-node-${{ matrix.node-version }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-node-
       - if: matrix.node-version == 20
         name: Check code style
         run: pnpm format:check
       - name: Build
         run: pnpm turbo build
-      - name: Check types
+      - if: matrix.node-version == 20 || github.head_ref == 'changeset-release/main'
+        name: Check types
         run: pnpm turbo types:check
       - name: Run tests
         run: pnpm test:ci

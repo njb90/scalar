@@ -9,7 +9,7 @@ type IconVariants = VariantProps<typeof iconProps>
 /**
  * Icon wrapper for all scalar icons
  */
-const props = defineProps<{
+defineProps<{
   icon: Icon
   size?: IconVariants['size']
 }>()
@@ -31,17 +31,10 @@ const iconProps = cva({
     size: 'full',
   },
 })
-
-const iconComp = getIcon(props.icon)
 </script>
 
 <template>
   <component
     :is="getIcon(icon)"
-    v-if="iconComp"
     :class="cx('scalar-icon', iconProps({ size }))" />
-  <!-- Temp fallback to match with other component but we should remove this -->
-  <img
-    v-else
-    :src="icon" />
 </template>

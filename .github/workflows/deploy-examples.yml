@@ -2,9 +2,6 @@ name: Deploy Scalar examples
 
 on:
   push:
-    paths:
-      - 'examples/web/**'
-      - '.github/workflows/deploy-examples.yml'
     branches:
       - 'main'
 
@@ -21,8 +18,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: 8
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -35,7 +30,12 @@ jobs:
       - name: Install dependencies
         run: pnpm --filter web install
       - name: Turborepo cache
-        uses: dtinth/setup-github-actions-caching-for-turbo@v1
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-node-${{ matrix.node-version }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-node-
       - name: Build
         run: cd examples/web && pnpm turbo run build
         env:

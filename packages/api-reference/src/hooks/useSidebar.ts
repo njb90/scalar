@@ -1,5 +1,6 @@
-import { useApiClientStore, useOpenApiStore } from '@scalar/api-client'
-import { type TransformedOperation, ssrState } from '@scalar/oas-utils'
+import { useApiClientStore, useOpenApiStore } from '#legacy'
+import type { Spec, Tag, TransformedOperation } from '@scalar/oas-utils'
+import { ssrState } from '@scalar/oas-utils/helpers'
 import type { OpenAPIV3_1 } from '@scalar/openapi-parser'
 import { computed, reactive, ref, watch } from 'vue'
 
@@ -11,7 +12,6 @@ import {
   hasWebhooks,
   openClientFor,
 } from '../helpers'
-import type { Spec, Tag } from '../types'
 import { useNavState } from './useNavState'
 
 export type SidebarEntry = {
@@ -95,7 +95,7 @@ const items = computed(() => {
     if (heading.depth === getLowestHeadingLevel(headings.value)) {
       currentHeading = {
         id: getHeadingId(heading),
-        title: heading.value.toUpperCase(),
+        title: heading.value,
         show: !state.showApiClient,
         children: [],
       }
@@ -129,8 +129,8 @@ const items = computed(() => {
           .map((tag: Tag) => {
             return {
               id: getTagId(tag),
-              title: tag.name.toUpperCase(),
-              displayTitle: (tag['x-displayName'] ?? tag.name).toUpperCase(),
+              title: tag.name,
+              displayTitle: tag['x-displayName'] ?? tag.name,
               show: true,
               children: tag.operations?.map(
                 (operation: TransformedOperation) => {
@@ -174,12 +174,12 @@ const items = computed(() => {
         })
 
   // Models
-  const modelEntries: SidebarEntry[] =
+  let modelEntries: SidebarEntry[] =
     hasModels(parsedSpec.value) && !hideModels.value
       ? [
           {
             id: getModelId(),
-            title: 'MODELS',
+            title: 'Models',
             show: !state.showApiClient,
             children: Object.keys(getModels(parsedSpec.value) ?? {}).map(
               (name) => {
@@ -198,40 +198,12 @@ const items = computed(() => {
         ]
       : []
 
-  const groupOperations: SidebarEntry[] | undefined = parsedSpec.value?.[
-    'x-tagGroups'
-  ]
-    ? parsedSpec.value?.['x-tagGroups']?.map((tagGroup) => {
-        const children: SidebarEntry[] = []
-        tagGroup.tags.map((tagName: string) => {
-          if (tagName.toUpperCase() === 'MODELS' && modelEntries.length > 0) {
-            children.push(modelEntries[0])
-          } else {
-            const tag = operationEntries?.find(
-              (entry) => entry.title === tagName.toUpperCase(),
-            )
-            if (tag) {
-              children.push(tag)
-            }
-          }
-        })
-        const sidebarTagGroup = {
-          id: tagGroup.name,
-          title: tagGroup.name.toUpperCase(),
-          children,
-          show: true,
-          isGroup: true,
-        }
-        return sidebarTagGroup
-      })
-    : undefined
-
   // Webhooks
-  const webhookEntries: SidebarEntry[] = hasWebhooks(parsedSpec.value)
+  let webhookEntries: SidebarEntry[] = hasWebhooks(parsedSpec.value)
     ? [
         {
           id: getWebhookId(),
-          title: 'WEBHOOKS',
+          title: 'Webhook',
           show: !state.showApiClient,
           children: Object.keys(parsedSpec.value?.webhooks ?? {})
             .map((name) => {
@@ -256,23 +228,65 @@ const items = computed(() => {
       ]
     : []
 
+  const groupOperations: SidebarEntry[] | undefined = parsedSpec.value?.[
+    'x-tagGroups'
+  ]
+    ? parsedSpec.value?.['x-tagGroups']?.map((tagGroup) => {
+        const children: SidebarEntry[] = []
+        tagGroup.tags?.map((tagName: string) => {
+          if (tagName === 'models' && modelEntries.length > 0) {
+            // Add default models entry to the group
+            children.push(modelEntries[0])
+            // Don’t show default models entry
+            modelEntries = []
+          } else if (tagName === 'webhooks' && webhookEntries.length > 0) {
+            // Add default webhooks entry to the group
+            children.push(webhookEntries[0])
+            // Don’t show default webhooks entry
+            webhookEntries = []
+          } else {
+            const tag = operationEntries?.find(
+              (entry) => entry.title === tagName,
+            )
+
+            if (tag) {
+              children.push(tag)
+            }
+          }
+        })
+        const sidebarTagGroup = {
+          id: tagGroup.name,
+          title: tagGroup.name,
+          children,
+          show: true,
+          isGroup: true,
+        }
+        return sidebarTagGroup
+      })
+    : undefined
+
   return {
     entries: [
       ...headingEntries,
       ...(groupOperations ?? operationEntries ?? []),
-      ...(groupOperations ? [] : webhookEntries),
-      ...(groupOperations ? [] : modelEntries),
+      ...webhookEntries,
+      ...modelEntries,
     ],
     titles: titlesById,
   }
 })
 
-// Controls whether or not the sidebar is open on MOBILE only
-// Desktop uses the standard showSidebar prop which supercedes this one
+/**
+ * Controls whether or not the sidebar is open on mobile-only.
+ * Desktop uses the standard showSidebar prop which supercedes this one.
+ */
 const isSidebarOpen = ref(false)
 
 const breadcrumb = computed(() => items.value?.titles?.[hash.value] ?? '')
 
+/**
+ * Provides the sidebar state and methods to control it.
+ */
 export function useSidebar(options?: { parsedSpec: Spec }) {
   if (options?.parsedSpec) {
     parsedSpec.value = options.parsedSpec

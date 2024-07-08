@@ -16,20 +16,20 @@
     "specification",
     "yaml"
   ],
-  "version": "0.1.11",
+  "version": "0.2.10",
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "build": "vite build && pnpm types:build && tsc-alias -p tsconfig.build.json",
+    "build": "scalar-build-rollup",
     "dev": "vite",
     "lint:check": "eslint .",
     "lint:fix": "eslint .  --fix",
     "preview": "vite preview",
     "test": "vitest",
     "test:unit": "vitest .",
-    "types:build": "tsc -p tsconfig.build.json",
-    "types:check": "tsc --noEmit --skipLibCheck --composite false"
+    "types:build": "scalar-types-build",
+    "types:check": "scalar-types-check"
   },
   "type": "module",
   "main": "dist/index.js",
@@ -38,13 +38,57 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./css/*.css": {
-      "import": "./dist/css/*.css",
-      "require": "./dist/css/*.css"
+    "./transforms": {
+      "import": "./dist/transforms/index.js",
+      "types": "./dist/transforms/index.d.ts"
     },
-    "./*.css": {
-      "import": "./dist/*.css",
-      "require": "./dist/*.css"
+    "./spec-getters": {
+      "import": "./dist/spec-getters/index.js",
+      "types": "./dist/spec-getters/index.d.ts"
+    },
+    "./helpers": {
+      "import": "./dist/helpers/index.js",
+      "types": "./dist/helpers/index.d.ts"
+    },
+    "./entities": {
+      "import": "./dist/entities/index.js",
+      "types": "./dist/entities/index.d.ts"
+    },
+    "./entities/workspace": {
+      "import": "./dist/entities/workspace/index.js",
+      "types": "./dist/entities/workspace/index.d.ts"
+    },
+    "./entities/workspace/spec": {
+      "import": "./dist/entities/workspace/spec/index.js",
+      "types": "./dist/entities/workspace/spec/index.d.ts"
+    },
+    "./entities/workspace/shared": {
+      "import": "./dist/entities/workspace/shared/index.js",
+      "types": "./dist/entities/workspace/shared/index.d.ts"
+    },
+    "./entities/workspace/server": {
+      "import": "./dist/entities/workspace/server/index.js",
+      "types": "./dist/entities/workspace/server/index.d.ts"
+    },
+    "./entities/workspace/security": {
+      "import": "./dist/entities/workspace/security/index.js",
+      "types": "./dist/entities/workspace/security/index.d.ts"
+    },
+    "./entities/workspace/folder": {
+      "import": "./dist/entities/workspace/folder/index.js",
+      "types": "./dist/entities/workspace/folder/index.d.ts"
+    },
+    "./entities/workspace/environment": {
+      "import": "./dist/entities/workspace/environment/index.js",
+      "types": "./dist/entities/workspace/environment/index.d.ts"
+    },
+    "./entities/workspace/cookie": {
+      "import": "./dist/entities/workspace/cookie/index.js",
+      "types": "./dist/entities/workspace/cookie/index.d.ts"
+    },
+    "./entities/workspace/collection": {
+      "import": "./dist/entities/workspace/collection/index.js",
+      "types": "./dist/entities/workspace/collection/index.d.ts"
     }
   },
   "files": [
@@ -53,18 +97,21 @@
   ],
   "module": "dist/index.js",
   "dependencies": {
-    "yaml": "^2.4.1"
+    "axios": "^1.6.8",
+    "nanoid": "^5.0.7",
+    "yaml": "^2.4.5",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@scalar/build-tooling": "workspace:*",
-    "@scalar/openapi-parser": "^0.3.2",
+    "@scalar/openapi-parser": "^0.7.1",
     "axios": "^1.6.8",
     "httpsnippet-lite": "^3.0.5",
+    "openapi-types": "^12.1.3",
+    "rollup": "^4.16.4",
     "tsc-alias": "^1.8.8",
+    "type-fest": "^4.20.0",
     "vite": "^5.2.10",
-    "vitest": "^1.5.0"
-  },
-  "peerDependencies": {
-    "axios": "^1.5"
+    "vitest": "^1.6.0"
   }
 }

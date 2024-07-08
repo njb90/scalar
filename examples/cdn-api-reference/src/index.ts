@@ -1,5 +1,8 @@
 import fastifyStatic from '@fastify/static'
+import apiReferenceBundle from '@scalar/api-reference/browser/standalone.js?raw'
+import playButtonBundle from '@scalar/play-button?raw'
 import fastify from 'fastify'
+import { readdirSync } from 'node:fs'
 import { join } from 'node:path'
 
 const app = await fastify({ logger: true })
@@ -7,19 +10,44 @@ const app = await fastify({ logger: true })
 await app.register(fastifyStatic, {
   root: join(__dirname, 'public'),
   prefix: '/',
+  cacheControl: false,
 })
 
-app.get('/live', (_request, reply) => {
-  reply.sendFile('api-reference-cdn-live.html', { cacheControl: false }) // overriding the options disabling cache-control headers) // serving path.join(__dirname, 'public', 'myHtml.html') directly
+// health check
+app.get('/ping', (_request, reply) => {
+  reply.send('pong')
 })
 
-app.get('/localhost', (_request, reply) => {
-  reply.sendFile('api-reference-cdn-localhost.html', { cacheControl: false }) // overriding the options disabling cache-control headers) // serving path.join(__dirname, 'public', 'myHtml.html') directly
+// @scalar/api-reference bundle
+
+app.get('/api-reference/standalone.js', (_request, reply) => {
+  reply
+    .code(200)
+    .header('Content-Type', 'text/javascript; charset=utf-8')
+    .send(apiReferenceBundle)
+})
+
+// @scalar/play-button bundle
+
+app.get('/play-button/standalone.js', (_request, reply) => {
+  reply
+    .code(200)
+    .header('Content-Type', 'text/javascript; charset=utf-8')
+    .send(playButtonBundle)
 })
 
 // Run the server!
 try {
-  await app.listen({ port: 3173 })
+  app.listen({ port: 3173 }, () => {
+    console.log()
+    console.info(`📦 CDN Example listening on http://127.0.0.1:3173`)
+    console.log()
+    // List all files in the public directory
+    readdirSync(join(__dirname, 'public')).forEach((file) => {
+      console.info(`  ➜ http://127.0.0.1:3173/${file}`)
+    })
+    console.log()
+  })
 } catch (err) {
   app.log.error(err)
   process.exit(1)

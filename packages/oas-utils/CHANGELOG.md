@@ -1,5 +1,121 @@
 # @scalar/oas-utils
 
+## 0.2.10
+
+### Patch Changes
+
+- d58841b: feat: type, format and default to request example parameters schema
+
+## 0.2.9
+
+### Patch Changes
+
+- d6a2a4d: feat: oas-utils request example parameters enum
+- 632d6f7: fix: add cookie handler and schema
+
+## 0.2.8
+
+### Patch Changes
+
+- a01df62: fix: ensure path and operation params are merged on import
+
+## 0.2.7
+
+### Patch Changes
+
+- 7f4d22e: refactor: new redirectToProxy helper
+
+## 0.2.6
+
+### Patch Changes
+
+- cefe804: feat: findVariables, replaceVariables, concatenateUrlAndPath
+- fec6f8e: feat: add a value to the server variables
+- d0aec62: fix: remove hardcoded proxy url for new client
+
+## 0.2.5
+
+### Patch Changes
+
+- a298195: feat: add timestamp in request event type
+- 326bd3d: fix: URL is not encoded when sent to the proxy
+- 94e68ab: chore: upgrade typescript to 5.5
+
+## 0.2.4
+
+### Patch Changes
+
+- c20c7d0: feat: security schemes and requirements
+
+## 0.2.3
+
+### Patch Changes
+
+- 362d47a: chore: less @ts-ignore comments
+
+## 0.2.2
+
+### Patch Changes
+
+- a2cb3c3: Migrate away from unintended peer dependencies
+
+## 0.2.1
+
+### Patch Changes
+
+- e0fc110: chore: patch bump all package
+- f0acc89: chore: upgrade to new @scalar/openapi-parser version
+
+## 0.2.0
+
+### Minor Changes
+
+- 7f8ef74: chore: remove aliasing
+
+### Patch Changes
+
+- 96347a1: feat: use example values for path variables
+- 8494349: Migrate to highlightjs based syntax highlighting
+- 6fbb57e: feat: release all the packages
+
+## 0.1.17
+
+### Patch Changes
+
+- c951512: feat: omit empty and not required properties from the generated request body
+
+## 0.1.16
+
+### Patch Changes
+
+- cc5402c: feat: OpenAuth 2.0 password grant
+
+## 0.1.15
+
+### Patch Changes
+
+- f472998: feat: generated example values based on the given format
+
+## 0.1.14
+
+### Patch Changes
+
+- 7205137: fix: response body does not show a preview when the content-type is undefined
+- d369ac4: feat: union types in getExampleFromSchema
+
+## 0.1.13
+
+### Patch Changes
+
+- 5aa656f: feat: [BREAKING CHANGE] use new HTTP proxy (https://github.com/scalar/scalar/pull/1703)
+
+## 0.1.12
+
+### Patch Changes
+
+- 61b8ddc: fix: doesn’t render preview for mimetype variations like application/foobar+json
+- 165b901: feat: dynamic values for generated examples
+
 ## 0.1.11
 
 ### Patch Changes

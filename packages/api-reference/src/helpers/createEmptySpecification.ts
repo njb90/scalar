@@ -1,7 +1,13 @@
-import type { Spec } from '../types'
+import type { Spec } from '@scalar/oas-utils'
 
-export function createEmptySpecification(): Spec {
-  return {
+import { deepMerge } from './deepMerge'
+
+/**
+ * Creates an empty specification object.
+ * The returning object has the same structure as a valid OpenAPI specification, but everything is empty.
+ */
+export function createEmptySpecification(partialSpecification?: Partial<Spec>) {
+  return deepMerge(partialSpecification ?? {}, {
     info: {
       title: '',
       description: '',
@@ -21,5 +27,5 @@ export function createEmptySpecification(): Spec {
     },
     servers: [],
     tags: [],
-  }
+  }) as Spec
 }

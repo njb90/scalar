@@ -1,17 +1,20 @@
 <script setup lang="ts">
-import { HttpMethod } from '@scalar/api-client'
-import { ScalarIcon, ScalarIconButton } from '@scalar/components'
+import {
+  ScalarIcon,
+  ScalarIconButton,
+  ScalarMarkdown,
+} from '@scalar/components'
 import type { TransformedOperation } from '@scalar/oas-utils'
 
+import { ExampleRequest } from '../../../features/ExampleRequest'
 import { useClipboard } from '../../../hooks'
 import { Anchor } from '../../Anchor'
-import { MarkdownRenderer } from '../../MarkdownRenderer'
+import { HttpMethod } from '../../HttpMethod'
 import { SectionAccordion } from '../../Section'
 import EndpointDetailsCard from './EndpointDetailsCard.vue'
 import EndpointPath from './EndpointPath.vue'
-import ExampleRequest from './ExampleRequest.vue'
 import { PathResponses } from './PathResponses'
-import TryRequestButton from './TryRequestButton.vue'
+import TestRequestButton from './TestRequestButton.vue'
 
 defineProps<{
   id?: string
@@ -48,7 +51,7 @@ const { copyToClipboard } = useClipboard()
       </h3>
     </template>
     <template #actions="{ active }">
-      <TryRequestButton
+      <TestRequestButton
         v-if="active"
         :operation="operation" />
       <ScalarIcon
@@ -66,7 +69,7 @@ const { copyToClipboard } = useClipboard()
     <template
       v-if="operation.description"
       #description>
-      <MarkdownRenderer
+      <ScalarMarkdown
         :value="operation.description"
         withImages />
     </template>
@@ -131,7 +134,9 @@ const { copyToClipboard } = useClipboard()
 
   font-size: 20px;
 }
-
+.endpoint-anchor.label {
+  display: flex;
+}
 .endpoint-label {
   display: flex;
   align-items: baseline;
