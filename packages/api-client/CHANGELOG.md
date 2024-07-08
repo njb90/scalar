@@ -1,5 +1,57 @@
 # @scalar/api-client
 
+## 2.0.13
+
+### Patch Changes
+
+- 618285e: feat: add localStorage syncing to client app
+- Updated dependencies [618285e]
+  - @scalar/object-utils@1.1.4
+  - @scalar/oas-utils@0.2.12
+  - @scalar/themes@0.9.13
+  - @scalar/components@0.12.10
+
+## 2.0.12
+
+### Patch Changes
+
+- 0a33194: fix: flatten default array value
+
+## 2.0.11
+
+### Patch Changes
+
+- e8a7f82: fix: favor nowrap over pre for table tooltip value
+- c16413d: feat: display sidebar by default if not read-only
+- b9a7a4e: feat: hide client modal on esc
+  - @scalar/components@0.12.10
+  - @scalar/oas-utils@0.2.11
+  - @scalar/object-utils@1.1.3
+  - @scalar/themes@0.9.12
+  - @scalar/use-codemirror@0.11.4
+  - @scalar/use-toasts@0.7.4
+  - @scalar/use-tooltip@1.0.2
+
+## 2.0.10
+
+### Patch Changes
+
+- b65d1fa: fix: the client search modal was missing icons, methods, and had a racecondition
+- b655c7a: fix: indent request sidebar highlight properly in readonly mode
+
+## 2.0.9
+
+### Patch Changes
+
+- 1bb94c7: fix: set created cookie page active
+- f1b5390: fix: remove tailwind preflight from api client app
+- ad7fd7e: feat: add min max value to request params
+- Updated dependencies [ad7fd7e]
+- Updated dependencies [f1b5390]
+  - @scalar/oas-utils@0.2.11
+  - @scalar/components@0.12.10
+  - @scalar/themes@0.9.12
+
 ## 2.0.8
 
 ### Patch Changes

@@ -1,5 +1,19 @@
 # @scalar/oas-utils
 
+## 0.2.12
+
+### Patch Changes
+
+- 618285e: feat: add localStorage syncing to client app
+- Updated dependencies [618285e]
+  - @scalar/themes@0.9.13
+
+## 0.2.11
+
+### Patch Changes
+
+- ad7fd7e: feat: add min max to request example parameters schema
+
 ## 0.2.10
 
 ### Patch Changes

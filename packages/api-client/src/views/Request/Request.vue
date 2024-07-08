@@ -33,14 +33,14 @@ const {
   activeRequest,
   activeServer,
   activeSecurityScheme,
+  activeWorkspace,
   collections,
   modalState,
-  workspace,
 } = useWorkspace()
 const { collapsedSidebarFolders } = useSidebar()
 const actionModalState = useActionModal()
 const searchModalState = useModal()
-const showSideBar = ref(false)
+const showSideBar = ref(!activeWorkspace.value?.isReadOnly)
 
 const handleTabChange = (activeTab: string) => {
   actionModalState.tab = activeTab as ActionModalTab
@@ -58,7 +58,9 @@ const executeRequest = async () => {
     return
   }
 
-  let url = activeServer.value?.url + activeRequest.value.path
+  let url = activeServer.value?.url
+    ? activeServer.value?.url + activeRequest.value.path
+    : activeRequest.value.path
 
   // Replace vraible
   // TODO: use `replaceVariables` from `@scalar/oas-utils/helpers`
@@ -79,7 +81,7 @@ const executeRequest = async () => {
     activeExample.value,
     url,
     activeSecurityScheme.value,
-    workspace.proxyUrl,
+    activeWorkspace.value?.proxyUrl,
   )
 
   if (request && response) {
@@ -101,12 +103,19 @@ onMounted(() => executeRequestBus.on(executeRequest))
  */
 onBeforeUnmount(() => executeRequestBus.off(executeRequest))
 
-// TODO temp switch for folder mode
-const FOLDER_MODE = true
+const workspaceCollections = computed(() => {
+  // let's move drafts to the bottom
+  const c = Object.values(collections)
+  const index = c.findIndex((obj) => obj.uid === 'drafts')
 
-const workspaceCollections = computed(() =>
-  workspace.collectionUids.map((uid) => collections[uid]),
-)
+  const [draftsObj] = c.splice(index, 1)
+
+  // Add the object to the end of the array
+  c.push(draftsObj)
+
+  return c
+})
+
 // const collections = computed(() => {
 //   if (FOLDER_MODE) {
 //     return workspace.collections
@@ -272,13 +281,8 @@ useEventListener(document, 'keydown', (event) => {
       <AddressBar />
       <div
         class="flex flex-row items-center gap-1 lg:px-1 lg:mb-0 mb-0.5 lg:flex-1 justify-end w-6/12">
-        <!-- <button
-          class="request-text-color-text bg-mix-transparent hover:bg-mix-amount-95 px-2 py-1.5 rounded bg-mix-amount-90 font-medium text-sm"
-          type="button">
-          Test Acctual Locally
-        </button> -->
         <button
-          v-if="workspace.isReadOnly"
+          v-if="activeWorkspace.isReadOnly"
           class="text-c-3 hover:bg-b-3 active:text-c-1 p-2 rounded"
           type="button"
           @click="modalState.hide()">
@@ -290,9 +294,9 @@ useEventListener(document, 'keydown', (event) => {
     </div>
     <ViewLayout>
       <Sidebar
-        v-if="showSideBar"
+        v-show="showSideBar"
         :class="[showSideBar ? 'sidebar-active-width' : '']">
-        <template #title>{{ workspace.name }}</template>
+        <template #title>{{ activeWorkspace.name }}</template>
         <template #content>
           <SearchButton @openSearchModal="searchModalState.show()" />
           <div
@@ -303,8 +307,8 @@ useEventListener(document, 'keydown', (event) => {
             <RequestSidebarItem
               v-for="(collection, collectionIndex) in workspaceCollections"
               :key="collection.uid"
-              :isDraggable="FOLDER_MODE && !workspace.isReadOnly"
-              :isDroppable="FOLDER_MODE && !workspace.isReadOnly"
+              :isDraggable="!activeWorkspace.isReadOnly"
+              :isDroppable="!activeWorkspace.isReadOnly"
               :item="collection"
               :parentUids="[]"
               @onDragEnd="
@@ -330,7 +334,7 @@ useEventListener(document, 'keydown', (event) => {
         </template>
         <template #button>
           <SidebarButton
-            v-if="!workspace.isReadOnly"
+            v-if="!activeWorkspace.isReadOnly"
             :click="addItemHandler">
             <template #title>Add Item</template>
           </SidebarButton>

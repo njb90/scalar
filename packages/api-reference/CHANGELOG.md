@@ -1,5 +1,58 @@
 # @scalar/api-reference
 
+## 1.24.36
+
+### Patch Changes
+
+- Updated dependencies [618285e]
+  - @scalar/api-client@2.0.13
+  - @scalar/oas-utils@0.2.12
+  - @scalar/themes@0.9.13
+  - @scalar/components@0.12.10
+
+## 1.24.35
+
+### Patch Changes
+
+- 0a33194: fix: flatten default array value
+- Updated dependencies [0a33194]
+  - @scalar/api-client@2.0.12
+
+## 1.24.34
+
+### Patch Changes
+
+- Updated dependencies [e8a7f82]
+- Updated dependencies [c16413d]
+- Updated dependencies [b9a7a4e]
+  - @scalar/api-client@2.0.11
+  - @scalar/components@0.12.10
+  - @scalar/oas-utils@0.2.11
+  - @scalar/themes@0.9.12
+  - @scalar/use-toasts@0.7.4
+  - @scalar/use-tooltip@1.0.2
+
+## 1.24.33
+
+### Patch Changes
+
+- Updated dependencies [b65d1fa]
+- Updated dependencies [b655c7a]
+  - @scalar/api-client@2.0.10
+
+## 1.24.32
+
+### Patch Changes
+
+- Updated dependencies [ad7fd7e]
+- Updated dependencies [1bb94c7]
+- Updated dependencies [f1b5390]
+- Updated dependencies [ad7fd7e]
+  - @scalar/oas-utils@0.2.11
+  - @scalar/api-client@2.0.9
+  - @scalar/components@0.12.10
+  - @scalar/themes@0.9.12
+
 ## 1.24.31
 
 ### Patch Changes
