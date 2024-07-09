@@ -297,6 +297,7 @@ useDeprecationWarnings(props.configuration)
       <div class="references-rendered">
         <Content
           :baseServerURL="configuration.baseServerURL"
+          :clientLibraries="configuration.clientLibraries"
           :layout="configuration.layout === 'classic' ? 'accordion' : 'default'"
           :parsedSpec="parsedSpec"
           :proxy="configuration.proxy"
@@ -398,7 +399,7 @@ useDeprecationWarnings(props.configuration)
   grid-area: header;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 5;
 
   height: var(--scalar-header-height, 0px);
 }
