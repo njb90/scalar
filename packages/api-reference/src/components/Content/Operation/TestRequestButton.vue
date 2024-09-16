@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { ScalarIcon } from '@scalar/components'
-import type { TransformedOperation } from '@scalar/oas-utils'
+import type { TransformedOperation } from '@scalar/types/legacy'
+import { inject } from 'vue'
 
+import { HIDE_TEST_REQUEST_BUTTON_SYMBOL } from '../../../helpers'
 import { apiClientBus } from '../../api-client-bus'
 
 defineProps<{
   operation: TransformedOperation
 }>()
+
+const getHideTestRequestButton = inject(HIDE_TEST_REQUEST_BUTTON_SYMBOL)
 </script>
 <template>
   <button
+    v-if="getHideTestRequestButton?.() !== true"
     class="show-api-client-button"
     :method="operation.httpVerb"
     type="button"
@@ -21,9 +26,12 @@ defineProps<{
         },
       })
     ">
-    <ScalarIcon icon="PaperAirplane" />
+    <ScalarIcon
+      icon="Play"
+      size="sm" />
     <span>Test Request</span>
   </button>
+  <template v-else>&nbsp;</template>
 </template>
 <style scoped>
 .show-api-client-button {
@@ -48,6 +56,7 @@ defineProps<{
 }
 .show-api-client-button span,
 .show-api-client-button svg {
+  fill: currentColor;
   color: var(--scalar-button-1-color);
   z-index: 1;
 }
@@ -55,8 +64,6 @@ defineProps<{
   background: var(--scalar-button-1-hover);
 }
 .show-api-client-button svg {
-  height: 12px;
-  width: auto;
-  margin-right: 6px;
+  margin-right: 4px;
 }
 </style>

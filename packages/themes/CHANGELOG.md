@@ -1,5 +1,101 @@
 # @scalar/themes
 
+## 0.9.29
+
+### Patch Changes
+
+- c577cde: feat(themes): make base dark mode colors opaque
+
+## 0.9.28
+
+### Patch Changes
+
+- 80a3c46: fix(theme): add SSR check to obtrusive scroll check
+
+## 0.9.27
+
+### Patch Changes
+
+- bb13304: fix(themes): remove obtrusive scrollbar test after testing
+
+## 0.9.26
+
+### Patch Changes
+
+- abb8ddd: fix(themes): always show obtrusive scrollbars
+
+## 0.9.25
+
+### Patch Changes
+
+- 78db8f5: feat: use new @scalar/types package
+
+## 0.9.24
+
+### Patch Changes
+
+- 298f7c4: fix(themes): restrict flare overflow for themes
+
+## 0.9.23
+
+### Patch Changes
+
+- c450bb3: fix: scalar api ref use scalar-border-width
+
+## 0.9.22
+
+### Patch Changes
+
+- 60e63d3: fix(themes): sets a default for scalar brightness filters
+
+## 0.9.21
+
+### Patch Changes
+
+- faf3ed9: fix: style updates to client app
+
+## 0.9.20
+
+### Patch Changes
+
+- 425dc83: fix(api-client): rebuild address bar history with grid
+
+## 0.9.19
+
+### Patch Changes
+
+- 3a6effa: feat(api-client): add response previews
+
+## 0.9.18
+
+### Patch Changes
+
+- c1ada84: feat(api-client): add the ability to delete and rename folders and collections
+
+## 0.9.17
+
+### Patch Changes
+
+- de25d01: feat(api-client): add the ability to delete and rename folders and collections
+
+## 0.9.16
+
+### Patch Changes
+
+- a5f3a84: feat(components): create combo box component
+
+## 0.9.15
+
+### Patch Changes
+
+- 5e060b1: fix: don’t minify the CSS
+
+## 0.9.14
+
+### Patch Changes
+
+- 96e7106: fix: switch from font-size unset to inherit
+
 ## 0.9.13
 
 ### Patch Changes

@@ -19,8 +19,7 @@
     "testing",
     "react"
   ],
-  "version": "0.5.30",
-  "private": true,
+  "version": "1.0.37",
   "engines": {
     "node": ">=18"
   },
@@ -35,7 +34,13 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "exports": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./style.css": "./dist/style.css"
+  },
   "files": [
     "dist",
     "CHANGELOG.md"
@@ -43,10 +48,11 @@
   "module": "./dist/index.js",
   "dependencies": {
     "@scalar/api-client": "workspace:*",
-    "react": "^18.3.1",
-    "vue": "^3.4.22"
+    "rollup-preserve-directives": "^1.1.1",
+    "vue": "^3.4.29"
   },
   "devDependencies": {
+    "@scalar/build-tooling": "workspace:*",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
@@ -55,5 +61,8 @@
     "react-dom": "^18.3.1",
     "vite": "^5.2.10",
     "vite-plugin-dts": "^3.6.3"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
   }
 }

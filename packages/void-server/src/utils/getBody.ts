@@ -1,6 +1,12 @@
 import type { Context } from 'hono'
-// Node 18 doesn’t have File, so we need to import it from 'undici'
-import { File } from 'undici'
+
+/** File polyfill for Node 18  */
+type File = {
+  name: string
+  size: number
+  type: string
+  lastModified: number
+}
 
 /**
  * Get the body of a request, no matter if it’s JSON or text
@@ -13,12 +19,22 @@ export async function getBody(c: Context) {
     contentType?.includes('application/x-www-form-urlencoded') ||
     contentType?.includes('multipart/form-data')
   ) {
-    return transformFormData(
-      await c.req.parseBody({
-        dot: true,
-        all: true,
-      }),
-    )
+    try {
+      // TODO: This is just for debugging purposes, remove it later
+      // const body = await c.req.raw.body
+      // It should actually be this:
+      const body = transformFormData(
+        await c.req.parseBody({
+          dot: true,
+          all: true,
+        }),
+      )
+
+      return body
+    } catch {
+      // Mute the error, just return an empty object
+      return {}
+    }
   }
 
   const body = await c.req.text()
@@ -47,8 +63,7 @@ function transformFormData(formData: Record<string, any>) {
       continue
     }
 
-    // File
-    if (value instanceof File) {
+    if (isFile(value)) {
       body[key] = {
         name: value?.name,
         sizeInBytes: value?.size,
@@ -64,7 +79,7 @@ function transformFormData(formData: Record<string, any>) {
     // Array
     if (Array.isArray(value)) {
       body[key] = value.map((item: string | File) => {
-        if (item instanceof File) {
+        if (typeof item !== 'string' && isFile(item)) {
           return {
             name: item?.name,
             sizeInBytes: item?.size,
@@ -89,4 +104,17 @@ function transformFormData(formData: Record<string, any>) {
   }
 
   return body
+}
+
+/**
+ * Check if the data is a file, just a polyfill for Node 18
+ */
+function isFile(data: any) {
+  return (
+    typeof data === 'object' &&
+    data.name !== undefined &&
+    data.size !== undefined &&
+    data.type !== undefined &&
+    data.lastModified !== undefined
+  )
 }

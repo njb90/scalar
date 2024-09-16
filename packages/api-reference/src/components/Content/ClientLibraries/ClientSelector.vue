@@ -161,9 +161,10 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
   display: flex;
   justify-content: center;
   overflow: hidden;
-  padding: 3px;
-  border: 1px solid var(--scalar-border-color);
+  background-color: var(--scalar-background-2);
   border-radius: var(--scalar-radius) var(--scalar-radius) 0 0;
+  border: var(--scalar-border-width) solid var(--scalar-border-color);
+  border-bottom: none;
 }
 .client-libraries {
   display: flex;
@@ -173,14 +174,24 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
   position: relative;
   cursor: pointer;
   white-space: nowrap;
-  padding: 5px;
+  padding: 8px 2px;
   gap: 6px;
   color: var(--scalar-color-3);
-  border-radius: var(--scalar-radius);
-  border: 0.5px solid transparent;
   user-select: none;
+  border-bottom: var(--scalar-border-width) solid var(--scalar-border-color);
 }
-.client-libraries:hover {
+.client-libraries:hover:before {
+  content: '';
+  position: absolute;
+  width: calc(100% - 4px);
+  height: calc(100% - 4px);
+  background: var(--scalar-background-3);
+  left: 2px;
+  top: 2px;
+  z-index: 0;
+  border-radius: var(--scalar-radius);
+}
+.client-libraries:active {
   color: var(--scalar-color-1);
 }
 /* remove php and c on mobile */
@@ -224,10 +235,8 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
   }
 }
 .client-libraries__active {
-  background-color: var(--scalar-background-2);
   color: var(--scalar-color-1);
-  border-color: var(--scalar-border-color);
-  filter: brightness(var(--scalar-lifted-brightness));
+  border-bottom: var(--scalar-border-width) solid var(--scalar-color-1);
 }
 @keyframes codeloader {
   0% {
@@ -240,6 +249,7 @@ const checkIfClientIsFeatured = (client: HttpClientState) =>
 .client-libraries span {
   font-size: var(--scalar-mini);
   font-weight: var(--scalar-semibold);
+  position: relative;
 }
 .client-libraries__active span {
   color: var(--scalar-color-1);

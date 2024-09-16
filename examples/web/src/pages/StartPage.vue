@@ -6,7 +6,7 @@ import PageLink from '../components/PageLink.vue'
 const inDevelopment = import.meta.env.DEV
 </script>
 <template>
-  <div class="main dark-mode">
+  <div class="main">
     <div class="logo">
       <svg
         data-v-873746d2=""
@@ -64,6 +64,10 @@ const inDevelopment = import.meta.env.DEV
       <PageLink href="http://localhost:5062/json">
         <template #title>Nuxt</template>
         <template #description>@scalar/nuxt</template>
+      </PageLink>
+      <PageLink href="http://localhost:5066/api/openapi">
+        <template #title>Next.js</template>
+        <template #description>@scalar/nuxtjs-openapi</template>
       </PageLink>
       <PageLink href="http://localhost:5063/scalar">
         <template #title>Docusaurus</template>

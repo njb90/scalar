@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid'
 import { type Ref, onMounted, ref, useAttrs } from 'vue'
 
 import { cva, cx } from '../../cva'
+import { ScalarIcon } from '../ScalarIcon'
 
 const props = withDefaults(
   defineProps<{
@@ -23,7 +24,7 @@ const props = withDefaults(
   }>(),
   {
     emitOnBlur: true,
-    labelShadowColor: 'var(--scalar-background-2)',
+    labelShadowColor: 'var(--scalar-background-1)',
     disableTrim: false,
   },
 )
@@ -38,7 +39,7 @@ const textField = cva({
     focus: {
       true: 'scalar-input-wrapper-focus border-c-3 has-actv-btn:border has-actv-btn:border-border',
     },
-    error: { true: 'scalar-input-wrapper-error border-error' },
+    error: { true: 'scalar-input-wrapper-error border-red' },
   },
 })
 
@@ -121,12 +122,12 @@ onMounted(() => {
         @blur="handleBlur"
         @focus="isFocused = true"
         @input="handleChange"
-        @keyup.enter="handleSubmit" />
+        @keydown.enter="handleSubmit" />
       <label
         v-if="label"
         :class="
           cx(
-            'scalar-input-label pointer-events-none absolute left-0 top-0 mx-2 my-3 px-1 text-xs',
+            'scalar-input-label pointer-events-none absolute left-0 top-0 mx-2 my-3 px-1 text-sm',
             'z-10 origin-top-left rounded text-c-3 shadow-current transition-transform',
           )
         "
@@ -143,13 +144,13 @@ onMounted(() => {
       </div>
     </div>
     <span
-      :class="
-        cx(
-          'helper-text before:font-black mt-1.5 flex items-center text-xs text-error before:rounded-full',
-          'before:mr-1.5 before:block before:h-4 before:w-4 before:text-center before:text-xxs before:leading-4',
-          `before:bg-error before:text-white before:content-['!'] empty:hidden`,
-        )
-      ">
+      v-if="helperText"
+      class="helper-text mt-1.5 flex items-center gap-1 text-sm"
+      :class="error ? 'font-medium text-red' : 'text-c-2'">
+      <ScalarIcon
+        v-if="error"
+        icon="Error"
+        size="sm" />
       {{ helperText }}
     </span>
   </div>
@@ -164,7 +165,7 @@ onMounted(() => {
   color: var(--scalar-color-1);
 }
 .scalar-input-wrapper-error .scalar-input-label {
-  color: var(--scalar-color-error-color);
+  color: var(--scalar-color-red);
 }
 .scalar-input::selection {
   color: var(--scalar-color-1);

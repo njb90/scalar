@@ -1,5 +1,17 @@
 # @scalar/use-toasts
 
+## 0.7.6
+
+### Patch Changes
+
+- ad89ca3: fix: autprefixer warnings
+
+## 0.7.5
+
+### Patch Changes
+
+- db92a85: fix(use-toasts): set parent class for scalar toasts
+
 ## 0.7.4
 
 ### Patch Changes

@@ -4,8 +4,8 @@ import {
   useRequestStore,
   useServerStore,
 } from '#legacy'
-import type { TransformedOperation } from '@scalar/oas-utils'
-import type { OpenAPIV3 } from '@scalar/openapi-parser'
+import type { OpenAPIV3 } from '@scalar/openapi-types'
+import type { TransformedOperation } from '@scalar/types/legacy'
 
 import { getApiClientRequest } from '../helpers'
 

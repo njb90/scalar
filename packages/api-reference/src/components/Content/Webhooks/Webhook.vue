@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { TransformedOperation } from '@scalar/oas-utils'
+import type { TransformedOperation } from '@scalar/types/legacy'
 
 import { useResponses } from '../../../hooks'
 import Parameters from '../Operation/Parameters.vue'
@@ -14,11 +14,20 @@ const { responses } = useResponses(props.webhook)
 
 <template>
   <template v-if="webhook">
-    <RequestBody :requestBody="webhook.information?.requestBody">
+    <RequestBody
+      class="webhook-request-body"
+      :requestBody="webhook.information?.requestBody">
       <template #title>Payload</template>
     </RequestBody>
-    <Parameters :parameters="responses">
+    <Parameters
+      class="webhook-response-parameters"
+      :parameters="responses">
       <template #title>Responses</template>
     </Parameters>
   </template>
 </template>
+<style scoped>
+.webhook-request-body {
+  margin-top: -18px;
+}
+</style>

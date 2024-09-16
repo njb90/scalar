@@ -15,12 +15,14 @@
 **/.venv
 
 pnpm-lock.yaml
-.changeset/
+.changeset/*.md
 cdn
 
-fixtures
+
 .vite-ssg-temp
 .next
 
 examples/docusaurus/**/*.mdx
 packages/nuxt/src/runtime/plugins/hydrateClient.d.mts
+packages/api-client-app/out
+packages/openapi-parser/tests/**/*.yaml

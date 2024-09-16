@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { Spec } from '@scalar/oas-utils'
-import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-parser'
+import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-types'
+import type { Spec } from '@scalar/types/legacy'
 import GithubSlugger from 'github-slugger'
 import { computed } from 'vue'
 
+import DownloadLink from '../../../features/DownloadLink/DownloadLink.vue'
 import { Badge } from '../../Badge'
 import {
   Section,
@@ -14,7 +15,6 @@ import {
   SectionHeader,
 } from '../../Section'
 import Description from './Description.vue'
-import DownloadSpec from './DownloadSpec.vue'
 
 const props = defineProps<{
   info: Partial<
@@ -51,7 +51,7 @@ const formattedSpecTitle = computed(() => {
               tight>
               {{ info.title }}
             </SectionHeader>
-            <DownloadSpec :specTitle="formattedSpecTitle" />
+            <DownloadLink :specTitle="formattedSpecTitle" />
             <Description :value="info.description" />
           </SectionColumn>
           <SectionColumn v-if="$slots.aside">

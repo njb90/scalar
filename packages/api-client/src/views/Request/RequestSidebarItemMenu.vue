@@ -1,112 +1,121 @@
 <script setup lang="ts">
-import ScalarHotkey from '@/components/ScalarHotkey.vue'
-import { useWorkspace } from '@/store/workspace'
+import { commandPaletteBus } from '@/libs/event-busses'
 import {
   ScalarButton,
   ScalarDropdown,
-  ScalarDropdownDivider,
   ScalarDropdownItem,
   ScalarIcon,
 } from '@scalar/components'
+import type { Collection } from '@scalar/oas-utils/entities/workspace/collection'
+import type { Folder } from '@scalar/oas-utils/entities/workspace/folder'
 import type {
   Request,
   RequestExample,
 } from '@scalar/oas-utils/entities/workspace/spec'
 import { computed } from 'vue'
 
-const props = defineProps<{
-  item: Request | RequestExample
+const props = withDefaults(
+  defineProps<{
+    /** Both inidicate the level and provide a way to traverse upwards */
+    item: Collection | Folder | Request | RequestExample
+    resourceTitle: string
+    static?: boolean
+  }>(),
+  { static: false },
+)
+
+const emit = defineEmits<{
+  (event: 'delete'): void
+  (event: 'rename'): void
 }>()
-const { createExampleFromRequest, requestMutators } = useWorkspace()
 
-const addExample = () => {
-  if (!('summary' in props.item)) return
-
-  const example = createExampleFromRequest(props.item)
-
-  requestMutators.edit(props.item.uid, 'childUids', [
-    ...props.item.childUids,
-    example.uid,
-  ])
-
-  // TOOD route to example?
-}
-
-const handleItemRename = () => {
-  console.log('rename')
-}
-
-const handleItemDuplicate = () => {
-  console.log('duplicate')
-}
-
-const handleItemDelete = () => {
-  console.log('delete')
-}
+/** Add example */
+const handleAddExample = () =>
+  commandPaletteBus.emit({
+    commandName: 'Add Example',
+    metaData: props.item.uid,
+  })
 
 const isRequest = computed(() => 'summary' in props.item)
 </script>
 
 <template>
-  <ScalarDropdown teleport="#scalar-client">
+  <ScalarDropdown
+    :static="static"
+    :teleport="!static ?? '#scalar-client'">
     <ScalarButton
-      class="z-10 hover:bg-b-3 transition-none p-1 group-hover:flex ui-open:flex absolute left-0 hidden -translate-x-full -ml-1"
+      class="px-0.5 py-0 z-10 hover:bg-b-3 hidden group-hover:flex ui-open:flex absolute -translate-y-1/2 right-0 aspect-square inset-y-2/4 h-fit"
       size="sm"
       variant="ghost"
-      @click.stop>
+      @click="
+        (ev) => {
+          // We must stop propagation on folders and collections to prevent them from toggling
+          if (
+            props.resourceTitle === 'Collection' ||
+            props.resourceTitle === 'Folder'
+          )
+            ev.stopPropagation()
+        }
+      ">
       <ScalarIcon
         icon="Ellipses"
         size="sm" />
     </ScalarButton>
     <template #items>
+      <!-- Add example -->
       <ScalarDropdownItem
         v-if="isRequest"
-        class="flex !gap-2"
-        @click="addExample">
+        class="flex gap-2"
+        @click="handleAddExample">
         <ScalarIcon
-          class="text-c-2 inline-flex p-px"
-          icon="Add"
-          size="xs" />
+          class="inline-flex"
+          icon="Example"
+          size="md"
+          thickness="1.5" />
         <span>Add Example</span>
-        <ScalarHotkey
-          class="absolute right-2 text-c-3"
-          hotkey="1"
-          @hotkeyPressed="addExample" />
       </ScalarDropdownItem>
-      <ScalarDropdownItem class="flex !gap-2">
+
+      <!-- Rename -->
+      <ScalarDropdownItem
+        class="flex gap-2"
+        @click="emit('rename')">
         <ScalarIcon
-          class="text-c-2 inline-flex p-px"
+          class="inline-flex"
           icon="Edit"
-          size="xs" />
+          size="md"
+          thickness="1.5" />
         <span>Rename</span>
-        <ScalarHotkey
-          class="absolute right-2 text-c-3"
-          hotkey="2"
-          @hotkeyPressed="handleItemRename" />
       </ScalarDropdownItem>
-      <ScalarDropdownItem class="flex !gap-2">
+
+      <!-- Duplicate -->
+      <!-- <ScalarDropdownItem
+        class="flex !gap-2"
+        @click="handleItemDuplicate">
         <ScalarIcon
-          class="text-c-2 inline-flex p-px"
+          class="inline-flex"
+          thickness="1.5"
           icon="Duplicate"
-          size="xs" />
+          size="sm" />
         <span>Duplicate</span>
-        <ScalarHotkey
-          class="absolute right-2 text-c-3"
-          hotkey="3"
-          @hotkeyPressed="handleItemDuplicate" />
       </ScalarDropdownItem>
-      <ScalarDropdownDivider />
-      <ScalarDropdownItem class="flex !gap-2">
+      <ScalarDropdownDivider /> -->
+
+      <!-- Delete -->
+      <ScalarDropdownItem
+        class="flex gap-2"
+        @click="emit('delete')">
         <ScalarIcon
-          class="text-c-2 inline-flex p-px"
-          icon="Trash"
-          size="xs" />
+          class="inline-flex"
+          icon="Delete"
+          size="md"
+          thickness="1.5" />
         <span>Delete</span>
-        <ScalarHotkey
-          class="absolute right-2 text-c-3"
-          hotkey="4"
-          @hotkeyPressed="handleItemDelete" />
       </ScalarDropdownItem>
     </template>
   </ScalarDropdown>
 </template>
+<style scoped>
+.ellipsis-position {
+  transform: translate3d(calc(-100% - 4.5px), 0, 0);
+}
+</style>

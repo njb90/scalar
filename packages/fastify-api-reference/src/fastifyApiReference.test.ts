@@ -1,7 +1,25 @@
+import FastifyBasicAuth, {
+  type FastifyBasicAuthOptions,
+} from '@fastify/basic-auth'
 import Fastify from 'fastify'
 import { describe, expect, it } from 'vitest'
 
 import fastifyApiReference from './index'
+
+const authOptions: FastifyBasicAuthOptions = {
+  validate(username, password, req, reply, done) {
+    if (username === 'admin' && password === 'admin') {
+      done()
+    } else {
+      done(new Error('Invalid credentials'))
+    }
+  },
+  authenticate: true,
+}
+
+function basicAuthEncode(username: string, password: string) {
+  return 'Basic ' + Buffer.from(username + ':' + password).toString('base64')
+}
 
 describe('fastifyApiReference', () => {
   it('returns 200 OK for the HTML', async () => {
@@ -64,7 +82,7 @@ describe('fastifyApiReference', () => {
     })
 
     const address = await fastify.listen({ port: 0 })
-    const response = await fetch(`${address}/`)
+    const response = await fetch(`${address}/reference`)
     expect(response.status).toBe(200)
   })
 
@@ -214,5 +232,82 @@ describe('fastifyApiReference', () => {
     const response = await fetch(`${address}/reference`)
     expect(response.headers.has('content-type')).toBe(true)
     expect(response.headers.get('content-type')).toContain('text/html')
+  })
+
+  it('has the JS url with default routePrefix', async () => {
+    const fastify = Fastify({
+      logger: false,
+    })
+
+    fastify.register(fastifyApiReference, {
+      configuration: {
+        spec: { url: '/openapi.json' },
+      },
+    })
+
+    const address = await fastify.listen({ port: 0 })
+    const response = await fetch(`${address}/reference`)
+    expect(await response.text()).toContain(
+      '/reference/@scalar/fastify-api-reference/js/browser.js',
+    )
+  })
+
+  it('returns 401 Unauthorized for requests without authentication', async () => {
+    const fastify = Fastify({
+      logger: false,
+    })
+    await fastify.register(FastifyBasicAuth, authOptions)
+
+    fastify.register(fastifyApiReference, {
+      configuration: {
+        spec: { url: '/openapi.json' },
+      },
+      hooks: {
+        onRequest: fastify.basicAuth,
+      },
+    })
+
+    const address = await fastify.listen({ port: 0 })
+    let response = await fetch(`${address}/reference`)
+    expect(response.status).toBe(401)
+
+    response = await fetch(
+      `${address}/reference/@scalar/fastify-api-reference/js/browser.js`,
+    )
+    expect(response.status).toBe(401)
+  })
+
+  it('returns 200 OK for requests with authentication', async () => {
+    const fastify = Fastify({
+      logger: false,
+    })
+    await fastify.register(FastifyBasicAuth, authOptions)
+
+    fastify.register(fastifyApiReference, {
+      configuration: {
+        spec: { url: '/openapi.json' },
+      },
+      hooks: {
+        onRequest: fastify.basicAuth,
+      },
+    })
+
+    const address = await fastify.listen({ port: 0 })
+    let response = await fetch(`${address}/reference`, {
+      headers: {
+        authorization: basicAuthEncode('admin', 'admin'),
+      },
+    })
+    expect(response.status).toBe(200)
+
+    response = await fetch(
+      `${address}/reference/@scalar/fastify-api-reference/js/browser.js`,
+      {
+        headers: {
+          authorization: basicAuthEncode('admin', 'admin'),
+        },
+      },
+    )
+    expect(response.status).toBe(200)
   })
 })

@@ -1,5 +1,246 @@
 # @scalar/components
 
+## 0.12.44
+
+### Patch Changes
+
+- 0fc3460: feat(components): make markdown line clamping configurable
+  - @scalar/code-highlight@0.0.11
+
+## 0.12.43
+
+### Patch Changes
+
+- 1e41dfe: fix: adds endpoints description collapse state
+- ad89ca3: fix: autprefixer warnings
+
+## 0.12.42
+
+### Patch Changes
+
+- Updated dependencies [18744d4]
+  - @scalar/code-highlight@0.0.11
+
+## 0.12.41
+
+### Patch Changes
+
+- 9e8d40d: fix(components): use single scroll container for codeblock
+- c02202c: fix: scalar dropdown item dark mode background brightness
+  - @scalar/code-highlight@0.0.10
+
+## 0.12.40
+
+### Patch Changes
+
+- bbe5b49: feat: update edit and delete icons
+
+## 0.12.39
+
+### Patch Changes
+
+- 9bc0ae7: feat: update scalar icon disabled state
+- a792002: feat: add xl scalar modal
+  - @scalar/code-highlight@0.0.10
+
+## 0.12.38
+
+### Patch Changes
+
+- 6babe66: fix(components): show icon for ScalarTextField errors
+  - @scalar/code-highlight@0.0.10
+
+## 0.12.37
+
+### Patch Changes
+
+- af75550: feat: scalar search input sidebar style
+
+## 0.12.36
+
+### Patch Changes
+
+- 8bde837: fix(components): refactor loading to match icon sizes
+
+## 0.12.35
+
+### Patch Changes
+
+- 7aa26fb: fix(components): fix modal layout
+- 2db9eb8: feat: topnav context menu
+
+## 0.12.34
+
+### Patch Changes
+
+- 78db8f5: feat: use new @scalar/types package
+  - @scalar/code-highlight@0.0.10
+
+## 0.12.33
+
+### Patch Changes
+
+- 7bfee42: fix(components): don't clear loading state automatically
+  - @scalar/code-highlight@0.0.10
+
+## 0.12.32
+
+### Patch Changes
+
+- 48693d7: fix(components): rebuild code block x-y scroll box
+
+## 0.12.31
+
+### Patch Changes
+
+- Updated dependencies [c450bb3]
+  - @scalar/code-highlight@0.0.10
+
+## 0.12.30
+
+### Patch Changes
+
+- db96313: feat: scalar context menu component
+- 6f107e1: style(components): outline user icon
+- db96313: feat: set request sidebar item context menu
+- Updated dependencies [58e5912]
+  - @scalar/code-highlight@0.0.9
+
+## 0.12.29
+
+### Patch Changes
+
+- Updated dependencies [b910fc1]
+  - @scalar/code-highlight@0.0.8
+
+## 0.12.28
+
+### Patch Changes
+
+- 13b2f6d: fix: scalar icon chevron left update
+  - @scalar/code-highlight@0.0.7
+
+## 0.12.27
+
+### Patch Changes
+
+- 09d07d1: fix: api client help and darkmode button, sidebar bugs, backgrounds, etc
+
+## 0.12.26
+
+### Patch Changes
+
+- 3a6effa: feat(api-client): add response previews
+  - @scalar/code-highlight@0.0.7
+
+## 0.12.25
+
+### Patch Changes
+
+- c1ada84: feat(api-client): add the ability to delete and rename folders and collections
+- c1ada84: fix: modal layout and size
+  - @scalar/code-highlight@0.0.7
+
+## 0.12.24
+
+### Patch Changes
+
+- de25d01: feat(api-client): add the ability to delete and rename folders and collections
+  - @scalar/code-highlight@0.0.7
+
+## 0.12.23
+
+### Patch Changes
+
+- 7b58f10: fix: add discord and github line icons
+
+## 0.12.22
+
+### Patch Changes
+
+- bf2895e: feat(api-client): add multiple auth to api client
+- 5d2825a: feat: add sidebar request menu
+
+## 0.12.21
+
+### Patch Changes
+
+- e8fa353: https://github.com/scalar/scalar/pull/2658
+
+## 0.12.20
+
+### Patch Changes
+
+- b2a662a: fix: provide a placeholder for icons while loading
+- 86014b5: feat(components): update combobox styles
+- a60c916: feat(components): add multiselect combobox
+
+## 0.12.19
+
+### Patch Changes
+
+- a5f3a84: feat(components): create combo box component
+- 9a08f46: fix: set component font size to 13px
+  - @scalar/code-highlight@0.0.7
+
+## 0.12.18
+
+### Patch Changes
+
+- 19d8b6a: feat: animate sidebar icon
+
+## 0.12.17
+
+### Patch Changes
+
+- 67aefbf: fix: scalar api client fixed to bottom
+
+## 0.12.16
+
+### Patch Changes
+
+- ff59399: fix: api client spacing issues, and icon thickness
+  - @scalar/code-highlight@0.0.7
+
+## 0.12.15
+
+### Patch Changes
+
+- 7076725: feat(components): add outline icons
+- 1e72b03: fix(components): polish history icon
+- dd2a42e: feat: outline page icon
+
+## 0.12.14
+
+### Patch Changes
+
+- e1aa4fc: fix: add max height to search modal
+
+## 0.12.13
+
+### Patch Changes
+
+- e285a6b: fix: scalar code block copy
+- bff602a: fix: client sidebar item width + some icon issues
+- 6f4d20d: fix: update client icon weights
+- 2f10a39: fix: dark mode icon
+- 2f10a39: fix: lint client scalar icons
+
+## 0.12.12
+
+### Patch Changes
+
+- f86a242: fix: remove scalar dropdown button border
+
+## 0.12.11
+
+### Patch Changes
+
+- e649da6: feat: set copy clipboard in scalar codeblock
+- a1d59de: fix: resize scalar modal
+- Updated dependencies [c2362ee]
+  - @scalar/code-highlight@0.0.7
+
 ## 0.12.10
 
 ### Patch Changes

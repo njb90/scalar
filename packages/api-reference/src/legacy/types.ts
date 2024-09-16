@@ -1,4 +1,4 @@
-import type { BaseParameter } from '@scalar/oas-utils'
+import type { BaseParameter } from '@scalar/types/legacy'
 
 export type Header = BaseParameter
 
@@ -116,32 +116,4 @@ export type RequestBody = {
 export type Response = {
   description: string
   content: any
-}
-
-export type Server = {
-  url: string
-  description?: string
-  variables?: ServerVariables
-}
-
-export type ServerVariables = Record<
-  string,
-  {
-    default?: string | number
-    description?: string
-    enum?: (string | number)[]
-  }
->
-
-export type Variable = {
-  name: string
-  value: string
-  enum?: (string | number)[]
-}
-
-export type ServerState = {
-  selectedServer: null | number
-  description?: string
-  servers?: Server[]
-  variables: { [key: string]: string }
 }

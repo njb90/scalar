@@ -1,14 +1,19 @@
-import type { OpenAPI, OpenAPIV3_1 } from '@scalar/openapi-parser'
+import type { OpenAPI, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-types'
 
 export function isBasicAuthenticationRequired(
   operation: OpenAPI.Operation,
   schema?: OpenAPI.Document,
 ) {
   const allowedSecuritySchemes = operation.security?.map(
-    (securityScheme: OpenAPIV3_1.SecurityRequirementObject) => {
+    (
+      securityScheme:
+        | OpenAPIV3.SecurityRequirementObject
+        | OpenAPIV3_1.SecurityRequirementObject,
+    ) => {
       return Object.keys(securityScheme)[0]
     },
   )
+
   // Check if one of them is HTTP Basic Auth
   const httpBasicAuthIsRequired =
     allowedSecuritySchemes?.findIndex((securitySchemeKey: string) => {
@@ -18,6 +23,7 @@ export function isBasicAuthenticationRequired(
       return (
         securityScheme?.type === 'http' && securityScheme?.scheme === 'basic'
       )
-    }) !== undefined
+    }) >= 0
+
   return httpBasicAuthIsRequired
 }

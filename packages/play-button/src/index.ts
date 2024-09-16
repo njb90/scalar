@@ -2,9 +2,9 @@
  * This file is the entry point for the CDN version of the Scalar Test Button.
  * It’s responsible for finding the spec and configuration in the HTML, and mounting the Vue.js app.
  */
-import { createScalarApiClient } from '@scalar/api-client'
+import { createApiClientModal } from '@scalar/api-client'
 import { parse } from '@scalar/api-reference'
-import type { Spec, Tag, TransformedOperation } from '@scalar/oas-utils'
+import type { Spec, Tag, TransformedOperation } from '@scalar/types/legacy'
 import { reactive } from 'vue'
 
 const specScriptTag = document.getElementById('scalar-play-button-script')
@@ -79,7 +79,7 @@ if (!specUrlElement && !specElement && !specScriptTag) {
       return null
     }
 
-    const { open } = await createScalarApiClient(container as HTMLElement, {
+    const { open } = await createApiClientModal(container as HTMLElement, {
       spec: {
         url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.json',
       },

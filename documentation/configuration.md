@@ -80,13 +80,67 @@ Whether models (`components.schemas` or `definitions`) should be shown in the si
 
 #### hideDownloadButton?: boolean
 
-Whether to show the "Download OpenAPI Specification" button
+Whether to show the “Download OpenAPI Document” button
 
 `@default false`
 
 ```js
 {
   hideDownloadButton: true
+}
+```
+
+#### hideTestRequestButton?: boolean
+
+Whether to show the “Test Request” button
+
+`@default false`
+
+```js
+{
+  hideTestRequestButton: true
+}
+```
+
+#### hideSearch?: boolean
+
+Whether to show the sidebar search bar
+
+`@default false`
+
+```js
+{
+  hideSearch: true
+}
+```
+
+#### darkMode?: boolean
+
+Whether dark mode is on or off initially (light mode)
+
+```js
+{
+  darkMode: true
+}
+```
+
+#### forceDarkModeState?: 'dark' | 'light'
+
+forceDarkModeState makes it always this state no matter what
+
+```js
+{
+  forceDarkModeState: 'dark'
+}
+```
+
+#### hideDarkModeToggle?: boolean
+
+Whether to show the dark mode toggle
+
+```js
+{
+  hideDarkModeToggle: true
 }
 ```
 
@@ -148,6 +202,31 @@ You can pass information to the config object to configure meta information out 
 }
 ```
 
+#### favicon?: string
+
+You can specify the path to a favicon to be used for the documentation.
+
+```js
+{
+  favicon: '/favicon.svg'
+}
+```
+
+#### defaultHttpClient?: HttpClientState
+
+By default, we’re using Shell/curl as the default HTTP client. Or, if that’s disabled (through `hiddenClients`), we’re just using the first available HTTP client.
+
+You can explicitly set the default HTTP client, though:
+
+```js
+{
+  defaultHttpClient: {
+    targetKey: 'node',
+    clientKey: 'undici',
+  }
+}
+```
+
 #### hiddenClients?: array | true
 
 You can pass an array of [httpsnippet clients](https://github.com/Kong/httpsnippet/wiki/Targets) to hide from the clients menu.
@@ -158,7 +237,15 @@ You can pass an array of [httpsnippet clients](https://github.com/Kong/httpsnipp
 }
 ```
 
-By default hides Unirest, pass `[]` to **show** all clients or `true` to **hide** all clients:
+By default hides Unirest, pass `[]` to **show** all clients:
+
+```js
+{
+  hiddenClients: []
+}
+```
+
+Or `true` to **hide** all clients:
 
 ```js
 {
@@ -224,6 +311,42 @@ By default we’re using Inter and JetBrains Mono, served by Google Fonts. If yo
 }
 ```
 
+#### defaultOpenAllTags?: boolean
+
+By default we only open the relevant tag based on the url, however if you want all the tags open by default then set this configuration option :)
+
+```js
+{
+  defaultOpenAllTags: true
+}
+```
+
+#### tagsSorter?: 'alpha' | (a: Tag, b: Tag) => number
+
+Sort tags alphanumerically (`'alpha'`):
+
+```js
+{
+  tagsSorter: 'alpha'
+}
+```
+
+Or specify a custom function to sort the tags.
+
+> Note: Most of our integrations pass the configuration as JSON and you can’t use custom sort functions there. It will work in Vue, Nuxt, React, Next and all integrations that don’t need to pass the configuration as a JSON string.
+
+```js
+{
+  /** @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort */
+  tagsSorter: (a, b) => {
+    if (a.name === 'Super Important Tag') return -1
+    return 1
+  }
+}
+```
+
+Learn more about Array sort functions: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+
 #### theme?: string
 
 You don’t like the color scheme? We’ve prepared some themes for you:
@@ -232,6 +355,6 @@ Can be one of: **alternate**, **default**, **moon**, **purple**, **solarized**, 
 
 ```js
 {
-  theme: default
+  theme: 'default'
 }
 ```

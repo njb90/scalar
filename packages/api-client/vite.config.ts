@@ -8,16 +8,18 @@ import { URL, fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import svgLoader from 'vite-svg-loader'
 
+import { version } from './package.json'
+
 export default defineConfig({
   plugins: [vue(), svgLoader(), ViteWatchWorkspace()],
-  define: {
-    'process.env.ENABLE_LOCAL_STORAGE': 'true',
-  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
     dedupe: ['vue'],
+  },
+  define: {
+    'import.meta.env.PACKAGE_VERSION': `'${version}'`,
   },
   optimizeDeps: {
     exclude: ['@scalar/*'],
@@ -31,4 +33,7 @@ export default defineConfig({
       ssr: false,
     },
   }),
+  test: {
+    environment: 'jsdom',
+  },
 })

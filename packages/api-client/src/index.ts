@@ -1,6 +1,5 @@
-export { default as ScalarClient } from './App.vue'
-export * from './Modal'
+export * from './layouts/Modal'
+export * from './layouts/App'
 
 export { useWorkspace } from './store/workspace'
-
-export { modalRouter } from './router'
+export { createModalRouter, createWebHashRouter, router } from './router'

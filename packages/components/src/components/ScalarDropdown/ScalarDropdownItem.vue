@@ -14,10 +14,9 @@ defineEmits<{
 const variants = cva({
   base: [
     // Layout
-    'min-w-0 items-center gap-3 rounded px-2.5 py-1.5 text-left',
-    'first-of-type:mt-0.75 last-of-type:mb-0.75',
+    'h-8 min-w-0 items-center gap-1.5 rounded px-2.5 py-1.5 text-left',
     // Text / background style
-    'truncate text-xs text-c-1',
+    'truncate text-sm text-c-1',
     // Interaction
     'cursor-pointer hover:bg-b-2 hover:text-c-1',
   ],
@@ -40,3 +39,8 @@ const variants = cva({
     </button>
   </MenuItem>
 </template>
+<style scoped>
+.dark-mode .scalar-dropdown-item:hover {
+  filter: brightness(1.1);
+}
+</style>

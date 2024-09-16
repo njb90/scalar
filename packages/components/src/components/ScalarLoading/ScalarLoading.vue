@@ -1,18 +1,33 @@
 <script setup lang="ts">
-import { cx } from '../../cva'
+import type { VariantProps } from 'cva'
+import { cva, cx } from '../../cva'
 import { reactive } from 'vue'
 
-withDefaults(
-  defineProps<{
-    loadingState: LoadingState
-    size?: string
-  }>(),
-  {
-    size: '24px',
-  },
-)
-</script>
+type Variants = VariantProps<typeof variants>
 
+defineProps<{
+  loadingState: LoadingState
+  size?: Variants['size']
+}>()
+
+const variants = cva({
+  variants: {
+    size: {
+      'xs': 'size-3',
+      'sm': 'size-3.5',
+      'md': 'size-4',
+      'lg': 'size-5',
+      'xl': 'size-6',
+      '2xl': 'size-8',
+      '3xl': 'size-10',
+      'full': 'size-full',
+    },
+  },
+  defaultVariants: {
+    size: 'full',
+  },
+})
+</script>
 <script lang="ts">
 export type LoadingState = ReturnType<typeof useLoadingState>
 
@@ -32,20 +47,26 @@ export function useLoadingState() {
     stopLoading() {
       this.isLoading = false
     },
-    validate(time = 800) {
+    validate(time = 800, clear?: boolean) {
+      this.isInvalid = false
       this.isValid = true
-      const diff = time - 300
+      const diff = clear ? time - 300 : time
       // Allow chaining after animation
       return new Promise((res) =>
-        setTimeout(() => this.clear().then(() => res(true)), diff),
+        clear
+          ? setTimeout(() => this.clear().then(() => res(true)), diff)
+          : setTimeout(() => res(true), diff),
       )
     },
-    invalidate(time = 1100) {
+    invalidate(time = 1100, clear?: boolean) {
+      this.isValid = false
       this.isInvalid = true
-      const diff = time - 300
+      const diff = clear ? time - 300 : time
       // Allow chaining after animation
       return new Promise((res) =>
-        setTimeout(() => this.clear().then(() => res(true)), diff),
+        clear
+          ? setTimeout(() => this.clear().then(() => res(true)), diff)
+          : setTimeout(() => res(true), diff),
       )
     },
     clear(time = 300) {
@@ -62,11 +83,10 @@ export function useLoadingState() {
   })
 }
 </script>
-
 <template>
   <div
     v-if="loadingState"
-    :class="cx('loader-wrapper')">
+    :class="cx('loader-wrapper', variants({ size }))">
     <svg
       class="svg-loader"
       :class="{
@@ -111,8 +131,6 @@ export function useLoadingState() {
 <style scoped>
 .loader-wrapper {
   position: relative;
-  height: v-bind(size);
-  width: v-bind(size);
 
   display: flex;
   align-items: center;

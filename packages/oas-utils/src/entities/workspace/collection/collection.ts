@@ -1,5 +1,5 @@
 import { nanoidSchema } from '@/entities/workspace/shared'
-import { deepMerge } from '@/helpers'
+import { deepMerge } from '@scalar/object-utils/merge'
 import { z } from 'zod'
 
 import { securityRequirement } from '../security'
@@ -118,26 +118,8 @@ const specSchema = z.object({
 const collectionSchema = z.object({
   uid: nanoidSchema,
   spec: specSchema.optional().default({}),
-  /**
-   * The currently selected security scheme key
-   * TODO eventually we will need to maintain one per request + collection but this will do for now
-   */
-  selectedSecuritySchemes: z
-    .array(
-      z.object({
-        uid: z.string(),
-        // Wasn't sure how to extract the keys from another schema so hard coded these for now
-        flowKey: z
-          .enum([
-            'implicit',
-            'clientCredentials',
-            'password',
-            'authorizationCode',
-          ])
-          .optional(),
-      }),
-    )
-    .default([]),
+  /** A dictionary which maps the openapi spec name keys to the security-scheme UID's for lookup */
+  securitySchemeDict: z.record(z.string(), z.string()).optional().default({}),
   /** The currently selected server */
   selectedServerUid: z.string().default(''),
   /**  List of uids that correspond to collection requests or folders */
@@ -156,4 +138,4 @@ export type CollectionPayload = z.input<typeof collectionSchema>
 
 /** Create Collction helper */
 export const createCollection = (payload: CollectionPayload): Collection =>
-  deepMerge(collectionSchema.parse({}), payload)
+  deepMerge(collectionSchema.parse({}), payload as Partial<Collection>)

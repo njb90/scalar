@@ -1,5 +1,41 @@
 # @scalar/use-codemirror
 
+## 0.11.10
+
+### Patch Changes
+
+- 4e5de89: fix: lint only if content is given
+
+## 0.11.9
+
+### Patch Changes
+
+- 3a6effa: feat(api-client): add response previews
+
+## 0.11.8
+
+### Patch Changes
+
+- c112f24: fix: remove ScalarCodeBlock that freezes browser in response preview
+
+## 0.11.7
+
+### Patch Changes
+
+- 694c1d8: Add explicit newline
+
+## 0.11.6
+
+### Patch Changes
+
+- 9e3348a: feat: set placeholder usage
+
+## 0.11.5
+
+### Patch Changes
+
+- 6b32eee: feat: add json linter
+
 ## 0.11.4
 
 ### Patch Changes

@@ -20,10 +20,12 @@ export default {
   theme: {
     extend: {
       maxWidth: {
+        'screen-xxs': '360px',
         'screen-xs': '480px',
         'screen-sm': '540px',
         'screen-md': '640px',
         'screen-lg': '800px',
+        'screen-xl': '1000px',
       },
       zIndex: {
         // Contextual overlays like dropdowns, popovers, tooltips

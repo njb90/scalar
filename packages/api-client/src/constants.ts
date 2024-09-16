@@ -1,11 +1,7 @@
-import type { Icon } from '@scalar/components'
-
-export type Route = { label: string; icon: Icon; path: string }
-
-export const ROUTES: Route[] = [
-  { label: 'Requests', icon: 'ExternalLink', path: '/request' },
-  { label: 'Cookies', icon: 'Cookie', path: '/cookies' },
-  { label: 'Environment', icon: 'Brackets', path: '/environment' },
-  { label: 'Servers', icon: 'Server', path: '/servers' },
+export const ROUTES = [
+  { prettyName: 'Request', name: 'request', icon: 'ExternalLink' },
+  { prettyName: 'Cookies', name: 'cookies', icon: 'Cookie' },
+  { prettyName: 'Env Vars', name: 'environment', icon: 'Brackets' },
+  // { prettyName: 'Servers', name: 'servers', icon: 'Server' },
   // { label: 'Git Sync', icon: 'Branch', path: '/git-sync' },
 ] as const

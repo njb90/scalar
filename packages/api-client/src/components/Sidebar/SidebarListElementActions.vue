@@ -10,6 +10,7 @@ const { variable } = defineProps<{
     name: string
     isDefault: boolean
   }
+  warningMessage?: string
 }>()
 
 const emit = defineEmits<{
@@ -42,31 +43,33 @@ function handleDelete(id: string) {
 }
 </script>
 <template>
-  <div class="absolute right-1 opacity-0 group-hover:opacity-100">
+  <div class="absolute flex right-1 opacity-0 group-hover:opacity-100">
     <button
-      class="text-c-3 hover:bg-b-3 hover:text-c-1 rounded p-1.5"
+      class="text-c-3 hover:bg-b-3 hover:text-c-1 rounded p-[5px]"
       type="button"
       @click="copyToClipboard(variable.name)">
       <ScalarIcon
-        class="h-2.5 w-2.5"
+        class="h-3 w-3"
         icon="Clipboard" />
     </button>
     <button
       v-if="!variable.isDefault"
-      class="text-c-3 hover:bg-b-3 hover:text-c-1 rounded p-1.5"
+      class="text-c-3 hover:bg-b-3 hover:text-c-1 rounded p-1"
       type="button"
       @click.prevent="startActionFlow(ModalAction.Delete)">
       <ScalarIcon
-        class="h-2.5 w-2.5"
+        class="h-3.5 w-3.5"
         icon="Close" />
     </button>
   </div>
   <ScalarModal
+    size="sm"
     :state="modalState"
     :title="`${currentAction.action} ${currentAction.name}`">
     <DeleteSidebarListElement
       v-if="currentAction.action === ModalAction.Delete"
       :variableName="currentAction.name"
+      :warningMessage="warningMessage"
       @close="handleModalClose"
       @delete="handleDelete(variable.uid)" />
   </ScalarModal>

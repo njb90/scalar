@@ -1,8 +1,10 @@
-import type { ReferenceConfiguration } from '@scalar/api-reference'
+import type { ReferenceConfiguration } from '@scalar/types/legacy'
 import type {
   FastifyBaseLogger,
   FastifyTypeProviderDefault,
   RawServerDefault,
+  onRequestHookHandler,
+  preHandlerHookHandler,
 } from 'fastify'
 import fp from 'fastify-plugin'
 
@@ -19,7 +21,7 @@ export type FastifyApiReferenceOptions = {
   /**
    * Prefix the route with a path. This is where the API Reference will be available.
    *
-   * @default ''
+   * @default '/reference'
    */
   routePrefix?: string
   /**
@@ -28,7 +30,16 @@ export type FastifyApiReferenceOptions = {
    * Read more: https://github.com/scalar/scalar
    */
   configuration?: ReferenceConfiguration
+  /**
+   * The hooks for the API Reference.
+   */
+  hooks?: FastifyApiReferenceHooksOptions
 }
+
+export type FastifyApiReferenceHooksOptions = Partial<{
+  onRequest?: onRequestHookHandler
+  preHandler?: preHandlerHookHandler
+}>
 
 // This Schema is used to hide the route from the documentation.
 // https://github.com/fastify/fastify-swagger#hide-a-route
@@ -37,7 +48,7 @@ const schemaToHideRoute = {
 }
 
 const getJavaScriptUrl = (routePrefix?: string, publicPath?: string) =>
-  `${publicPath ?? ''}${routePrefix ?? ''}/@scalar/fastify-api-reference/js/browser.js`.replace(
+  `${publicPath ?? ''}${routePrefix ?? '/reference'}/@scalar/fastify-api-reference/js/browser.js`.replace(
     /\/\//g,
     '/',
   )
@@ -189,13 +200,26 @@ const fastifyApiReference = fp<
     // Read the JavaScript file once.
     const fileContent = getJavaScriptFile()
 
+    const hooks: FastifyApiReferenceHooksOptions = {}
+    if (options.hooks) {
+      const additionalHooks: (keyof FastifyApiReferenceHooksOptions)[] = [
+        'onRequest',
+        'preHandler',
+      ]
+
+      for (const hook of additionalHooks) {
+        hooks[hook] = options.hooks[hook]
+      }
+    }
+
     // If no theme is passed, use the default theme.
     fastify.route({
       method: 'GET',
-      url: options.routePrefix ?? '/',
+      url: options.routePrefix ?? '/reference',
       // We don’t know whether @fastify/swagger is registered, but it doesn’t hurt to add a schema anyway.
       // @ts-ignore
       schema: schemaToHideRoute,
+      ...hooks,
       handler(_, reply) {
         // If nothing is passed, try to use @fastify/swagger
         if (
@@ -234,6 +258,7 @@ const fastifyApiReference = fp<
       // We don’t know whether @fastify/swagger is registered, but it doesn’t hurt to add a schema anyway.
       // @ts-ignore
       schema: schemaToHideRoute,
+      ...hooks,
       handler(_, reply) {
         return reply
           .header('Content-Type', 'application/javascript; charset=utf-8')

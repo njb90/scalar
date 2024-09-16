@@ -26,6 +26,7 @@ plugins: [
     {
       label: 'Scalar',
       route: '/scalar',
+      showNavLink: true, // optional, default is true
       configuration: {
         spec: {
           url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.yaml',
@@ -36,7 +37,7 @@ plugins: [
 ],
 ```
 
-We wrote a [detailed integration guide for Docusaurus](https://github.com/scalar/scalar/tree/main/documentation/docusaurus.md).
+We wrote a [detailed integration guide for Docusaurus](https://github.com/scalar/scalar/tree/main/documentation/integrations/docusaurus.md).
 
 ### Multiple API descriptions
 
@@ -54,6 +55,7 @@ plugins: [
       id: 'scalar/galaxy',
       label: 'Scalar',
       route: '/scalar',
+      showNavLink: true, // optional, default is true
       configuration: {
         spec: {
           url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.json',
@@ -69,6 +71,7 @@ plugins: [
       id: 'petstore',
       label: 'Petstore',
       route: '/petstore',
+      showNavLink: true, // optional, default is true
       configuration: {
         spec: {
           url: 'https://petstore3.swagger.io/api/v3/openapi.json',

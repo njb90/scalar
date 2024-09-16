@@ -1,64 +1,30 @@
 name: CI
 
 on:
-  pull_request:
+  push:
     branches:
       - main
+  pull_request:
 
 jobs:
-  # Always use Node 20
-  # Add Node 18 to the matrix if we’re in the release PR
-  define-matrix:
-    runs-on: ubuntu-latest
-
-    outputs:
-      node-versions: ${{ steps.node-versions.outputs.node-versions }}
-
-    steps:
-      - name: Node version matrix
-        id: node-versions
-        run: |
-          if [ "${{ github.head_ref }}" == "changeset-release/main" ]; then
-            echo 'node-versions=[18, 20]' >> "$GITHUB_OUTPUT"
-          else
-            echo 'node-versions=[20]' >> "$GITHUB_OUTPUT"
-          fi
-      - name: Print Node version matrix
-        run: echo "node-versions=${{ steps.node-versions.outputs.node-versions }}"
-      - name: Check Node version matrix
-        run: |
-          if [ "${{ steps.node-versions.outputs.node-versions }}" != "[18, 20]" ] && [ "${{ steps.node-versions.outputs.node-versions }}" != "[20]" ]; then
-            echo "Node version matrix is not [18, 20] or [20]"
-            exit 1
-          fi
-
   build:
     runs-on: ubuntu-20.04
-    needs: define-matrix
     strategy:
       matrix:
-        node-version: ${{ fromJSON(needs.define-matrix.outputs.node-versions) }}
+        node-version: [18, 20]
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build
+        uses: ./.github/actions/build
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-      - name: Install dependencies
-        run: pnpm install
-      - name: Turborepo cache
-        uses: actions/cache@v4
+      - name: Update Turborepo cache
+        uses: actions/cache/save@v4
         with:
           path: .turbo
-          key: turbo-${{ runner.os }}-node-${{ matrix.node-version }}-branch-${{ github.head_ref }}
-          restore-keys: |
-            turbo-${{ runner.os }}-node-${{ matrix.node-version }}-branch-
-            turbo-${{ runner.os }}-node-
-      - name: Build
-        run: pnpm turbo build
+          key: turbo-${{ runner.os }}-node-${{ matrix.node-version }}
 
   format:
     runs-on: ubuntu-20.04
@@ -67,7 +33,8 @@ jobs:
         node-version: [20]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -81,62 +48,36 @@ jobs:
 
   types:
     runs-on: ubuntu-20.04
-    needs: [define-matrix, build]
+    needs: [build]
     strategy:
       matrix:
-        node-version: ${{ fromJSON(needs.define-matrix.outputs.node-versions) }}
+        node-version: [20]
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build
+        uses: ./.github/actions/build
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-      - name: Install dependencies
-        run: pnpm install
-      - name: Turborepo cache
-        uses: actions/cache/restore@v4
-        with:
-          path: .turbo
-          key: turbo-${{ runner.os }}-node-${{ matrix.node-version }}-branch-${{ github.head_ref }}
-          restore-keys: |
-            turbo-${{ runner.os }}-node-${{ matrix.node-version }}-branch-
-            turbo-${{ runner.os }}-node-
-      - name: Build
-        run: pnpm turbo build
-      - if: matrix.node-version == 20 || github.head_ref == 'changeset-release/main'
-        name: Check types
+      - name: Check types
         run: pnpm turbo types:check
 
   test:
     runs-on: ubuntu-20.04
-    needs: [define-matrix, build]
+    needs: [build]
     strategy:
       matrix:
-        node-version: ${{ fromJSON(needs.define-matrix.outputs.node-versions) }}
+        node-version: [18, 20]
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build packages
+        uses: ./.github/actions/build
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-      - name: Install dependencies
-        run: pnpm install
-      - name: Turborepo cache
-        uses: actions/cache/restore@v4
-        with:
-          path: .turbo
-          key: turbo-${{ runner.os }}-node-${{ matrix.node-version }}-branch-${{ github.head_ref }}
-          restore-keys: |
-            turbo-${{ runner.os }}-node-${{ matrix.node-version }}-branch-
-            turbo-${{ runner.os }}-node-
-      - name: Build packages
-        run: pnpm build:packages
+          packages-only: 'true'
       - name: Run tests
         run: pnpm test:ci
 
@@ -148,28 +89,244 @@ jobs:
         node-version: [20]
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build @scalar/api-reference
+        uses: ./.github/actions/build
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-      - name: Install dependencies
-        run: pnpm install
-      - name: Turborepo cache
-        uses: actions/cache/restore@v4
-        with:
-          path: .turbo
-          key: turbo-${{ runner.os }}-node-${{ matrix.node-version }}-branch-${{ github.head_ref }}
-          restore-keys: |
-            turbo-${{ runner.os }}-node-${{ matrix.node-version }}-branch-
-            turbo-${{ runner.os }}-node-
-      - name: Build @scalar/api-reference
-        run: pnpm build:api-reference
+          packages-only: 'api-reference'
       - name: Send bundle stats and build information to RelativeCI
         uses: relative-ci/agent-action@v2
         with:
           key: ${{ secrets.RELATIVE_CI_KEY }}
           token: ${{ secrets.GITHUB_TOKEN }}
           webpackStatsFile: ./packages/api-reference/dist/browser/webpack-stats.json
+
+  npm-publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write
+      id-token: write
+    needs: [build, test]
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build
+        uses: ./.github/actions/build
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Git Status
+        run: git status
+      - name: Stash changes
+        run: git stash
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          # The pull request title.
+          title: 'chore: release'
+          # The command to update version, edit CHANGELOG, read and delete changesets.
+          version: 'pnpm changeset version'
+          # The commit message to use.
+          commit: 'chore: version packages'
+          # The command to use to build and publish packages
+          publish: 'pnpm -r publish --access public'
+        env:
+          # https://github.com/settings/tokens/new
+          # Expiration: No expiration
+          # Select: repo.*
+          GITHUB_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+          # https://www.npmjs.com/settings/YOUR_ACCOUNT_HANDLE/tokens/granular-access-tokens/new
+          # Custom Expiration: 01-01-2100
+          # Permissions: Read and Write
+          # Select packages: @scalar
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  todesktop-release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-20.04
+    needs: [build, test]
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build
+        uses: ./.github/actions/build
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Git Status
+        run: git status
+      - name: Stash changes
+        run: git stash
+      - if: startsWith(github.event.head_commit.message, 'RELEASING:')
+        name: Check whether there’s a new version of the app
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files_yaml: |
+            api_client_app:
+              - packages/api-client-app/package.json
+      - if: steps.changed-files.outputs.api_client_app_any_changed == 'true'
+        name: Build in the toDesktop cloud
+        run: pnpm --filter scalar-api-client todesktop:build:ci
+        env:
+          TODESKTOP_EMAIL: ${{ secrets.TODESKTOP_EMAIL }}
+          TODESKTOP_ACCESS_TOKEN: ${{ secrets.TODESKTOP_ACCESS_TOKEN }}
+      # - if: steps.changed-files.outputs.api_client_app_any_changed == 'true'
+      #   name: Run smoke tests
+      #   run: pnpm --filter scalar-api-client todesktop:test:ci
+      #   env:
+      #     TODESKTOP_EMAIL: ${{ secrets.TODESKTOP_EMAIL }}
+      #     TODESKTOP_ACCESS_TOKEN: ${{ secrets.TODESKTOP_ACCESS_TOKEN }}
+      - if: steps.changed-files.outputs.api_client_app_any_changed == 'true'
+        name: Release the app
+        run: pnpm --filter scalar-api-client todesktop:release:ci
+        env:
+          TODESKTOP_EMAIL: ${{ secrets.TODESKTOP_EMAIL }}
+          TODESKTOP_ACCESS_TOKEN: ${{ secrets.TODESKTOP_ACCESS_TOKEN }}
+
+  stackblitz:
+    if: github.head_ref == 'changeset-release/main'
+    runs-on: ubuntu-20.04
+    needs: [build]
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build packages
+        uses: ./.github/actions/build
+        with:
+          node-version: ${{ matrix.node-version }}
+          packages-only: 'true'
+      - name: Bump versions
+        # Let’s apply the changesets and bump the version already,
+        # so it’ll have the upcoming version numbers already.
+        run: pnpm changeset version
+      - name: Publish on Stackblitz
+        # We can’t use npx pkg-pr-new publish ./packages/* here.
+        # We want to explicitly publish the packages we want to save some time.
+        run: npx pkg-pr-new publish
+          ./packages/api-client
+          ./packages/api-reference
+          ./packages/api-reference-editor
+          ./packages/api-reference-react
+          ./packages/build-tooling
+          ./packages/cli
+          ./packages/code-highlight
+          ./packages/components
+          ./packages/docusaurus
+          ./packages/draggable
+          ./packages/express-api-reference
+          ./packages/fastify-api-reference
+          ./packages/galaxy
+          ./packages/hono-api-reference
+          ./packages/mock-server
+          ./packages/nestjs-api-reference
+          ./packages/nextjs-api-reference
+          ./packages/nuxt
+          ./packages/oas-utils
+          ./packages/object-utils
+          ./packages/play-button
+          ./packages/themes
+          ./packages/use-codemirror
+          ./packages/use-toasts
+          ./packages/use-tooltip
+          ./packages/void-server
+
+  deploy-api-client:
+    runs-on: ubuntu-20.04
+    needs: [build]
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Check which files were touched
+        id: changed-files
+        uses: tj-actions/changed-files@v44
+        with:
+          files_yaml: |
+            api_client:
+              - examples/api-client/**
+              - packages/api-client/**
+      - if: steps.changed-files.outputs.api_client_any_changed == 'true'
+        name: Build
+        uses: ./.github/actions/build
+        with:
+          node-version: ${{ matrix.node-version }}
+      - if: steps.changed-files.outputs.api_client_any_changed == 'true'
+        name: Deploy to client.scalar.com
+        id: deploy-client
+        uses: cloudflare/wrangler-action@v3
+        with:
+          command: pages deploy dist --project-name=client
+          workingDirectory: examples/api-client
+          # 1) Log in to the Cloudflare dashboard.
+          # 2) Select Workers & Pages.
+          # 3) See the Account ID in the right sidebar.
+          # Read more: https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # 1) Go to https://dash.cloudflare.com/profile/api-tokens
+          # 2) Create a token with the following permissions:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      - if: github.ref != 'refs/heads/main' && steps.deploy-client.outputs.deployment-url
+        name: Add Cloudflare Preview URL to the PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            **Cloudflare Preview for the API Client**
+
+            ${{ steps.deploy-client.outputs.deployment-url }}
+          comment_tag: 'cloudflare-preview'
+
+  deploy-examples:
+    if: github.ref != 'refs/heads/main'
+    needs: [build]
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Generate new DEPLOY_ID
+        run: echo "DEPLOY_ID=$(uuidgen)" >> "$GITHUB_ENV" && echo $DEPLOY_ID
+      - name: Build
+        uses: ./.github/actions/build
+        with:
+          node-version: ${{ matrix.node-version }}
+        env:
+          DEPLOY_ID: ${{ env.DEPLOY_ID }}
+      - name: Install Netlify CLI
+        run: pnpm install -g netlify
+      - name: Deploy to Netlify
+        run: |
+          netlify deploy --dir "./examples/web/dist" \
+            --message "Deployed from GitHub (${{ env.DEPLOY_ID }})" \
+            --site ${{ vars.NETLIFY_SITE_ID_PREVIEW }} \
+            --auth ${{ secrets.NETLIFY_AUTH_TOKEN }} \
+            --filter @scalar-examples/web \
+            --alias=${{env.DEPLOY_ID}}
+      - name: Add Netlify Preview URL to the PR
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            **Preview Examples**
+
+            https://${{env.DEPLOY_ID}}--scalar-deploy-preview.netlify.app
+          comment_tag: 'netlify-preview'

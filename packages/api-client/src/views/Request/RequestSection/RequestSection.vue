@@ -9,8 +9,14 @@ import RequestPathParams from '@/views/Request/RequestSection/RequestPathParams.
 import { ScalarIcon } from '@scalar/components'
 import { computed, ref, watch } from 'vue'
 
-const { activeRequest, activeExample, activeSecurityRequirements } =
-  useWorkspace()
+const {
+  activeRequest,
+  activeSecuritySchemes,
+  activeExample,
+  activeSecurityRequirements,
+  isReadOnly,
+  requestMutators,
+} = useWorkspace()
 
 const bodyMethods = ['POST', 'PUT', 'PATCH', 'DELETE']
 
@@ -38,11 +44,12 @@ const sections = computed(() => {
   return allSections
 })
 
-// If security = [] or [{}] just hide it
+// If security = [] or [{}] just hide it on readOnly mode
 const isAuthHidden = computed(
   () =>
-    activeSecurityRequirements.value.length === 0 ||
-    JSON.stringify(activeSecurityRequirements.value) === '[{}]',
+    isReadOnly.value &&
+    (activeSecurityRequirements.value.length === 0 ||
+      JSON.stringify(activeSecurityRequirements.value) === '[{}]'),
 )
 
 type ActiveSections = (typeof sections.value)[number]
@@ -57,17 +64,33 @@ watch(activeRequest, (newRequest) => {
     activeSection.value = 'All'
   }
 })
+
+const updateRequestNameHandler = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  requestMutators.edit(activeRequest.value.uid, 'summary', target.value)
+}
 </script>
 <template>
   <ViewLayoutSection>
     <template #title>
       <ScalarIcon
-        class="text-c-3 mr-1.5 stroke-2"
+        class="text-c-3 mr-2 pointer-events-none"
         icon="ExternalLink"
-        size="md" />
-      <div class="flex-1">
+        size="sm"
+        thickness="2.5" />
+      <div class="flex-1 flex items-center pointer-events-none">
         Request
-        <span class="text-c-3 pl-1">{{ activeRequest?.summary }}</span>
+        <label
+          v-if="!isReadOnly"
+          class="absolute w-full h-full top-0 left-0 pointer-events-auto opacity-0 cursor-text"
+          for="requestname"></label>
+        <input
+          id="requestname"
+          class="pl-1 outline-none border-0 text-c-2 rounded pointer-events-auto relative w-full"
+          :disabled="isReadOnly"
+          placeholder="Request Name"
+          :value="activeRequest?.summary"
+          @input="updateRequestNameHandler" />
       </div>
     </template>
     <div
@@ -80,6 +103,8 @@ watch(activeRequest, (newRequest) => {
         v-show="
           !isAuthHidden && (activeSection === 'All' || activeSection === 'Auth')
         "
+        :index="0"
+        :securityScheme="activeSecuritySchemes[0]"
         title="Authentication" />
       <RequestPathParams
         v-show="

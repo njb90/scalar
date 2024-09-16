@@ -2,15 +2,22 @@ import { describe, expect, it } from 'vitest'
 import { toValue } from 'vue'
 
 import { parse } from '../helpers'
-import { useSidebar } from './useSidebar'
+import { type TagsSorterOption, useSidebar } from './useSidebar'
 
 /**
  * Parse the given OpenAPI definition and return the items for the sidebar.
  */
-async function getItemsForDocument(definition: Record<string, any>) {
+async function getItemsForDocument(
+  definition: Record<string, any>,
+  options?: TagsSorterOption,
+) {
   const parsedSpec = await parse(definition)
 
   const { items } = useSidebar({
+    ...{
+      tagsSorter: undefined,
+      ...options,
+    },
     parsedSpec,
   })
 
@@ -82,7 +89,7 @@ describe('useSidebar', async () => {
       entries: [
         { title: 'Hello World' },
         {
-          title: 'Webhook',
+          title: 'Webhooks',
           children: [
             {
               title: 'Hello Webhook',
@@ -162,6 +169,100 @@ describe('useSidebar', async () => {
           },
         },
       }),
+    ).toMatchObject({
+      entries: [
+        {
+          title: 'Foobar',
+          children: [
+            {
+              title: 'Hello World',
+            },
+          ],
+        },
+        {
+          title: 'Barfoo',
+          children: [
+            {
+              title: 'Hello World',
+            },
+          ],
+        },
+      ],
+    })
+  })
+
+  it('sorts tags alphabetically', async () => {
+    expect(
+      await getItemsForDocument(
+        {
+          openapi: '3.1.0',
+          info: {
+            title: 'Hello World',
+            version: '1.0.0',
+          },
+          paths: {
+            '/hello': {
+              get: {
+                summary: 'Hello World',
+                tags: ['Foobar', 'Barfoo'],
+              },
+            },
+          },
+        },
+        {
+          tagsSorter: 'alpha',
+        },
+      ),
+    ).toMatchObject({
+      entries: [
+        {
+          title: 'Barfoo',
+          children: [
+            {
+              title: 'Hello World',
+            },
+          ],
+        },
+        {
+          title: 'Foobar',
+          children: [
+            {
+              title: 'Hello World',
+            },
+          ],
+        },
+      ],
+    })
+  })
+
+  it('sorts tags with custom function', async () => {
+    expect(
+      await getItemsForDocument(
+        {
+          openapi: '3.1.0',
+          info: {
+            title: 'Hello World',
+            version: '1.0.0',
+          },
+          paths: {
+            '/hello': {
+              get: {
+                summary: 'Hello World',
+                tags: ['Foobar', 'Barfoo'],
+              },
+            },
+          },
+        },
+        {
+          tagsSorter: (a) => {
+            if (a.name === 'Foobar') {
+              return -1
+            }
+
+            return 1
+          },
+        },
+      ),
     ).toMatchObject({
       entries: [
         {
@@ -368,7 +469,7 @@ describe('useSidebar', async () => {
           ],
         },
         {
-          title: 'Webhook',
+          title: 'Webhooks',
           children: [
             {
               title: 'Hello Webhook',
@@ -428,7 +529,7 @@ describe('useSidebar', async () => {
               ],
             },
             {
-              title: 'Webhook',
+              title: 'Webhooks',
               children: [
                 {
                   title: 'Hello Webhook',
@@ -492,10 +593,240 @@ describe('useSidebar', async () => {
           ],
         },
         {
-          title: 'Webhook',
+          title: 'Webhooks',
           children: [
             {
               title: 'Hello Webhook',
+            },
+          ],
+        },
+      ],
+    })
+  })
+
+  it('hides operations with x-internal: true', async () => {
+    expect(
+      await getItemsForDocument({
+        openapi: '3.1.0',
+        info: {
+          title: 'Hello World',
+          version: '1.0.0',
+        },
+        paths: {
+          '/hello': {
+            get: {
+              'summary': 'Get',
+              'x-internal': false,
+            },
+            post: {
+              'summary': 'Post',
+              'x-internal': true,
+            },
+          },
+        },
+      }),
+    ).toMatchObject({
+      entries: [{ title: 'Get' }],
+    })
+  })
+
+  it('hides webhooks with x-internal: true', async () => {
+    expect(
+      await getItemsForDocument({
+        openapi: '3.1.0',
+        info: {
+          title: 'Hello World',
+          version: '1.0.0',
+        },
+        paths: {
+          '/hello': {
+            get: {
+              summary: 'Get',
+            },
+          },
+        },
+        webhooks: {
+          hello: {
+            post: {
+              'summary': 'Hello Webhook',
+              'x-internal': true,
+            },
+          },
+        },
+      }),
+    ).toMatchObject({
+      entries: [{ title: 'Get' }],
+    })
+  })
+
+  it('shows schemas', async () => {
+    expect(
+      await getItemsForDocument({
+        openapi: '3.1.0',
+        info: {
+          title: 'Hello World',
+          version: '1.0.0',
+        },
+        paths: {
+          '/hello': {
+            get: {
+              summary: 'Get',
+            },
+          },
+        },
+        components: {
+          schemas: {
+            Planet: {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      }),
+    ).toMatchObject({
+      entries: [
+        { title: 'Get' },
+        {
+          title: 'Models',
+          children: [
+            {
+              title: 'Planet',
+            },
+          ],
+        },
+      ],
+    })
+  })
+
+  it('hides schemas with x-internal: true', async () => {
+    expect(
+      await getItemsForDocument({
+        openapi: '3.1.0',
+        info: {
+          title: 'Hello World',
+          version: '1.0.0',
+        },
+        paths: {
+          '/hello': {
+            get: {
+              summary: 'Get',
+            },
+          },
+        },
+        components: {
+          schemas: {
+            Planet: {
+              'type': 'object',
+              'x-internal': false,
+              'properties': {
+                name: {
+                  type: 'string',
+                },
+              },
+            },
+            User: {
+              'type': 'object',
+              'x-internal': true,
+              'properties': {
+                name: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      }),
+    ).toMatchObject({
+      entries: [
+        { title: 'Get' },
+        {
+          title: 'Models',
+          children: [
+            {
+              title: 'Planet',
+            },
+          ],
+        },
+      ],
+    })
+  })
+
+  it('adds heading to the sidebar', async () => {
+    expect(
+      await getItemsForDocument({
+        openapi: '3.1.0',
+        info: {
+          title: 'Hello World',
+          version: '1.0.0',
+          description: '# Foobar',
+        },
+        paths: {},
+      }),
+    ).toMatchObject({
+      titles: {},
+      entries: [
+        {
+          id: 'description/foobar',
+          title: 'Foobar',
+          children: [],
+        },
+      ],
+    })
+  })
+
+  it('adds two levels of headings to the sidebar', async () => {
+    expect(
+      await getItemsForDocument({
+        openapi: '3.1.0',
+        info: {
+          title: 'Hello World',
+          version: '1.0.0',
+          description: '# Foobar\n\n## Barfoo',
+        },
+        paths: {},
+      }),
+    ).toMatchObject({
+      titles: {},
+      entries: [
+        {
+          id: 'description/foobar',
+          title: 'Foobar',
+          children: [
+            {
+              id: 'description/barfoo',
+              title: 'Barfoo',
+            },
+          ],
+        },
+      ],
+    })
+  })
+
+  it('doesn’t add third level of headings', async () => {
+    expect(
+      await getItemsForDocument({
+        openapi: '3.1.0',
+        info: {
+          title: 'Hello World',
+          version: '1.0.0',
+          description: '# Foobar\n\n## Barfoo\n\n### Foofoo',
+        },
+        paths: {},
+      }),
+    ).toMatchObject({
+      titles: {},
+      entries: [
+        {
+          id: 'description/foobar',
+          title: 'Foobar',
+          children: [
+            {
+              id: 'description/barfoo',
+              title: 'Barfoo',
             },
           ],
         },

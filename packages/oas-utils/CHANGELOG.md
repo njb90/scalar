@@ -1,5 +1,235 @@
 # @scalar/oas-utils
 
+## 0.2.43
+
+### Patch Changes
+
+- Updated dependencies [c577cde]
+- Updated dependencies [dc9aff2]
+  - @scalar/themes@0.9.29
+  - @scalar/types@0.0.8
+
+## 0.2.42
+
+### Patch Changes
+
+- 5483fc3: fix: File is not defined
+- Updated dependencies [a07cfc8]
+- Updated dependencies [023ca15]
+- Updated dependencies [85872b6]
+  - @scalar/types@0.0.7
+
+## 0.2.41
+
+### Patch Changes
+
+- f931ac7: fix: displays variable in curly braces when empty
+
+## 0.2.40
+
+### Patch Changes
+
+- 0afb293: feat: request bodies for multipart form data and url encoded form data
+- e67f5a8: chore(api-client): removed axios dependency
+- b63be39: fix: incorrect example for schemas with anyOf
+- 152c016: feat: add environment selector to addressbar
+  - @scalar/types@0.0.6
+
+## 0.2.39
+
+### Patch Changes
+
+- Updated dependencies [80a3c46]
+  - @scalar/themes@0.9.28
+  - @scalar/types@0.0.5
+
+## 0.2.38
+
+### Patch Changes
+
+- Updated dependencies [bb13304]
+  - @scalar/themes@0.9.27
+  - @scalar/types@0.0.4
+
+## 0.2.37
+
+### Patch Changes
+
+- Updated dependencies [abb8ddd]
+  - @scalar/themes@0.9.26
+  - @scalar/types@0.0.3
+
+## 0.2.36
+
+### Patch Changes
+
+- af75550: feat: sidebar request search
+
+## 0.2.35
+
+### Patch Changes
+
+- Updated dependencies [910b1c2]
+  - @scalar/types@0.0.2
+
+## 0.2.34
+
+### Patch Changes
+
+- 78db8f5: feat: use new @scalar/types package
+- 7f11bc6: fix: temporary fix set type to any
+- Updated dependencies [78db8f5]
+  - @scalar/themes@0.9.25
+  - @scalar/types@0.0.1
+
+## 0.2.33
+
+### Patch Changes
+
+- Updated dependencies [298f7c4]
+  - @scalar/themes@0.9.24
+
+## 0.2.32
+
+### Patch Changes
+
+- 1c81549: feat: topnav navigation hotkeys
+
+## 0.2.31
+
+### Patch Changes
+
+- c220358: feat: add response schemas
+- 7ec175b: fix: remove default tag in request schema
+
+## 0.2.30
+
+### Patch Changes
+
+- Updated dependencies [c450bb3]
+  - @scalar/themes@0.9.23
+
+## 0.2.29
+
+### Patch Changes
+
+- 8672a78: feat(api-client): moved command palette to the global key event bus
+- 078ca72: feat: add topnav and addressbar hotkeys
+- 520caff: fix: hot keys bus modifier
+- Updated dependencies [03e9bbb]
+  - @scalar/object-utils@1.1.7
+
+## 0.2.28
+
+### Patch Changes
+
+- dba83e4: Support circular refs
+- Updated dependencies [60e63d3]
+- Updated dependencies [dba83e4]
+  - @scalar/themes@0.9.22
+  - @scalar/object-utils@1.1.6
+
+## 0.2.27
+
+### Patch Changes
+
+- 17e06de: fix: additionalProperties are not rendered correctly
+
+## 0.2.26
+
+### Patch Changes
+
+- Updated dependencies [faf3ed9]
+  - @scalar/themes@0.9.21
+
+## 0.2.25
+
+### Patch Changes
+
+- 9cc6311: fix: add overload to servers as prop for create client app
+
+## 0.2.24
+
+### Patch Changes
+
+- Updated dependencies [425dc83]
+  - @scalar/themes@0.9.20
+
+## 0.2.23
+
+### Patch Changes
+
+- 8eec1b7: fix(oas-utils): I'm a teapot
+
+## 0.2.22
+
+### Patch Changes
+
+- Updated dependencies [3a6effa]
+  - @scalar/themes@0.9.19
+
+## 0.2.21
+
+### Patch Changes
+
+- e18029f: Fallback request summary to path on spec import
+- Updated dependencies [c1ada84]
+  - @scalar/themes@0.9.18
+
+## 0.2.20
+
+### Patch Changes
+
+- Updated dependencies [de25d01]
+  - @scalar/themes@0.9.17
+
+## 0.2.19
+
+### Patch Changes
+
+- bf2895e: feat(api-client): add multiple auth to api client
+
+## 0.2.18
+
+### Patch Changes
+
+- 9815191: fix: actually add workspace cookies to request
+- 869d255: fix: superfluous yaml or json parse before spec parsing
+
+## 0.2.17
+
+### Patch Changes
+
+- Updated dependencies [a5f3a84]
+  - @scalar/themes@0.9.16
+
+## 0.2.16
+
+### Patch Changes
+
+- 7761630: fix: use window location origin if no servers
+
+## 0.2.15
+
+### Patch Changes
+
+- 1dab515: feat: revamp address bar
+- Updated dependencies [5e060b1]
+  - @scalar/themes@0.9.15
+
+## 0.2.14
+
+### Patch Changes
+
+- Updated dependencies [96e7106]
+  - @scalar/themes@0.9.14
+
+## 0.2.13
+
+### Patch Changes
+
+- 1a675be: feat: add empty state + drafts collection
+
 ## 0.2.12
 
 ### Patch Changes

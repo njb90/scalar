@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import type { Parameters } from '@scalar/oas-utils'
+import type { Parameters } from '@scalar/types/legacy'
 
 import ParameterItem from './ParameterItem.vue'
 
 withDefaults(
-  defineProps<{ parameters?: Parameters[]; showChildren?: boolean }>(),
+  defineProps<{
+    parameters?: Parameters[]
+    showChildren?: boolean
+    collapsableItems?: boolean
+  }>(),
   {
     showChildren: false,
+    collapsableItems: false,
   },
 )
 </script>
@@ -21,6 +26,7 @@ withDefaults(
       <ParameterItem
         v-for="item in parameters"
         :key="item.name"
+        :collapsableItems="collapsableItems"
         :parameter="item"
         :showChildren="showChildren" />
     </ul>
@@ -32,7 +38,7 @@ withDefaults(
   margin-top: 24px;
 }
 .parameters-title {
-  font-size: var(--scalar-heading-4);
+  font-size: var(--scalar-font-size-3);
   font-weight: var(--scalar-semibold);
   color: var(--scalar-color-1);
   line-height: 1.45;

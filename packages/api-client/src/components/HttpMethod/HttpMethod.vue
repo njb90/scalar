@@ -24,7 +24,10 @@ const emit = defineEmits<{
 const method = computed(() => getRequest(props.method))
 
 const methodOptions = Object.entries(REQUEST_METHODS).map(
-  ([id, { short }]) => ({ id: id as RequestMethod, label: short }),
+  ([id, { short }]) => ({
+    id: id as RequestMethod,
+    label: id.charAt(0) + id.toLowerCase().slice(1),
+  }),
 )
 const selectedMethod = computed({
   get: () => methodOptions.find(({ id }) => id === props.method),
@@ -35,11 +38,11 @@ const variants = cva({
   base: 'text-center font-code text-3xs justify-center items-center flex',
   variants: {
     isSquare: {
-      true: 'px-2.5 rounded-md bg-mix-transparent bg-mix-amount-90 dark:bg-mix-amount-80',
+      true: 'px-2.5 whitespace-nowrap font-bold border-r h-fit m-auto',
       false: 'rounded-full',
     },
     isEditable: {
-      true: 'px-0 hover:bg-mix-b-2',
+      true: 'px-0 http-bg-gradient rounded-md border-1/2 border-r-1/2',
       false: 'cusor-pointer',
     },
   },
@@ -57,36 +60,33 @@ const httpLabel = computed(() => method.value.short)
       class="h-full"
       :class="{ 'pointer-events-none': !isEditable }">
       <button
-        class="relative h-full gap-1"
-        :class="
-          cx(
-            variants({ isSquare, isEditable }),
-            method.color,
-            isSquare && method.backgroundColor,
-          )
-        "
+        class="relative h-full"
+        :class="cx(variants({ isSquare, isEditable }), method.color)"
         type="button">
         <span>{{ httpLabel }}</span>
-        <ScalarIcon
-          v-if="isEditable"
-          :class="method.color"
-          icon="ChevronDown"
-          size="xs" />
       </button>
     </div>
   </ScalarListbox>
   <!-- Display only -->
   <div
     v-else
-    class="relative gap-1"
-    :class="
-      cx(
-        variants({ isSquare, isEditable }),
-        method.color,
-        isSquare && method.backgroundColor,
-      )
-    "
+    class="relative gap-1 whitespace-nowrap"
+    :class="cx(variants({ isSquare, isEditable }), method.color)"
     type="button">
     {{ method.short }}
   </div>
 </template>
+<style scoped>
+.http-bg-gradient {
+  background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(0, 0, 0, 0.035));
+}
+.http-bg-gradient:hover {
+  background: linear-gradient(rgba(0, 0, 0, 0.035), rgba(255, 255, 255, 0.75));
+}
+.dark-mode .http-bg-gradient {
+  background: linear-gradient(rgba(255, 255, 255, 0.035), rgba(0, 0, 0, 0.15));
+}
+.dark-mode .http-bg-gradient:hover {
+  background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.035));
+}
+</style>

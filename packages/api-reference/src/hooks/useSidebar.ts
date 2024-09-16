@@ -1,9 +1,10 @@
 import { useApiClientStore, useOpenApiStore } from '#legacy'
-import type { Spec, Tag, TransformedOperation } from '@scalar/oas-utils'
 import { ssrState } from '@scalar/oas-utils/helpers'
-import type { OpenAPIV3_1 } from '@scalar/openapi-parser'
+import type { OpenAPIV3_1 } from '@scalar/openapi-types'
+import type { Spec, Tag, TransformedOperation } from '@scalar/types/legacy'
 import { computed, reactive, ref, watch } from 'vue'
 
+import { lazyBus } from '../components/Content/Lazy/lazyBus'
 import {
   getHeadingsFromMarkdown,
   getLowestHeadingLevel,
@@ -11,6 +12,7 @@ import {
   hasModels,
   hasWebhooks,
   openClientFor,
+  scrollToId,
 } from '../helpers'
 import { useNavState } from './useNavState'
 
@@ -39,11 +41,25 @@ const {
 // Track the parsed spec
 const parsedSpec = ref<Spec | undefined>(undefined)
 
+/** Keep track of the given options */
+const optionsRef = reactive<Partial<ParsedSpecOption & TagsSorterOption>>({})
+
+/** Helper to overwrite the current OpenAPI document */
 function setParsedSpec(spec: Spec) {
+  // Sort tags alphabetically
+  if (optionsRef.tagsSorter === 'alpha') {
+    spec.tags = spec.tags?.sort((a, b) => a.name.localeCompare(b.name))
+  }
+  // Custom tags sorting
+  else if (typeof optionsRef.tagsSorter === 'function') {
+    spec.tags = spec.tags?.sort(optionsRef.tagsSorter)
+  }
+
   return (parsedSpec.value = spec)
 }
 
 const hideModels = ref(false)
+const defaultOpenAllTags = ref(false)
 
 // Track which sidebar items are collapsed
 type CollapsedSidebarItems = Record<string, boolean>
@@ -63,8 +79,8 @@ function setCollapsedSidebarItem(key: string, value: boolean) {
 // Track headings in the spec description
 const headings = ref<any[]>([])
 
-const updateHeadings = async (description: string) => {
-  const newHeadings = await getHeadingsFromMarkdown(description)
+function updateHeadings(description: string) {
+  const newHeadings = getHeadingsFromMarkdown(description)
   const lowestLevel = getLowestHeadingLevel(newHeadings)
 
   return newHeadings.filter((heading) => {
@@ -203,7 +219,7 @@ const items = computed(() => {
     ? [
         {
           id: getWebhookId(),
-          title: 'Webhook',
+          title: 'Webhooks',
           show: !state.showApiClient,
           children: Object.keys(parsedSpec.value?.webhooks ?? {})
             .map((name) => {
@@ -265,13 +281,22 @@ const items = computed(() => {
       })
     : undefined
 
+  const entries = [
+    ...headingEntries,
+    ...(groupOperations ?? operationEntries ?? []),
+    ...webhookEntries,
+    ...modelEntries,
+  ]
+
+  if (defaultOpenAllTags.value) {
+    entries.forEach((entry) => {
+      setCollapsedSidebarItem(entry.id, true)
+      entry.show = true
+    })
+  }
+
   return {
-    entries: [
-      ...headingEntries,
-      ...(groupOperations ?? operationEntries ?? []),
-      ...webhookEntries,
-      ...modelEntries,
-    ],
+    entries,
     titles: titlesById,
   }
 })
@@ -284,12 +309,46 @@ const isSidebarOpen = ref(false)
 
 const breadcrumb = computed(() => items.value?.titles?.[hash.value] ?? '')
 
+export type ParsedSpecOption = {
+  parsedSpec: Spec
+}
+
+export type TagsSorterOption = {
+  tagsSorter?: 'alpha' | ((a: Tag, b: Tag) => number)
+}
+
+/**
+ * Scroll to operation
+ *
+ * Similar to scrollToId BUT in the case of a section not being open,
+ * it uses the lazyBus to ensure the section is open before scrolling to it
+ *
+ */
+export const scrollToOperation = (operationId: string) => {
+  const sectionId = getSectionId(operationId)
+
+  if (sectionId !== operationId) {
+    // We use the lazyBus to check when the target has loaded then scroll to it
+    if (!collapsedSidebarItems[sectionId]) {
+      const unsubscribe = lazyBus.on((ev) => {
+        if (ev.id === operationId) {
+          scrollToId(operationId)
+          unsubscribe()
+        }
+      })
+      setCollapsedSidebarItem(sectionId, true)
+    } else scrollToId(operationId)
+  }
+}
+
 /**
  * Provides the sidebar state and methods to control it.
  */
-export function useSidebar(options?: { parsedSpec: Spec }) {
+export function useSidebar(options?: ParsedSpecOption & TagsSorterOption) {
+  Object.assign(optionsRef, options)
+
   if (options?.parsedSpec) {
-    parsedSpec.value = options.parsedSpec
+    setParsedSpec(options.parsedSpec)
 
     // Open the first tag section by default OR specific section from hash
     watch(
@@ -308,14 +367,17 @@ export function useSidebar(options?: { parsedSpec: Spec }) {
     // Watch the spec description for headings
     watch(
       () => parsedSpec.value?.info?.description,
-      async () => {
+      () => {
         const description = parsedSpec.value?.info?.description
 
         if (!description) {
           return (headings.value = [])
         }
 
-        return (headings.value = await updateHeadings(description))
+        return (headings.value = updateHeadings(description))
+      },
+      {
+        immediate: true,
       },
     )
   }
@@ -329,5 +391,7 @@ export function useSidebar(options?: { parsedSpec: Spec }) {
     setCollapsedSidebarItem,
     hideModels,
     setParsedSpec,
+    defaultOpenAllTags,
+    scrollToOperation,
   }
 }

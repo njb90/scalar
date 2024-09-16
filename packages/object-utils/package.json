@@ -13,7 +13,7 @@
   "keywords": [
     "typescript object transforms"
   ],
-  "version": "1.1.4",
+  "version": "1.1.7",
   "engines": {
     "node": ">=18"
   },
@@ -38,6 +38,10 @@
       "import": "./dist/transforms/index.js",
       "types": "./dist/transforms/index.d.ts"
     },
+    "./parse": {
+      "import": "./dist/parse/index.js",
+      "types": "./dist/parse/index.d.ts"
+    },
     "./nested": {
       "import": "./dist/nested/index.js",
       "types": "./dist/nested/index.d.ts"
@@ -45,6 +49,10 @@
     "./mutator-record": {
       "import": "./dist/mutator-record/index.js",
       "types": "./dist/mutator-record/index.d.ts"
+    },
+    "./merge": {
+      "import": "./dist/merge/index.js",
+      "types": "./dist/merge/index.d.ts"
     },
     "./clone": {
       "import": "./dist/clone/index.js",
@@ -62,7 +70,9 @@
   "module": "dist/index.js",
   "dependencies": {
     "@vueuse/core": "^10.10.0",
-    "just-clone": "^6.2.0"
+    "flatted": "^3.3.1",
+    "just-clone": "^6.2.0",
+    "ts-deepmerge": "^7.0.1"
   },
   "devDependencies": {
     "@scalar/build-tooling": "workspace:*",

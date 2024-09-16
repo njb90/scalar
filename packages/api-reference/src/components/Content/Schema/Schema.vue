@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { ScalarIcon, ScalarMarkdown } from '@scalar/components'
-import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-parser'
+import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-types'
 import { computed } from 'vue'
 
 import SchemaHeading from './SchemaHeading.vue'
@@ -25,6 +25,7 @@ const props = withDefaults(
     compact?: boolean
     /** Shows a toggle to hide/show children */
     noncollapsible?: boolean
+    hideHeading?: boolean
   }>(),
   { level: 0 },
 )
@@ -58,7 +59,7 @@ const handleClick = (e: MouseEvent) =>
         class="schema-properties"
         :class="{ 'schema-properties-open': open }">
         <DisclosureButton
-          v-show="!(noncollapsible && compact)"
+          v-show="!hideHeading && !(noncollapsible && compact)"
           :as="noncollapsible ? 'div' : 'button'"
           class="schema-card-title"
           :class="{ 'schema-card-title--compact': compact }"
@@ -67,19 +68,12 @@ const handleClick = (e: MouseEvent) =>
           }"
           @click.capture="handleClick">
           <template v-if="compact">
-            <svg
+            <ScalarIcon
               v-if="shouldShowToggle"
-              class="schema-card-title-icon"
+              class="schema-card-title-icon h-2.5"
               :class="{ 'schema-card-title-icon--open': open }"
-              fill="currentColor"
-              height="14"
-              viewBox="0 0 14 14"
-              width="14"
-              xmlns="http://www.w3.org/2000/svg">
-              <polygon
-                fill-rule="nonzero"
-                points="14 8 8 8 8 14 6 14 6 8 0 8 0 6 6 6 6 0 8 0 8 6 14 6" />
-            </svg>
+              icon="Add"
+              thickness="3" />
             <template v-if="open">
               Hide {{ value?.title ?? 'Child Attributes' }}
             </template>
@@ -92,8 +86,9 @@ const handleClick = (e: MouseEvent) =>
               v-if="shouldShowToggle"
               class="schema-card-title-icon"
               :class="{ 'schema-card-title-icon--open': open }"
-              icon="ChevronRight"
-              size="md" />
+              icon="Add"
+              size="xs"
+              thickness="2.5" />
             <SchemaHeading
               :name="(value?.title ?? name) as string"
               :value="value" />
@@ -130,7 +125,7 @@ const handleClick = (e: MouseEvent) =>
                 :level="level"
                 noncollapsible
                 :value="{
-                  type: 'any',
+                  type: 'anything',
                   ...(typeof value.additionalProperties === 'object'
                     ? value.additionalProperties
                     : {}),
@@ -169,10 +164,9 @@ const handleClick = (e: MouseEvent) =>
 }
 
 .schema-card-title {
-  --schema-title-height: 38px;
   height: var(--schema-title-height);
 
-  padding: 10px 12px;
+  padding: 6px 10px;
 
   display: flex;
   align-items: center;
@@ -181,9 +175,7 @@ const handleClick = (e: MouseEvent) =>
   color: var(--scalar-color-2);
   font-weight: var(--scalar-semibold);
   font-size: var(--scalar-micro);
-  background: var(--scalar-background-1);
-  border-radius: var(--scalar-radius-lg);
-  border-bottom: 1px solid transparent;
+  border-bottom: var(--scalar-border-width) solid transparent;
 }
 button.schema-card-title {
   cursor: pointer;
@@ -191,26 +183,22 @@ button.schema-card-title {
 button.schema-card-title:hover {
   color: var(--scalar-color-1);
 }
-.schema-card-title-icon {
-  margin-left: -4px;
-}
 .schema-card-title-icon--open {
-  transform: rotate(90deg);
+  transform: rotate(45deg);
 }
 .schema-properties-open > .schema-card-title {
-  z-index: 1;
-  position: sticky;
-  top: var(--refs-header-height);
-
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
-  border-bottom: 1px solid var(--scalar-border-color);
+  border-bottom: var(--scalar-border-width) solid var(--scalar-border-color);
 }
 .schema-properties-open > .schema-properties {
   width: fit-content;
 }
 .schema-card-description + .schema-properties {
   width: fit-content;
+}
+.schema-card-description + .schema-properties {
+  margin-top: 12px;
 }
 .schema-properties-open.schema-properties,
 .schema-properties-open > .schema-card--open {
@@ -224,12 +212,21 @@ button.schema-card-title:hover {
   display: flex;
   flex-direction: column;
 
-  border: 1px solid var(--scalar-border-color);
+  border: var(--scalar-border-width) solid var(--scalar-border-color);
   border-radius: var(--scalar-radius-lg);
+  width: fit-content;
 }
-
+.schema-properties .schema-properties {
+  border-radius: 13.5px;
+}
+.schema-properties .schema-properties.schema-properties-open {
+  border-radius: 13.5px 13.5px var(--scalar-radius) var(--scalar-radius);
+}
+.schema-properties-open {
+  width: 100%;
+}
 .schema-card--compact {
-  align-self: start;
+  align-self: flex-start;
 }
 
 .schema-card--compact.schema-card--open {

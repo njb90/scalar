@@ -4,6 +4,11 @@
   "author": "Scalar (https://github.com/scalar)",
   "homepage": "https://github.com/scalar/scalar",
   "bugs": "https://github.com/scalar/scalar/issues/new/choose",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/scalar/scalar.git",
+    "directory": "examples/nextjs-api-reference"
+  },
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -20,12 +25,12 @@
   "dependencies": {
     "@scalar/api-client-react": "workspace:*",
     "@scalar/nextjs-api-reference": "workspace:*",
-    "next": "^14.1.1",
+    "next": "^14.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@types/node": "^20.8.4",
+    "@types/node": "^20.14.10",
     "@types/react": "^18.2.60",
     "@types/react-dom": "^18.2.19"
   }

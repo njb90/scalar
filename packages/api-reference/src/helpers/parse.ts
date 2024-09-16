@@ -7,20 +7,20 @@ import {
   normalizeRequestMethod,
   validRequestMethods,
 } from '#legacy'
-import type { Spec } from '@scalar/oas-utils'
 import { redirectToProxy } from '@scalar/oas-utils/helpers'
-import {
-  type AnyObject,
-  type OpenAPI,
-  type OpenAPIV2,
-  type OpenAPIV3,
-  type OpenAPIV3_1,
-  dereference,
-  load,
-} from '@scalar/openapi-parser'
+import { dereference, load } from '@scalar/openapi-parser'
 import { fetchUrls } from '@scalar/openapi-parser/plugins/fetch-urls'
+import type {
+  OpenAPI,
+  OpenAPIV2,
+  OpenAPIV3,
+  OpenAPIV3_1,
+} from '@scalar/openapi-types'
+import type { Spec } from '@scalar/types/legacy'
 
 import { createEmptySpecification } from '../helpers'
+
+type AnyObject = Record<string, any>
 
 export const parse = (
   specification: any,

@@ -1,5 +1,333 @@
 # @scalar/docusaurus
 
+## 0.4.89
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.87
+
+## 0.4.88
+
+### Patch Changes
+
+- 50eb168: fix(docusaurus): improve docusaurus memory issues
+  - @scalar/api-reference-react@0.3.86
+
+## 0.4.87
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.85
+
+## 0.4.86
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.84
+
+## 0.4.85
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.83
+
+## 0.4.84
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.82
+
+## 0.4.83
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.81
+
+## 0.4.82
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.80
+
+## 0.4.81
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.79
+
+## 0.4.80
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.78
+
+## 0.4.79
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.77
+
+## 0.4.78
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.76
+
+## 0.4.77
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.75
+
+## 0.4.76
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.74
+
+## 0.4.75
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.73
+
+## 0.4.74
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.72
+
+## 0.4.73
+
+### Patch Changes
+
+- 58e5912: fix: markdown fixes and intro card polish
+  - @scalar/api-reference-react@0.3.71
+
+## 0.4.72
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.70
+
+## 0.4.71
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.69
+
+## 0.4.70
+
+### Patch Changes
+
+- 1088ede: Added option to remove spec link from navigation bar
+  - @scalar/api-reference-react@0.3.68
+
+## 0.4.69
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.67
+
+## 0.4.68
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.66
+
+## 0.4.67
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.65
+
+## 0.4.66
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.64
+
+## 0.4.65
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.63
+
+## 0.4.64
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.62
+
+## 0.4.63
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.61
+
+## 0.4.62
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.60
+
+## 0.4.61
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.59
+
+## 0.4.60
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.58
+
+## 0.4.59
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.57
+
+## 0.4.58
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.56
+
+## 0.4.57
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.55
+
+## 0.4.56
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.54
+
+## 0.4.55
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.53
+
+## 0.4.54
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.52
+
+## 0.4.53
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.51
+
+## 0.4.52
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.50
+
+## 0.4.51
+
+### Patch Changes
+
+- 401446c: fix: docusaurus missing variables + icon uniformity
+- 1ba3b29: fix(docusaurus): build docusaurus theme css with postcss
+  - @scalar/api-reference-react@0.3.49
+
+## 0.4.50
+
+### Patch Changes
+
+- Updated dependencies [2a335dd]
+  - @scalar/api-reference-react@0.3.48
+
+## 0.4.49
+
+### Patch Changes
+
+- 8e593ae: chore: make react and next a peer dependency
+- Updated dependencies [8e593ae]
+  - @scalar/api-reference-react@0.3.47
+
+## 0.4.48
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.46
+
+## 0.4.47
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.45
+
+## 0.4.46
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.44
+
+## 0.4.45
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.43
+
+## 0.4.44
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.42
+
+## 0.4.43
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.41
+
+## 0.4.42
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.40
+
+## 0.4.41
+
+### Patch Changes
+
+- fb06bf4: fix: scope docusaurus theme styles
+  - @scalar/api-reference-react@0.3.39
+
+## 0.4.40
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.38
+
+## 0.4.39
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.37
+
+## 0.4.38
+
+### Patch Changes
+
+- @scalar/api-reference-react@0.3.36
+
+## 0.4.37
+
+### Patch Changes
+
+- c2362ee: fix: don't constrain markdown image height
+  - @scalar/api-reference-react@0.3.35
+
 ## 0.4.36
 
 ### Patch Changes

@@ -4,7 +4,7 @@ import {
   useAuthenticationStore,
   useServerStore,
 } from '#legacy'
-import type { SpecConfiguration } from '@scalar/oas-utils'
+import type { Spec, SpecConfiguration } from '@scalar/types/legacy'
 import { type App, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import { apiClientBus, modalStateBus } from './api-client-bus'
@@ -12,6 +12,7 @@ import { apiClientBus, modalStateBus } from './api-client-bus'
 const props = defineProps<{
   proxyUrl?: string
   spec?: SpecConfiguration
+  servers?: Spec['servers']
 }>()
 
 const el = ref<HTMLDivElement | null>(null)
@@ -23,12 +24,13 @@ const { server } = useServerStore()
 onMounted(async () => {
   if (!el.value) return
 
-  const { createScalarApiClient } = await import('@scalar/api-client')
+  const { createApiClientModal } = await import('@scalar/api-client')
 
   const { app, open, updateAuth, updateServerUrl, modalState, updateSpec } =
-    await createScalarApiClient(el.value, {
+    await createApiClientModal(el.value, {
       spec: props.spec ?? {},
       proxyUrl: props.proxyUrl,
+      servers: props.servers,
     })
 
   modalStateBus.emit(modalState)

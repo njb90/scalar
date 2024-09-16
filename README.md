@@ -1,7 +1,6 @@
 # Scalar API Reference
 
 [![CI](https://github.com/scalar/scalar/actions/workflows/ci.yml/badge.svg)](https://github.com/scalar/scalar/actions/workflows/ci.yml)
-[![Release](https://github.com/scalar/scalar/actions/workflows/release.yml/badge.svg)](https://github.com/scalar/scalar/actions/workflows/release.yml)
 [![Contributors](https://img.shields.io/github/contributors/scalar/scalar)](https://github.com/scalar/scalar/graphs/contributors)
 [![GitHub License](https://img.shields.io/github/license/scalar/scalar)](https://github.com/scalar/scalar/blob/main/LICENSE)
 [![Discord](https://img.shields.io/discord/1135330207960678410?style=flat&color=5865F2)](https://discord.gg/scalar)
@@ -46,24 +45,25 @@ And there’s an ever-growing list of plugins and integrations:
 
 ## Integrations
 
+- [HTML](documentation/integrations/html.md)
 - [.NET](packages/scalar.aspnetcore/README.md)
-- [AdonisJS](documentation/adonisjs.md)
+- [AdonisJS](documentation/integrations/adonisjs.md)
 - [Docusaurus](packages/docusaurus/README.md)
-- [ElysiaJS](documentation/elysiajs.md)
+- [ElysiaJS](documentation/integrations/elysiajs.md)
 - [Express](packages/express-api-reference/README.md)
 - [FastAPI](packages/scalar_fastapi/README.md)
 - [Fastify](packages/fastify-api-reference/README.md)
-- [Go](documentation/go.md)
+- [Go](documentation/integrations/go.md)
 - [Hono](packages/hono-api-reference/README.md)
-- [Laravel](documentation/laravel.md)
+- [Laravel Scribe](documentation/integrations/laravel-scribe.md)
 - [Litestar](https://docs.litestar.dev/latest/usage/openapi/ui_plugins.html)
 - [NestJS](packages/nestjs-api-reference/README.md)
 - [Next.js](packages/nextjs-api-reference/README.md)
-- [Nitro](documentation/nitro.md)
+- [Nitro](documentation/integrations/nitro.md)
 - [Nuxt](packages/nuxt/README.md)
-- [Platformatic](documentation/platformatic.md)
+- [Platformatic](documentation/integrations/platformatic.md)
 - [React](packages/api-reference-react/README.md)
-- [Rust](documentation/rust.md)
+- [Rust](documentation/integrations/rust.md)
 - [Vue.js](packages/api-reference/README.md)
 
 ## Managed Hosting
@@ -80,16 +80,16 @@ Ready? [Create your account on scalar.com](https://scalar.com).
 
 ## Projects
 
-| Project                                                            | Description            |
-| ------------------------------------------------------------------ | ---------------------- |
-| [Scalar API Client](packages/api-client/README.md)                 | API client             |
-| [Scalar CLI](packages/cli/README.md)                               | Command-line interface |
-| [Scalar Galaxy](packages/galaxy/README.md)                         | OpenAPI Example        |
-| [Scalar Play Button](packages/play-button/README.md)               | Quick API Client Embed |
-| [Scalar Mock Server](packages/mock-server/README.md)               | OpenAPI Mock Server    |
-| [Scalar Void Server](packages/void-server/README.md)               | HTTP Request Mirror    |
-| [Scalar Open API Parser](https://github.com/scalar/openapi-parser) | OpenAPI SDK            |
-| [Scalar Sandbox](https://sandbox.scalar.com/)                      | Online OpenAPI Editor  |
+| Project                                                     | Description            |
+| ----------------------------------------------------------- | ---------------------- |
+| [Scalar API Client](packages/api-client/README.md)          | API client             |
+| [Scalar CLI](packages/cli/README.md)                        | Command-line interface |
+| [Scalar Galaxy](packages/galaxy/README.md)                  | OpenAPI Example        |
+| [Scalar Play Button](packages/play-button/README.md)        | Quick API Client Embed |
+| [Scalar Mock Server](packages/mock-server/README.md)        | OpenAPI Mock Server    |
+| [Scalar Void Server](packages/void-server/README.md)        | HTTP Request Mirror    |
+| [Scalar Open API Parser](packages/openapi-parser/README.md) | OpenAPI SDK            |
+| [Scalar Sandbox](https://sandbox.scalar.com/)               | Online OpenAPI Editor  |
 
 ## Documentation
 
@@ -176,6 +176,13 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                 </a>
             </td>
             <td align="center">
+                <a href="https://github.com/inyourtime">
+                    <img src="https://avatars.githubusercontent.com/u/66111030?v=4" width="100;" alt="inyourtime"/>
+                    <br />
+                    <sub><b>inyourtime</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/Amorim33">
                     <img src="https://avatars.githubusercontent.com/u/42624869?v=4" width="100;" alt="Amorim33"/>
                     <br />
@@ -196,6 +203,15 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                     <sub><b>ATREAY</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/Edgaraszs">
+                    <img src="https://avatars.githubusercontent.com/u/55696268?v=4" width="100;" alt="Edgaraszs"/>
+                    <br />
+                    <sub><b>Edgaraszs</b></sub>
+                </a>
+            </td>
             <td align="center">
                 <a href="https://github.com/Mohib834">
                     <img src="https://avatars.githubusercontent.com/u/47316464?v=4" width="100;" alt="Mohib834"/>
@@ -203,20 +219,11 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                     <sub><b>Mohib834</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/mcollina">
                     <img src="https://avatars.githubusercontent.com/u/52195?v=4" width="100;" alt="mcollina"/>
                     <br />
                     <sub><b>mcollina</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/mpminardi">
-                    <img src="https://avatars.githubusercontent.com/u/8587567?v=4" width="100;" alt="mpminardi"/>
-                    <br />
-                    <sub><b>mpminardi</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -234,10 +241,33 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/federicobond">
-                    <img src="https://avatars.githubusercontent.com/u/138426?v=4" width="100;" alt="federicobond"/>
+                <a href="https://github.com/mpminardi">
+                    <img src="https://avatars.githubusercontent.com/u/8587567?v=4" width="100;" alt="mpminardi"/>
                     <br />
-                    <sub><b>federicobond</b></sub>
+                    <sub><b>mpminardi</b></sub>
+                </a>
+            </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/ykdojo">
+                    <img src="https://avatars.githubusercontent.com/u/1811651?v=4" width="100;" alt="ykdojo"/>
+                    <br />
+                    <sub><b>ykdojo</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/mouhannad-sh">
+                    <img src="https://avatars.githubusercontent.com/u/18495740?v=4" width="100;" alt="mouhannad-sh"/>
+                    <br />
+                    <sub><b>mouhannad-sh</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/mason-at-pieces">
+                    <img src="https://avatars.githubusercontent.com/u/123421085?v=4" width="100;" alt="mason-at-pieces"/>
+                    <br />
+                    <sub><b>mason-at-pieces</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -247,22 +277,22 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                     <sub><b>gsmcdonald</b></sub>
                 </a>
             </td>
+            <td align="center">
+                <a href="https://github.com/federicobond">
+                    <img src="https://avatars.githubusercontent.com/u/138426?v=4" width="100;" alt="federicobond"/>
+                    <br />
+                    <sub><b>federicobond</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/MarioGK">
+                    <img src="https://avatars.githubusercontent.com/u/8379079?v=4" width="100;" alt="MarioGK"/>
+                    <br />
+                    <sub><b>MarioGK</b></sub>
+                </a>
+            </td>
 		</tr>
 		<tr>
-            <td align="center">
-                <a href="https://github.com/mouhannad-sh">
-                    <img src="https://avatars.githubusercontent.com/u/18495740?v=4" width="100;" alt="mouhannad-sh"/>
-                    <br />
-                    <sub><b>mouhannad-sh</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/ykdojo">
-                    <img src="https://avatars.githubusercontent.com/u/1811651?v=4" width="100;" alt="ykdojo"/>
-                    <br />
-                    <sub><b>ykdojo</b></sub>
-                </a>
-            </td>
             <td align="center">
                 <a href="https://github.com/Mason-Little">
                     <img src="https://avatars.githubusercontent.com/u/105008441?v=4" width="100;" alt="Mason-Little"/>
@@ -291,13 +321,27 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                     <sub><b>rbange</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
+            <td align="center">
+                <a href="https://github.com/hrynevychroman">
+                    <img src="https://avatars.githubusercontent.com/u/82209198?v=4" width="100;" alt="hrynevychroman"/>
+                    <br />
+                    <sub><b>hrynevychroman</b></sub>
+                </a>
+            </td>
             <td align="center">
                 <a href="https://github.com/STP5940">
                     <img src="https://avatars.githubusercontent.com/u/21144303?v=4" width="100;" alt="STP5940"/>
                     <br />
                     <sub><b>STP5940</b></sub>
+                </a>
+            </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/captainsafia">
+                    <img src="https://avatars.githubusercontent.com/u/1857993?v=4" width="100;" alt="captainsafia"/>
+                    <br />
+                    <sub><b>captainsafia</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -338,17 +382,24 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
 		</tr>
 		<tr>
             <td align="center">
-                <a href="https://github.com/tsiwek-piwik">
-                    <img src="https://avatars.githubusercontent.com/u/117373332?v=4" width="100;" alt="tsiwek-piwik"/>
+                <a href="https://github.com/thibaultleouay">
+                    <img src="https://avatars.githubusercontent.com/u/13894054?v=4" width="100;" alt="thibaultleouay"/>
                     <br />
-                    <sub><b>tsiwek-piwik</b></sub>
+                    <sub><b>thibaultleouay</b></sub>
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/inyourtime">
-                    <img src="https://avatars.githubusercontent.com/u/66111030?v=4" width="100;" alt="inyourtime"/>
+                <a href="https://github.com/timheuer">
+                    <img src="https://avatars.githubusercontent.com/u/4821?v=4" width="100;" alt="timheuer"/>
                     <br />
-                    <sub><b>inyourtime</b></sub>
+                    <sub><b>timheuer</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/bitlab-ruizhi">
+                    <img src="https://avatars.githubusercontent.com/u/110380613?v=4" width="100;" alt="bitlab-ruizhi"/>
+                    <br />
+                    <sub><b>bitlab-ruizhi</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -372,6 +423,8 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                     <sub><b>x-delfino</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
             <td align="center">
                 <a href="https://github.com/FotieMConstant">
                     <img src="https://avatars.githubusercontent.com/u/42372656?v=4" width="100;" alt="FotieMConstant"/>
@@ -379,13 +432,18 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                     <sub><b>FotieMConstant</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/dunklesToast">
                     <img src="https://avatars.githubusercontent.com/u/17279485?v=4" width="100;" alt="dunklesToast"/>
                     <br />
                     <sub><b>dunklesToast</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/tsiwek-piwik">
+                    <img src="https://avatars.githubusercontent.com/u/117373332?v=4" width="100;" alt="tsiwek-piwik"/>
+                    <br />
+                    <sub><b>tsiwek-piwik</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -407,6 +465,36 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                     <img src="https://avatars.githubusercontent.com/u/47537704?v=4" width="100;" alt="arthurfiorette"/>
                     <br />
                     <sub><b>arthurfiorette</b></sub>
+                </a>
+            </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/zsilbi">
+                    <img src="https://avatars.githubusercontent.com/u/3886658?v=4" width="100;" alt="zsilbi"/>
+                    <br />
+                    <sub><b>zsilbi</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/bdpiprava">
+                    <img src="https://avatars.githubusercontent.com/u/7871209?v=4" width="100;" alt="bdpiprava"/>
+                    <br />
+                    <sub><b>bdpiprava</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/brunogrcsada">
+                    <img src="https://avatars.githubusercontent.com/u/54673205?v=4" width="100;" alt="brunogrcsada"/>
+                    <br />
+                    <sub><b>brunogrcsada</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/chadwhitacre">
+                    <img src="https://avatars.githubusercontent.com/u/134455?v=4" width="100;" alt="chadwhitacre"/>
+                    <br />
+                    <sub><b>chadwhitacre</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -433,17 +521,17 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/Edgaraszs">
-                    <img src="https://avatars.githubusercontent.com/u/55696268?v=4" width="100;" alt="Edgaraszs"/>
-                    <br />
-                    <sub><b>Edgaraszs</b></sub>
-                </a>
-            </td>
-            <td align="center">
                 <a href="https://github.com/emmanuel-ferdman">
                     <img src="https://avatars.githubusercontent.com/u/35470921?v=4" width="100;" alt="emmanuel-ferdman"/>
                     <br />
                     <sub><b>emmanuel-ferdman</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/facus26">
+                    <img src="https://avatars.githubusercontent.com/u/18079059?v=4" width="100;" alt="facus26"/>
+                    <br />
+                    <sub><b>facus26</b></sub>
                 </a>
             </td>
             <td align="center">
@@ -491,6 +579,13 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                 </a>
             </td>
             <td align="center">
+                <a href="https://github.com/TheVaan">
+                    <img src="https://avatars.githubusercontent.com/u/1108485?v=4" width="100;" alt="TheVaan"/>
+                    <br />
+                    <sub><b>TheVaan</b></sub>
+                </a>
+            </td>
+            <td align="center">
                 <a href="https://github.com/jonataw">
                     <img src="https://avatars.githubusercontent.com/u/29772763?v=4" width="100;" alt="jonataw"/>
                     <br />
@@ -504,6 +599,15 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                     <sub><b>IHIutch</b></sub>
                 </a>
             </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/xC0dex">
+                    <img src="https://avatars.githubusercontent.com/u/22918366?v=4" width="100;" alt="xC0dex"/>
+                    <br />
+                    <sub><b>xC0dex</b></sub>
+                </a>
+            </td>
             <td align="center">
                 <a href="https://github.com/KiARC">
                     <img src="https://avatars.githubusercontent.com/u/73847484?v=4" width="100;" alt="KiARC"/>
@@ -511,8 +615,6 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                     <sub><b>KiARC</b></sub>
                 </a>
             </td>
-		</tr>
-		<tr>
             <td align="center">
                 <a href="https://github.com/kyllian">
                     <img src="https://avatars.githubusercontent.com/u/5831233?v=4" width="100;" alt="kyllian"/>
@@ -525,13 +627,6 @@ Contributions are welcome! Read the [`CONTRIBUTING`](https://github.com/scalar/s
                     <img src="https://avatars.githubusercontent.com/u/48590492?v=4" width="100;" alt="ShadiestGoat"/>
                     <br />
                     <sub><b>ShadiestGoat</b></sub>
-                </a>
-            </td>
-            <td align="center">
-                <a href="https://github.com/MarioGK">
-                    <img src="https://avatars.githubusercontent.com/u/8379079?v=4" width="100;" alt="MarioGK"/>
-                    <br />
-                    <sub><b>MarioGK</b></sub>
                 </a>
             </td>
 		</tr>

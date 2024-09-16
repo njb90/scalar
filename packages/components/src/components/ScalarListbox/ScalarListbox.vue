@@ -21,7 +21,7 @@ withDefaults(
        */
       multiple?: boolean
       options: Option[]
-      modelValue?: Option
+      modelValue?: Option | Option[]
       fullWidth?: boolean
       id?: string
     } & Omit<FloatingOptions, 'middleware' | 'offset'>
@@ -57,7 +57,7 @@ const variants = cva({
   <Listbox
     v-slot="{ open }"
     as="div"
-    :class="[{ 'w-full': fullWidth }, 'text-xs']"
+    :class="[{ 'w-full': fullWidth }, 'text-sm']"
     :modelValue="modelValue"
     :multiple="multiple"
     @update:modelValue="(v) => $emit('update:modelValue', v)">
@@ -93,8 +93,9 @@ const variants = cva({
                 :class="selected ? 'bg-blue text-b-1' : 'text-transparent'">
                 <!-- Icon needs help to be optically centered (╥﹏╥) -->
                 <ScalarIcon
-                  class="relative top-[0.5px] size-2.5 stroke-[1.75]"
-                  icon="Checkmark" />
+                  class="relative top-[0.5px] size-2.5"
+                  icon="Checkmark"
+                  thickness="2.5" />
               </div>
               <span class="inline-block min-w-0 flex-1 truncate text-c-1">{{
                 option.label

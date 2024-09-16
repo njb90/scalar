@@ -1,6 +1,4 @@
-import type { OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-parser'
-
-export type Server = OpenAPIV3.ServerObject | OpenAPIV3_1.ServerObject
+import type { OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-types'
 
 export type ServerVariables = {
   [variable: string]: ServerVariable

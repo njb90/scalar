@@ -143,7 +143,7 @@ steps:
         '-t',
         'gcr.io/${_PROJECT_ID}/${_SERVICE_HONO}',
         '-f',
-        './examples/hono-api-reference/Dockerfile',
+        './packages/hono-api-reference/Dockerfile',
         '.',
       ]
   - name: 'gcr.io/cloud-builders/docker'
@@ -273,6 +273,120 @@ steps:
         'deploy',
         '$_SERVICE_NEST_JS_FASTIFY',
         '--image=gcr.io/${_PROJECT_ID}/${_SERVICE_NEST_JS_FASTIFY}',
+        '--region=$_REGION',
+        '--platform=managed',
+        '--allow-unauthenticated',
+        '--execution-environment=gen2',
+        '--cpu=$_CPU',
+        '--memory=$_MEMORY',
+        '--service-account=$_SERVICE_ACCOUNT',
+      ]
+  # ---------------------------------------------------------------
+  # Void Server
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-void-server'
+    waitFor: ['push-base']
+    args:
+      [
+        'buildx',
+        'build',
+        '--build-arg',
+        'BASE_IMAGE=gcr.io/${_PROJECT_ID}/${_BASE_BUILDER}',
+        '-t',
+        'gcr.io/${_PROJECT_ID}/${_SERVICE_VOID_SERVER}',
+        '-f',
+        './packages/void-server/Dockerfile',
+        '.',
+      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push-void-server'
+    waitFor: ['build-void-server']
+    args: ['push', 'gcr.io/${_PROJECT_ID}/${_SERVICE_VOID_SERVER}']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    waitFor: ['push-void-server']
+    args:
+      [
+        'run',
+        'deploy',
+        '$_SERVICE_VOID_SERVER',
+        '--image=gcr.io/${_PROJECT_ID}/${_SERVICE_VOID_SERVER}',
+        '--region=$_REGION',
+        '--platform=managed',
+        '--allow-unauthenticated',
+        '--execution-environment=gen2',
+        '--cpu=$_CPU',
+        '--memory=$_MEMORY',
+        '--service-account=$_SERVICE_ACCOUNT',
+      ]
+  # ---------------------------------------------------------------
+  # Galaxy Server
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-galaxy'
+    waitFor: ['push-base']
+    args:
+      [
+        'buildx',
+        'build',
+        '--build-arg',
+        'BASE_IMAGE=gcr.io/${_PROJECT_ID}/${_BASE_BUILDER}',
+        '-t',
+        'gcr.io/${_PROJECT_ID}/${_SERVICE_GALAXY}',
+        '-f',
+        './packages/galaxy/Dockerfile',
+        '.',
+      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push-galaxy'
+    waitFor: ['build-galaxy']
+    args: ['push', 'gcr.io/${_PROJECT_ID}/${_SERVICE_GALAXY}']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    waitFor: ['push-galaxy']
+    args:
+      [
+        'run',
+        'deploy',
+        '$_SERVICE_GALAXY',
+        '--image=gcr.io/${_PROJECT_ID}/${_SERVICE_GALAXY}',
+        '--region=$_REGION',
+        '--platform=managed',
+        '--allow-unauthenticated',
+        '--execution-environment=gen2',
+        '--cpu=$_CPU',
+        '--memory=$_MEMORY',
+        '--service-account=$_SERVICE_ACCOUNT',
+      ]
+  # ---------------------------------------------------------------
+  # API Client App Open Page
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build-open'
+    waitFor: ['push-base']
+    args:
+      [
+        'buildx',
+        'build',
+        '--build-arg',
+        'BASE_IMAGE=gcr.io/${_PROJECT_ID}/${_BASE_BUILDER}',
+        '-t',
+        'gcr.io/${_PROJECT_ID}/${_SERVICE_OPEN_API_CLIENT}',
+        '-f',
+        './packages/api-client-app/Dockerfile',
+        '.',
+      ]
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push-open'
+    waitFor: ['build-open']
+    args: ['push', 'gcr.io/${_PROJECT_ID}/${_SERVICE_OPEN_API_CLIENT}']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    waitFor: ['push-open']
+    args:
+      [
+        'run',
+        'deploy',
+        '$_SERVICE_OPEN_API_CLIENT',
+        '--image=gcr.io/${_PROJECT_ID}/${_SERVICE_OPEN_API_CLIENT}',
         '--region=$_REGION',
         '--platform=managed',
         '--allow-unauthenticated',

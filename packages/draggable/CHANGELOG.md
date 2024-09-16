@@ -1,5 +1,17 @@
 # @scalar/draggable
 
+## 0.1.5
+
+### Patch Changes
+
+- e9253af: fix(api-client): scope api client draggable styles
+
+## 0.1.4
+
+### Patch Changes
+
+- dfa7434: feat(api-client): added drag and drop to the api client
+
 ## 0.1.3
 
 ### Patch Changes

@@ -2,12 +2,12 @@
 import { useMediaQuery } from '@vueuse/core'
 import { watch } from 'vue'
 
+import { SearchButton } from '../../features/Search'
 import { useNavState, useSidebar } from '../../hooks'
 import type { ReferenceLayoutProps, ReferenceLayoutSlots } from '../../types'
 import ApiReferenceLayout from '../ApiReferenceLayout.vue'
 import { DarkModeToggle } from '../DarkModeToggle'
 import MobileHeader from '../MobileHeader.vue'
-import SearchButton from '../SearchButton.vue'
 
 const props = defineProps<ReferenceLayoutProps>()
 defineEmits<{
@@ -54,7 +54,9 @@ watch(hash, (newHash, oldHash) => {
         v-model:open="isSidebarOpen" />
     </template>
     <template #sidebar-start="{ spec }">
-      <div class="scalar-api-references-standalone-search">
+      <div
+        v-if="!props.configuration.hideSearch"
+        class="scalar-api-references-standalone-search">
         <SearchButton
           :searchHotKey="props.configuration?.searchHotKey"
           :spec="spec" />
@@ -62,6 +64,7 @@ watch(hash, (newHash, oldHash) => {
     </template>
     <template #sidebar-end>
       <DarkModeToggle
+        v-if="!!!props.configuration.hideDarkModeToggle"
         :isDarkMode="isDark"
         @toggleDarkMode="$emit('toggleDarkMode')" />
     </template>

@@ -145,40 +145,79 @@ const updateRequestBody = (content: string) => {
   )
 }
 
-// TODO: This isn’t used? Can we delete this?
-// const updateActiveBody = (type: keyof typeof contentTypeOptions) => {
-//   if (!activeRequest.value || !activeExample.value) return
+const getContentTypeHeader = (type: keyof typeof contentTypeOptions) => {
+  if (type === 'multipartForm') {
+    return 'multipart/form-data'
+  } else if (type === 'formUrlEncoded') {
+    return 'application/x-www-form-urlencoded'
+  } else if (type === 'binaryFile') {
+    return 'application/octet-stream'
+  } else if (type !== 'none') {
+    return `application/${type}`
+  }
+  return ''
+}
 
-//   let activeBodyType: { encoding: string; value: any } | undefined
-//   let bodyPath: 'body.raw.value' | 'body.formData.value' = 'body.raw.value'
-//   let bodyType: 'raw' | 'formData' | 'binary' = 'raw'
+const getBodyType = (type: keyof typeof contentTypeOptions) => {
+  if (type === 'multipartForm' || type === 'formUrlEncoded') {
+    return 'formData'
+  } else if (type === 'binaryFile') {
+    return 'binary'
+  }
+  return 'raw'
+}
 
-//   if (type === 'multipartForm' || type === 'formUrlEncoded') {
-//     activeBodyType = { encoding: 'form-data', value: formParams.value || [] }
-//     bodyPath = 'body.formData.value'
-//     bodyType = 'formData'
-//   } else if (type === 'binaryFile') {
-//     bodyType = 'binary'
-//   } else {
-//     const rawValue = activeExample.value?.body.raw.value ?? ''
-//     activeBodyType = { encoding: type, value: rawValue }
-//     bodyPath = 'body.raw.value'
-//     bodyType = 'raw'
-//   }
+const updateActiveBody = (type: keyof typeof contentTypeOptions) => {
+  const contentTypeHeader = getContentTypeHeader(type)
+  const bodyType = getBodyType(type)
 
-//   if (activeBodyType) {
-//     requestExampleMutators.edit(
-//       activeExample.value.uid,
-//       bodyPath,
-//       activeBodyType.value,
-//     )
-//   }
-//   requestExampleMutators.edit(
-//     activeExample.value.uid,
-//     'body.activeBody',
-//     bodyType,
-//   )
-// }
+  requestExampleMutators.edit(
+    activeExample.value.uid,
+    'body.activeBody',
+    bodyType,
+  )
+
+  const oldContentTypeIdx = [
+    ...activeExample.value.parameters.headers,
+  ].findIndex(
+    (header) => header.key.toLowerCase() === 'Content-Type'.toLowerCase(),
+  )
+  const oldContentType = [...activeExample.value.parameters.headers][
+    oldContentTypeIdx
+  ]
+
+  if (oldContentType?.value === contentTypeHeader) return
+
+  if (oldContentType && contentTypeHeader) {
+    const oldHeaders = [...activeExample.value.parameters.headers]
+    oldHeaders[oldContentTypeIdx].value = contentTypeHeader
+
+    requestExampleMutators.edit(
+      activeExample.value.uid,
+      'parameters.headers',
+      oldHeaders,
+    )
+  } else if (contentTypeHeader) {
+    // now lets handle the header
+    const headersWithoutContentType = [
+      ...activeExample.value.parameters.headers.filter(
+        (header) => header.key.toLowerCase() !== 'Content-Type'.toLowerCase(),
+      ),
+    ]
+
+    headersWithoutContentType.push({
+      key: 'Content-Type',
+      value: contentTypeHeader,
+      enabled: true,
+    })
+
+    requestExampleMutators.edit(
+      activeExample.value.uid,
+      'parameters.headers',
+      headersWithoutContentType,
+    )
+  }
+}
 
 const handleFileUploadFormData = async (rowIdx: number) => {
   const { open } = useFileDialog({
@@ -259,15 +298,14 @@ const selectedContentType = computed({
 const activeExampleContentType = computed(() => {
   if (!activeExample.value) return 'none'
   if (
+    activeExample.value.body.activeBody === 'formData' &&
     activeExample.value.body.formData &&
     activeExample.value.body.formData.value.length > 0
-  )
+  ) {
     return 'multipartForm'
-  if (
-    activeExample.value.body.raw &&
-    activeExample.value.body.raw.value.trim() !== ''
-  )
+  } else if (activeExample.value.body.activeBody === 'raw') {
     return activeExample.value.body.raw.encoding
+  }
   /** keep the content if populated */
   return contentType.value
 })
@@ -295,6 +333,7 @@ watch(
     if (val === 'multipartForm' || val === 'formUrlEncoded') {
       defaultRow()
     }
+    updateActiveBody(val)
   },
   { immediate: true },
 )
@@ -329,9 +368,9 @@ watch(
                 variant="ghost">
                 <span>{{ selectedContentType?.label }}</span>
                 <ScalarIcon
-                  class="stroke-[1]"
                   icon="ChevronDown"
-                  size="xs" />
+                  size="xs"
+                  thickness="2.5" />
               </ScalarButton>
             </ScalarListbox>
           </DataTableHeader>
@@ -347,11 +386,11 @@ watch(
             <div class="flex items-center justify-center p-1.5 overflow-hidden">
               <template v-if="activeExample?.body.binary">
                 <span
-                  class="text-c-2 text-xs w-full border rounded p-1 max-w-full overflow-hidden whitespace-nowrap"
-                  >{{ activeExample?.body.binary.name }}</span
-                >
+                  class="text-c-2 text-xs w-full border rounded p-1 max-w-full overflow-hidden whitespace-nowrap">
+                  {{ activeExample?.body.binary.name }}
+                </span>
                 <ScalarButton
-                  class="bg-b-2 hover:bg-b-3 border-0 text-c-2 ml-1"
+                  class="bg-b-2 hover:bg-b-3 border-0 text-c-2 ml-1 shadow-none"
                   size="sm"
                   variant="outlined"
                   @click="removeBinaryFile">
@@ -360,15 +399,16 @@ watch(
               </template>
               <template v-else>
                 <ScalarButton
-                  class="bg-b-2 hover:bg-b-3 border-0 text-c-2"
+                  class="bg-b-2 hover:bg-b-3 border-0 text-c-2 shadow-none"
                   size="sm"
                   variant="outlined"
                   @click="handleFileUpload">
                   <span>Upload File</span>
                   <ScalarIcon
-                    class="ml-1 stroke-[2.5]"
+                    class="ml-1"
                     icon="UploadSimple"
-                    size="xs" />
+                    size="xs"
+                    thickness="2.5" />
                 </ScalarButton>
               </template>
             </div>
@@ -404,6 +444,7 @@ watch(
               content=""
               :language="codeInputLanguage"
               lineNumbers
+              lint
               :modelValue="activeExample?.body.raw.value ?? ''"
               @update:modelValue="updateRequestBody" />
           </template>

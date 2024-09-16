@@ -13,32 +13,72 @@ npm install @scalar/api-client
 
 ## Usage
 
-```ts
-import { createScalarApiClient } from '@scalar/api-client'
+### App
 
-const targetElement = document.getElementById('root')
+You can mount the full-blown API Client to your DOM like this:
+
+```html
+<!-- index.html -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Scalar API Client App</title>
+  </head>
+  <body>
+    <div
+      id="scalar-client"
+      class="scalar-app scalar-client"></div>
+    <script
+      type="module"
+      src="./main.js"></script>
+  </body>
+</html>
+```
+
+```ts
+// main.js
+import { createApiClientApp } from '@/App'
 
 // Initialize
-const { open } = await createScalarApiClient(targetElement, {
+await createApiClientApp(document.getElementById('scalar-client'), {
   spec: {
-    // Load a spec from URL
     url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.json',
-    // OR the spec directly
-    content: {
-      ...
-    }
   },
   proxyUrl: 'https://proxy.scalar.com',
 })
+```
+
+### Modal
+
+Or you can mount a more compact version, which is living in a modal:
+
+```ts
+// main.js
+import { createApiClientApp } from '@/App'
+
+// Initialize
+const { open } = await createApiClientApp(
+  document.getElementById('scalar-client'),
+  {
+    spec: {
+      url: 'https://cdn.jsdelivr.net/npm/@scalar/galaxy/dist/latest.json',
+    },
+    proxyUrl: 'https://proxy.scalar.com',
+  },
+)
 
 // Open the API client right-away
 open()
 
 // Or: Open a specific operation
-open({
-  method: 'GET',
-  path: '/me',
-})
+// open({
+//   method: 'GET',
+//   path: '/me',
+// })
 ```
 
 ## Configuration
@@ -89,7 +129,7 @@ export type ClientConfiguration = {
 
 ## Available Methods
 
-The following methods are returned from the `createScalarApiClient` call:
+The following methods are returned from the `createApiClientModal` call:
 
 ### open
 
