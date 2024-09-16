@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ScalarMarkdown } from '@scalar/components'
-import type { ContentType, RequestBody } from '@scalar/oas-utils'
+import type { ContentType, RequestBody } from '@scalar/types/legacy'
 import { computed, ref } from 'vue'
 
 import { Schema } from '../Schema'
@@ -33,7 +33,7 @@ if (prop.requestBody?.content) {
           v-if="prop?.requestBody && contentTypes.length > 1"
           v-model="selectedContentType">
           <option
-            v-for="(value, key) in prop.requestBody?.content"
+            v-for="(_, key) in prop.requestBody?.content"
             :key="key"
             :value="key">
             {{ key }}
@@ -61,13 +61,13 @@ if (prop.requestBody?.content) {
 .request-body-title {
   display: flex;
   align-items: center;
-  font-size: var(--scalar-heading-4);
+  font-size: var(--scalar-font-size-3);
   font-weight: var(--scalar-semibold);
   color: var(--scalar-color-1);
   line-height: 1.45;
   margin-top: 24px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--scalar-border-color);
+  border-bottom: var(--scalar-border-width) solid var(--scalar-border-color);
   flex-flow: wrap;
 }
 .request-body-title-select {
@@ -75,7 +75,7 @@ if (prop.requestBody?.content) {
   padding-left: 9px;
   height: fit-content;
   color: var(--scalar-color-2);
-  font-size: var(--scalar-font-size-3);
+  font-weight: var(--scalar-regular);
   display: flex;
   align-items: center;
 }

@@ -1,5 +1,158 @@
 # @scalar/fastify-api-reference
 
+## 1.25.11
+
+### Patch Changes
+
+- Updated dependencies [dc9aff2]
+  - @scalar/types@0.0.8
+
+## 1.25.10
+
+### Patch Changes
+
+- Updated dependencies [a07cfc8]
+- Updated dependencies [023ca15]
+- Updated dependencies [85872b6]
+  - @scalar/types@0.0.7
+
+## 1.25.9
+
+## 1.25.8
+
+### Patch Changes
+
+- @scalar/types@0.0.6
+
+## 1.25.7
+
+### Patch Changes
+
+- @scalar/types@0.0.5
+
+## 1.25.6
+
+## 1.25.5
+
+### Patch Changes
+
+- @scalar/types@0.0.4
+
+## 1.25.4
+
+### Patch Changes
+
+- @scalar/types@0.0.3
+
+## 1.25.3
+
+## 1.25.2
+
+### Patch Changes
+
+- Updated dependencies [910b1c2]
+  - @scalar/types@0.0.2
+
+## 1.25.1
+
+## 1.25.0
+
+### Patch Changes
+
+- 78db8f5: feat: use new @scalar/types package
+- Updated dependencies [78db8f5]
+  - @scalar/types@0.0.1
+
+## 1.24.77
+
+## 1.24.76
+
+## 1.24.75
+
+## 1.24.74
+
+### Patch Changes
+
+- a1be0e8: feat: add hooks option for API reference route
+
+## 1.24.73
+
+## 1.24.72
+
+## 1.24.71
+
+### Patch Changes
+
+- 159432b: chore!: change default routePrefix to /reference
+
+## 1.24.70
+
+## 1.24.69
+
+## 1.24.68
+
+## 1.24.67
+
+## 1.24.66
+
+## 1.24.65
+
+## 1.24.64
+
+## 1.24.63
+
+## 1.24.62
+
+## 1.24.61
+
+## 1.24.60
+
+## 1.24.59
+
+## 1.24.58
+
+## 1.24.57
+
+## 1.24.56
+
+## 1.24.55
+
+## 1.24.54
+
+## 1.24.53
+
+## 1.24.52
+
+## 1.24.51
+
+## 1.24.50
+
+## 1.24.49
+
+## 1.24.48
+
+## 1.24.47
+
+## 1.24.46
+
+## 1.24.45
+
+## 1.24.44
+
+## 1.24.43
+
+## 1.24.42
+
+## 1.24.41
+
+## 1.24.40
+
+## 1.24.39
+
+## 1.24.38
+
+## 1.24.37
+
 ## 1.24.36
 
 ## 1.24.35

@@ -9,6 +9,7 @@ defineProps<{
     color?: string
     isDefault?: boolean
   }
+  warningMessage?: string
 }>()
 
 const emit = defineEmits<{
@@ -32,7 +33,7 @@ const handleDelete = (id: string) => {
 <template>
   <li>
     <router-link
-      class="text-c-2 hover:bg-b-2 group relative block flex items-center gap-1 rounded py-1 pr-2 font-medium"
+      class="h-8 text-c-2 hover:bg-b-2 group relative block flex items-center gap-1 rounded py-1 pr-2 font-medium no-underline"
       :class="[variable.color ? 'pl-1' : 'pl-2']"
       exactActiveClass="active-link"
       :to="`${variable.uid}`"
@@ -45,9 +46,10 @@ const handleDelete = (id: string) => {
           class="h-2.5 w-2.5 rounded-xl"
           :class="`bg-${variable.color}`"></div>
       </button>
-      {{ variable.name }}
+      <span class="empty-variable-name">{{ variable.name }}</span>
       <SidebarListElementActions
         :variable="{ ...variable, isDefault: variable.isDefault ?? false }"
+        :warningMessage="warningMessage"
         @delete="handleDelete" />
     </router-link>
   </li>
@@ -55,5 +57,12 @@ const handleDelete = (id: string) => {
 <style scoped>
 .active-link {
   @apply bg-b-2 text-c-1;
+}
+.empty-variable-name:empty:before {
+  content: 'No Name';
+  color: var(--scalar-color-3);
+}
+.cookie > a {
+  @apply pl-10;
 }
 </style>

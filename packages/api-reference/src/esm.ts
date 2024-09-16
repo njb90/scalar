@@ -1,12 +1,14 @@
-import type { SpecConfiguration } from '@scalar/oas-utils'
 import { objectMerge } from '@scalar/oas-utils/helpers'
+import type {
+  ReferenceConfiguration,
+  SpecConfiguration,
+} from '@scalar/types/legacy'
 import { createHead } from '@unhead/vue'
 import { createApp, reactive } from 'vue'
 
 import ApiReference from './components/ApiReference.vue'
-import type { ReferenceConfiguration } from './types'
 
-/** Initialize Scalar References and  */
+/** Initialize Scalar References */
 export function createScalarReferences(
   /** Element to mount the references to */
   el: HTMLElement | null,

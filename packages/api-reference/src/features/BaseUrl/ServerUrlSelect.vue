@@ -5,9 +5,8 @@ import {
   ScalarListbox,
   type ScalarListboxOption,
 } from '@scalar/components'
+import type { Server } from '@scalar/types/legacy'
 import { computed } from 'vue'
-
-import type { Server } from './types'
 
 const props = defineProps<{
   options: Server[]
@@ -41,7 +40,7 @@ const selected = computed<ScalarListboxOption | undefined>({
         :class="{ 'pointer-events-none': options.length <= 1 }"
         fullWidth
         variant="ghost">
-        <span>
+        <span class="custom-scroll">
           <slot></slot>
         </span>
         <ScalarIcon
@@ -55,7 +54,8 @@ const selected = computed<ScalarListboxOption | undefined>({
 
 <style scoped>
 .url-select {
-  padding: 10px 9px 9px 0;
+  padding: 0;
+  min-height: 32px;
   color: var(--scalar-color-1);
   align-items: center;
   display: flex;
@@ -65,6 +65,17 @@ const selected = computed<ScalarListboxOption | undefined>({
   height: auto;
   outline: none;
   width: 100%;
+}
+.url-select span {
+  display: flex;
+  align-items: center;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.url-select span::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 .url-select svg {
   color: var(--scalar-color-2);

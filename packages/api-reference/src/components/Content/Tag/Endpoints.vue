@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ScalarMarkdown } from '@scalar/components'
-import type { Tag, TransformedOperation } from '@scalar/oas-utils'
+import type { Tag, TransformedOperation } from '@scalar/types/legacy'
 
 import { useNavState, useSidebar } from '../../../hooks'
 import { Anchor } from '../../Anchor'
@@ -14,23 +14,15 @@ import {
   SectionHeader,
 } from '../../Section'
 
-const props = defineProps<{ id?: string; tag: Tag }>()
-
-const emit = defineEmits<{
-  (event: 'observeAndNavigate', value: string): void
-}>()
+const props = defineProps<{ id?: string; tag: Tag; isCollapsed?: boolean }>()
 
 const { getOperationId, getTagId } = useNavState()
-const { setCollapsedSidebarItem } = useSidebar()
-
-const navigateToOperation = (operationId: string) => {
-  emit('observeAndNavigate', operationId)
-}
+const { scrollToOperation } = useSidebar()
 
 // TODO in V2 we need to do the same loading trick as the initial load
-async function scrollHandler(operation: TransformedOperation) {
-  navigateToOperation(getOperationId(operation, props.tag))
-  setCollapsedSidebarItem(getTagId(props.tag), true)
+const scrollHandler = async (operation: TransformedOperation) => {
+  const operationId = getOperationId(operation, props.tag)
+  scrollToOperation(operationId)
 }
 </script>
 <template>
@@ -46,6 +38,7 @@ async function scrollHandler(operation: TransformedOperation) {
             </Anchor>
           </SectionHeader>
           <ScalarMarkdown
+            :clamp="isCollapsed ? '7' : false"
             :value="tag.description"
             withImages />
         </SectionColumn>
@@ -63,7 +56,12 @@ async function scrollHandler(operation: TransformedOperation) {
                     class="endpoint"
                     @click="scrollHandler(operation)">
                     <HttpMethod :method="operation.httpVerb" />
-                    <span>{{ operation.path }}</span>
+                    <span
+                      :class="{
+                        deprecated: operation.information?.deprecated,
+                      }">
+                      {{ operation.path }}
+                    </span>
                   </a>
                 </div>
               </CardContent>
@@ -114,5 +112,8 @@ async function scrollHandler(operation: TransformedOperation) {
   font-family: var(--scalar-font-code);
   font-size: var(--scalar-small);
   cursor: pointer;
+}
+.deprecated {
+  text-decoration: line-through;
 }
 </style>

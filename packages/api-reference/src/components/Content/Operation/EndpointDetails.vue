@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ScalarMarkdown } from '@scalar/components'
-import type { TransformedOperation } from '@scalar/oas-utils'
+import type { TransformedOperation } from '@scalar/types/legacy'
 
 import { useOperation, useResponses } from '../../../hooks'
 import Parameters from './Parameters.vue'
@@ -41,7 +41,9 @@ const { responses } = useResponses(props.operation)
       :requestBody="operation.information?.requestBody">
       <template #title>Body</template>
     </RequestBody>
-    <Parameters :parameters="responses">
+    <Parameters
+      :collapsableItems="true"
+      :parameters="responses">
       <template #title>Responses</template>
     </Parameters>
   </div>

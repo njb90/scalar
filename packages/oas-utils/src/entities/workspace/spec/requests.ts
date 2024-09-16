@@ -1,19 +1,23 @@
 import { securityRequirement } from '@/entities/workspace/security'
 import { nanoidSchema } from '@/entities/workspace/shared'
-import { REQUEST_METHODS, type RequestMethod, deepMerge } from '@/helpers'
-import type { AxiosResponse } from 'axios'
-import type { OpenAPIV3_1 } from 'openapi-types'
+import { REQUEST_METHODS, type RequestMethod } from '@/helpers'
+import { deepMerge } from '@scalar/object-utils/merge'
+import type { OpenAPIV3_1 } from '@scalar/openapi-types'
 import { type ZodSchema, z } from 'zod'
 
 import { $refSchema } from './refs'
 import type { RequestExample } from './request-examples'
 
 /** A single set of populated values for a sent request */
-export type ResponseInstance = AxiosResponse & {
-  /**
-   * Time in ms the request took
-   */
+export type ResponseInstance = Omit<Response, 'headers'> & {
+  /** Store headers as an object to match what we had with axios */
+  headers: Record<string, string>
+  /** Keys of headers which set cookies */
+  cookieHeaderKeys: string[]
+  /** Time in ms the request took */
   duration: number
+  /** The response data */
+  data: unknown
 }
 
 /** A single request/response set to save to the history stack */
@@ -41,7 +45,7 @@ const requestSchema = z.object({
    * A list of tags for API documentation control. Tags can be used for logical
    * grouping of operations by resources or any other qualifier.
    */
-  tags: z.string().array().default(['default']),
+  tags: z.string().array().optional(),
   /** A short summary of what the operation does. */
   summary: z.string().optional(),
   /** A verbose explanation of the operation behavior. CommonMark syntax MAY be used for rich text representation. */
@@ -68,6 +72,10 @@ const requestSchema = z.object({
    * security requirement ({}) can be included in the array.
    */
   security: z.array(securityRequirement).optional(),
+  /** Security schemes which have been created specifically for this request */
+  securitySchemeUids: z.array(nanoidSchema).optional().default([]),
+  /** The currently selected security schemes at the request level */
+  selectedSecuritySchemeUids: z.array(nanoidSchema).default([]),
   /**
    * The request body applicable for this operation. The requestBody is fully supported in HTTP methods where the
    * HTTP 1.1 specification [RFC7231] has explicitly defined semantics for request bodies. In other cases where the
@@ -94,4 +102,4 @@ export type RequestPayload = z.input<typeof requestSchema> & {
 
 /** Create request helper */
 export const createRequest = (payload: RequestPayload) =>
-  deepMerge(requestSchema.parse({}), payload)
+  deepMerge(requestSchema.parse({}), payload as Partial<Request>)

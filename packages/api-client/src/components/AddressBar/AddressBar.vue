@@ -1,53 +1,40 @@
 <script setup lang="ts">
-import { executeRequestBus } from '@/libs'
+import CodeInput from '@/components/CodeInput/CodeInput.vue'
+import {
+  type HotKeyEvents,
+  executeRequestBus,
+  hotKeyBus,
+  requestStatusBus,
+} from '@/libs'
 import { useWorkspace } from '@/store/workspace'
 import { Listbox } from '@headlessui/vue'
 import { ScalarButton, ScalarIcon } from '@scalar/components'
 import { REQUEST_METHODS, type RequestMethod } from '@scalar/oas-utils/helpers'
 import { isMacOS } from '@scalar/use-tooltip'
 import { useMagicKeys, whenever } from '@vueuse/core'
-import { ref, watch } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 import HttpMethod from '../HttpMethod/HttpMethod.vue'
 import AddressBarHistory from './AddressBarHistory.vue'
-import AddressBarServer from './AddressBarServer.vue'
 
 const {
   activeRequest,
   activeExample,
   isReadOnly,
   requestMutators,
+  requestExampleMutators,
   requestsHistory,
 } = useWorkspace()
 
 const history = requestsHistory
 const selectedRequest = ref(history.value[0])
+const addressBarRef = ref<typeof CodeInput | null>(null)
 
 const keys = useMagicKeys()
 whenever(isMacOS() ? keys.meta_enter : keys.ctrl_enter, () =>
   executeRequestBus.emit(),
 )
 
-// watch(
-//   () => activeInstance.value?.url,
-//   (newURL, oldURL) => {
-//     if (!activeRequest.value) return
-//
-//     const toUpdate = syncPathParamsFromURL(
-//       newURL,
-//       oldURL,
-//       activeInstance.value?.parameters.path,
-//     )
-//     if (toUpdate)
-//       updateRequestInstance(
-//         activeRequest.value.uid,
-//         activeInstanceIdx,
-//         toUpdate.key,
-//         toUpdate.value,
-//       )
-//   },
-// )
-//
 /** update the instance path parameters on change */
 const onUrlChange = (newPath: string) => {
   if (!activeRequest.value || activeRequest.value.path === newPath) return
@@ -64,21 +51,53 @@ watch(
   },
 )
 
+/** The amount remaining to load from 100 -> 0 */
 const percentage = ref(100)
+/** Keeps track of how much was left when the request finished */
+const remaining = ref(0)
+/** Whether or not there is a request loading */
 const isRequesting = ref(false)
+/** The loading interval */
+const interval = ref<ReturnType<typeof setInterval>>()
 
-executeRequestBus.on(() => {
-  if (isRequesting.value) return
+function load() {
+  if (isRequesting.value) {
+    // Reduce asymptotically up to 85% loaded
+    percentage.value -= (percentage.value - 15) / 60
+  } else {
+    // Always finish loading linearly over 400ms
+    percentage.value -= remaining.value / 20
+  }
+  if (percentage.value <= 0) {
+    clearInterval(interval.value)
+    interval.value = undefined
+    percentage.value = 100
+    isRequesting.value = false
+  }
+}
+
+function startLoading() {
+  if (interval.value) return
   isRequesting.value = true
+  interval.value = setInterval(load, 20)
+}
 
-  const interval = setInterval(() => {
-    percentage.value -= 5
-    if (percentage.value <= 0) {
-      clearInterval(interval)
-      percentage.value = 100
-      isRequesting.value = false
-    }
-  }, 20)
+function stopLoading() {
+  remaining.value = percentage.value
+  isRequesting.value = false
+}
+
+function abortLoading() {
+  clearInterval(interval.value)
+  interval.value = undefined
+  percentage.value = 100
+  isRequesting.value = false
+}
+
+requestStatusBus.on((status) => {
+  if (status === 'start') startLoading()
+  if (status === 'stop') stopLoading()
+  if (status === 'abort') abortLoading()
 })
 
 function updateRequestMethod(method: RequestMethod) {
@@ -92,48 +111,30 @@ function getBackgroundColor() {
   return REQUEST_METHODS[method as RequestMethod].backgroundColor
 }
 
-/** prevent line breaks on pasted content */
-const handlePaste = (event: ClipboardEvent) => {
-  event.preventDefault()
-  const text = event.clipboardData?.getData('text/plain') || ''
-  const sanitizedText = text.replace(/\n/g, '')
+function handleExecuteRequest() {
+  if (isRequesting.value) return
+  isRequesting.value = true
+  executeRequestBus.emit()
+}
 
-  const selection = window.getSelection()
-  if (!selection || selection.rangeCount === 0) return
+const updateExampleUrlHandler = (url: string) => {
+  requestExampleMutators.edit(activeExample.value.uid, 'url', url)
+}
 
-  const range = selection.getRangeAt(0)
-  range.deleteContents()
-  const textNode = document.createTextNode(sanitizedText)
-  range.insertNode(textNode)
-
-  /** move the cursor to the end of the inserted text */
-  range.setStartAfter(textNode)
-  selection.removeAllRanges()
-  selection.addRange(range)
-
-  /** scroll and focus at the end of the pasted content */
-  const editableDiv = range.startContainer.parentElement
-  if (editableDiv) {
-    editableDiv.scrollLeft = editableDiv.scrollWidth
+/** Handle hotkeys */
+const handleHotKey = (event: HotKeyEvents) => {
+  if (event.focusAddressBar) {
+    addressBarRef.value?.focus()
   }
 }
 
-/**
- * TODO: This component is pretty much mocked for now, will come back and finish it up once we
- * Start making requests and adding some history
- */
+onMounted(() => hotKeyBus.on(handleHotKey))
+onBeforeUnmount(() => hotKeyBus.off(handleHotKey))
 </script>
 <template>
   <div
     v-if="activeRequest && activeExample"
     class="order-last lg:order-none lg:w-auto w-full">
-    <!-- <div class="text-c-2 flex w-80 flex-row items-center gap-1 p-4">
-      <ScalarIcon
-        icon="Branch"
-        size="md" />
-      <h2 class="text-sm">Branch Name</h2>
-    </div> -->
-
     <div class="m-auto flex basis-1/2 flex-row items-center">
       <!-- Address Bar -->
       <Listbox
@@ -141,48 +142,50 @@ const handlePaste = (event: ClipboardEvent) => {
         v-model="selectedRequest">
         <div
           :class="[
-            'text-xxs bg-b-1 relative flex w-full lg:min-w-[720px] lg:max-w-[720px] order-last lg:order-none flex-1 flex-row items-stretch rounded border p-[3px]',
+            'addressbar-bg-states text-xxs relative flex w-full lg:min-w-[720px] lg:max-w-[720px] order-last lg:order-none flex-1 flex-row items-stretch rounded-lg border-1/2 p-[3px]',
             { 'rounded-b-none': open },
             { 'border-transparent': open },
           ]">
           <div
             class="pointer-events-none absolute left-0 top-0 z-10 block h-full w-full overflow-hidden">
             <div
-              class="bg-mix-transparent bg-mix-amount-95 absolute left-0 top-0 h-full w-full"
+              class="bg-mix-transparent bg-mix-amount-90 absolute left-0 top-0 h-full w-full"
               :class="getBackgroundColor()"
               :style="{ transform: `translate3d(-${percentage}%,0,0)` }"></div>
           </div>
           <div class="flex gap-1">
             <HttpMethod
-              class="font-code text-xxs font-medium"
               :isEditable="!isReadOnly"
               isSquare
               :method="activeRequest.method"
               @change="updateRequestMethod" />
-            <AddressBarServer />
           </div>
-          <div class="custom-scroll scroll-timeline-x relative flex w-full">
+          <div
+            class="codemirror-bg-switcher scroll-timeline-x scroll-timeline-x-hidden relative flex w-full">
             <div class="fade-left"></div>
 
-            <!-- TODO wrap vars in spans for special effects like mouseOver descriptions -->
-            <div
-              class="scroll-timeline-x-address font-code text-c-1 flex flex-1 items-center whitespace-nowrap lg:text-sm text-xs font-medium leading-[24.5px] outline-none"
-              :contenteditable="!isReadOnly"
-              @input="(ev) => onUrlChange((ev.target as HTMLElement).innerText)"
-              @keydown.enter.prevent="executeRequestBus.emit()"
-              @paste="handlePaste">
-              {{ activeRequest.path }}
-            </div>
+            <CodeInput
+              ref="addressBarRef"
+              disableCloseBrackets
+              :disabled="isReadOnly"
+              disableEnter
+              disableTabIndent
+              :emitOnBlur="false"
+              :modelValue="activeExample.url"
+              placeholder="Enter URL to get started"
+              server
+              @submit="handleExecuteRequest"
+              @update:modelValue="updateExampleUrlHandler" />
             <div class="fade-right"></div>
           </div>
 
           <AddressBarHistory :open="open" />
           <ScalarButton
-            class="relative h-auto shrink-0 gap-1.5 overflow-hidden px-2.5 py-1 z-[1]"
+            class="relative h-auto shrink-0 gap-1 overflow-hidden pl-2 pr-2.5 py-1 z-[1] font-bold"
             :disabled="isRequesting"
-            @click="executeRequestBus.emit()">
+            @click="handleExecuteRequest">
             <ScalarIcon
-              class="relative z-10 w-2 shrink-0"
+              class="relative z-10 shrink-0 fill-current"
               icon="Play"
               size="xs" />
             <span class="text-xxs relative z-10 lg:flex hidden">Send</span>
@@ -200,13 +203,34 @@ const handlePaste = (event: ClipboardEvent) => {
   width: 100%;
 }
 :deep(.cm-content) {
-  padding: 2px 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
 }
 .scroll-timeline-x {
   scroll-timeline: --scroll-timeline x;
   /* Firefox supports */
   scroll-timeline: --scroll-timeline horizontal;
   -ms-overflow-style: none; /* IE and Edge */
+}
+.scroll-timeline-x-hidden {
+  overflow: hidden;
+}
+.scroll-timeline-x-hidden :deep(.cm-scroller) {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-right: 20px;
+  overflow: auto;
+}
+.scroll-timeline-x-hidden::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+.scroll-timeline-x-hidden :deep(.cm-scroller::-webkit-scrollbar) {
+  width: 0;
+  height: 0;
+  display: none;
 }
 .scroll-timeline-x-address {
   line-height: 27px;
@@ -266,5 +290,25 @@ const handlePaste = (event: ClipboardEvent) => {
   1% {
     opacity: 1;
   }
+}
+.codemirror-bg-switcher {
+  --scalar-background-1: var(--scalar-background-2);
+}
+.addressbar-bg-states :deep(.adressbar-history-button:hover) {
+  background: var(--scalar-background-3);
+}
+.addressbar-bg-states:focus-within :deep(.adressbar-history-button:hover) {
+  background: var(--scalar-background-2);
+}
+.addressbar-bg-states:focus-within .codemirror-bg-switcher {
+  --scalar-background-1: var(--scalar-background-1);
+}
+.addressbar-bg-states {
+  background: var(--scalar-background-2);
+  border-color: transparent;
+}
+.addressbar-bg-states:focus-within {
+  background: var(--scalar-background-1);
+  border-color: var(--scalar-border-color);
 }
 </style>

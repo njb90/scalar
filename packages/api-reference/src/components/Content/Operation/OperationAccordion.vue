@@ -4,16 +4,18 @@ import {
   ScalarIconButton,
   ScalarMarkdown,
 } from '@scalar/components'
-import type { TransformedOperation } from '@scalar/oas-utils'
+import type { TransformedOperation } from '@scalar/types/legacy'
+import { inject } from 'vue'
 
 import { ExampleRequest } from '../../../features/ExampleRequest'
+import { ExampleResponses } from '../../../features/ExampleResponses'
+import { HIDE_TEST_REQUEST_BUTTON_SYMBOL } from '../../../helpers'
 import { useClipboard } from '../../../hooks'
 import { Anchor } from '../../Anchor'
 import { HttpMethod } from '../../HttpMethod'
 import { SectionAccordion } from '../../Section'
 import EndpointDetailsCard from './EndpointDetailsCard.vue'
 import EndpointPath from './EndpointPath.vue'
-import { PathResponses } from './PathResponses'
 import TestRequestButton from './TestRequestButton.vue'
 
 defineProps<{
@@ -22,6 +24,9 @@ defineProps<{
 }>()
 
 const { copyToClipboard } = useClipboard()
+const getHideTestRequestButton = inject(HIDE_TEST_REQUEST_BUTTON_SYMBOL)
+
+console.log(!getHideTestRequestButton?.())
 </script>
 <template>
   <SectionAccordion
@@ -55,9 +60,10 @@ const { copyToClipboard } = useClipboard()
         v-if="active"
         :operation="operation" />
       <ScalarIcon
-        v-else
+        v-else-if="!getHideTestRequestButton?.()"
         class="endpoint-try-hint"
-        icon="PaperAirplane" />
+        icon="Play"
+        thickness="1.75px" />
       <ScalarIconButton
         class="endpoint-copy"
         icon="Clipboard"
@@ -75,7 +81,7 @@ const { copyToClipboard } = useClipboard()
     </template>
     <div class="endpoint-content">
       <EndpointDetailsCard :operation="operation" />
-      <PathResponses :operation="operation" />
+      <ExampleResponses :operation="operation" />
       <ExampleRequest :operation="operation" />
     </div>
   </SectionAccordion>
@@ -172,23 +178,17 @@ const { copyToClipboard } = useClipboard()
 }
 
 .endpoint-try-hint {
-  padding: 6px;
+  padding: 2px;
   height: 24px;
   width: 24px;
   flex-shrink: 0;
-  opacity: 0.44;
 }
-
-.endpoint-copy,
-.endpoint-copy:hover {
-  color: currentColor;
-}
-
 .endpoint-copy {
-  opacity: 0.44;
+  color: currentColor;
+  padding: 2px;
 }
-.endpoint-copy:hover {
-  opacity: 1;
+.endpoint-copy :deep(svg) {
+  stroke-width: 2px;
 }
 
 .endpoint-content {

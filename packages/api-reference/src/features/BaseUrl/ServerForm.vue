@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { ScalarMarkdown } from '@scalar/components'
+import type { Server } from '@scalar/types/legacy'
 import { computed, toRef } from 'vue'
 
 import ServerUrl from './ServerUrl.vue'
 import ServerUrlSelect from './ServerUrlSelect.vue'
 import ServerVariablesForm from './ServerVariablesForm.vue'
-import type { Server, ServerVariableValues } from './types'
+import type { ServerVariableValues } from './types'
 
 const props = withDefaults(
   defineProps<{
@@ -85,8 +86,9 @@ const server = computed(() => props.servers?.[selectedRef.value])
   margin-top: 6px;
 }
 .server-form-container {
-  box-shadow: 0 0 0 1px var(--scalar-border-color);
   border-radius: var(--scalar-radius);
+  background: var(--scalar-background-2);
+  border: var(--scalar-border-width) solid var(--scalar-border-color);
 }
 .server-item {
   padding: 0 9px;
@@ -94,6 +96,8 @@ const server = computed(() => props.servers?.[selectedRef.value])
 .description {
   padding: 6px 12px;
   font-size: var(--scalar-small);
+  font-weight: var(--scalar-semibold);
+  color: var(--scalar-color-3);
 }
 .description :deep(.markdown) {
   font-size: var(--scalar-micro);

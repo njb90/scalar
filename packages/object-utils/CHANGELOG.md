@@ -1,5 +1,23 @@
 # @scalar/object-utils
 
+## 1.1.7
+
+### Patch Changes
+
+- 03e9bbb: Move to flatted for localstorage
+
+## 1.1.6
+
+### Patch Changes
+
+- dba83e4: Support circular refs
+
+## 1.1.5
+
+### Patch Changes
+
+- 240a618: feat: allow multiple api-clients on single page
+
 ## 1.1.4
 
 ### Patch Changes

@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import EnvironmentVariableDropdown from '@/views/Environment/EnvironmentVariableDropdown.vue'
 import { ScalarIconButton } from '@scalar/components'
 import { computed, ref } from 'vue'
 
 import DataTableCell from './DataTableCell.vue'
-import DataTableInputEnumSelect from './DataTableInputEnumSelect.vue'
+import DataTableInputSelect from './DataTableInputSelect.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -14,12 +13,14 @@ const props = withDefaults(
     containerClass?: string
     required?: boolean
     modelValue: string | number
+    /** Allows adding a custom value to the enum dropdown, defaults to true */
+    canAddCustomEnumValue?: boolean
     readOnly?: boolean
     enum?: string[]
     min?: number
     max?: number
   }>(),
-  { required: false, readOnly: false },
+  { canAddCustomEnumValue: true, required: false, readOnly: false },
 )
 
 const emit = defineEmits<{
@@ -73,19 +74,15 @@ const handleDropdownMouseUp = () => {
     :class="containerClass">
     <div
       v-if="$slots.default"
-      class="text-c-2 flex min-w-[100px] items-center border-r-1/2 pl-2 pr-0">
+      class="text-c-2 flex min-w-[120px] items-center border-r-1/2 pl-2 pr-0">
       <slot />
     </div>
-    <div
-      class="group row-1"
-      :class="{
-        'relative required after:absolute after:centered-y after:right-0 after:pt-px after:pr-2 after:text-xxs after:font-medium after:text-c-3 after:bg-b-1 after:shadow-[-8px_0_4px_var(--scalar-background-1)] group-has-[:focus]:after:hidden':
-          required,
-      }">
+    <div class="row-1">
       <template v-if="props.enum && props.enum.length">
-        <DataTableInputEnumSelect
-          :enum="props.enum"
+        <DataTableInputSelect
+          :canAddCustomValue="canAddCustomEnumValue"
           :modelValue="props.modelValue"
+          :value="props.enum"
           @update:modelValue="emit('update:modelValue', $event)" />
       </template>
       <template v-else>
@@ -93,7 +90,7 @@ const handleDropdownMouseUp = () => {
           v-bind="$attrs"
           :id="id"
           autocomplete="off"
-          class="border-none focus:text-c-1 text-c-2 min-w-0 w-full px-2 py-1.5 outline-none"
+          class="border-none text-c-1 min-w-0 w-full peer px-2 py-1.5 outline-none"
           data-1p-ignore
           :max="max"
           :min="min"
@@ -105,6 +102,11 @@ const handleDropdownMouseUp = () => {
           @blur="handleBlur"
           @focus="emit('inputFocus')"
           @input="handleInput" />
+        <div
+          v-if="required"
+          class="absolute centered-y right-0 pt-px pr-2 text-xxs text-c-3 bg-b-1 shadow-[-8px_0_4px_var(--scalar-background-1)] opacity-100 duration-150 transition-opacity peer-focus:opacity-0">
+          Required
+        </div>
       </template>
     </div>
     <div
@@ -119,11 +121,6 @@ const handleDropdownMouseUp = () => {
       :icon="mask ? 'Show' : 'Hide'"
       :label="mask ? 'Show Password' : 'Hide Password'"
       @click="mask = !mask" />
-    <EnvironmentVariableDropdown
-      :query="query"
-      @mousedown="handleDropdownMouseDown"
-      @mouseup="handleDropdownMouseUp"
-      @select="handleSelect" />
   </DataTableCell>
 </template>
 

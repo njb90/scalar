@@ -1,12 +1,35 @@
 import { nanoidSchema } from '@/entities/workspace/shared'
-import { deepMerge } from '@/helpers'
+import { deepMerge } from '@scalar/object-utils/merge'
 import { z } from 'zod'
+
+// Define the Blob schema
+export const blobSchema = z.object({
+  size: z.number().nonnegative('Blob size must be a non-negative number').int(), // Size of the Blob
+  type: z.string(), // MIME type of the Blob
+  arrayBuffer: z.function().returns(z.promise(z.instanceof(ArrayBuffer))), // Returns a Promise of ArrayBuffer
+  slice: z
+    .function()
+    .args(z.number().optional(), z.number().optional(), z.string().optional())
+    .returns(z.any()), // Returns a Blob (any type for now)
+  stream: z.function().returns(z.instanceof(ReadableStream<Uint8Array>)), // Returns a ReadableStream of Uint8Array
+  text: z.function().returns(z.promise(z.string())), // Returns a Promise of string
+})
+
+const fileSchema = z
+  .object({
+    name: z.string(),
+    lastModified: z.number(),
+    webkitRelativePath: z.string(),
+  })
+  .extend(blobSchema.shape)
+
+export type FileType = z.infer<typeof fileSchema>
 
 const requestExampleParametersSchema = z.object({
   key: z.string().default(''),
   value: z.union([z.string(), z.number()]).transform(String).default(''),
   enabled: z.boolean().default(true),
-  file: z.instanceof(File).optional(),
+  file: fileSchema.optional(),
   description: z.string().optional(),
   /** Params are linked to parents such as path params and global headers/cookies */
   refUid: nanoidSchema.optional(),
@@ -17,6 +40,7 @@ const requestExampleParametersSchema = z.object({
   minimum: z.number().optional(),
   maximum: z.number().optional(),
   default: z.any().optional(),
+  nullable: z.boolean().optional(),
 })
 
 /** Request examples - formerly known as instances - are "children" of requests */
@@ -30,10 +54,15 @@ export type RequestExampleParameterPayload = z.input<
 /** Create request example parameter helper */
 export const createRequestExampleParameter = (
   payload: RequestExampleParameterPayload,
-) => deepMerge(requestExampleParametersSchema.parse({}), payload)
+) =>
+  deepMerge(
+    requestExampleParametersSchema.parse({}),
+    payload as Partial<RequestExampleParameter>,
+  )
 
 const requestExampleSchema = z.object({
   uid: nanoidSchema,
+  url: z.string().optional().default(''),
   requestUid: z.string().min(7),
   name: z.string().optional().default('Name'),
   body: z
@@ -63,7 +92,7 @@ const requestExampleSchema = z.object({
           value: requestExampleParametersSchema.array().default([]),
         })
         .default({}),
-      binary: z.instanceof(File).optional(),
+      binary: fileSchema.optional(),
       activeBody: z
         .union([z.literal('raw'), z.literal('formData'), z.literal('binary')])
         .default('raw'),
@@ -90,5 +119,5 @@ export type RequestExamplePayload = z.input<typeof requestExampleSchema>
 export const createRequestExample = (payload: RequestExamplePayload) =>
   deepMerge(
     requestExampleSchema.parse({ requestUid: payload.requestUid }),
-    payload,
+    payload as Partial<RequestExample>,
   )

@@ -8,8 +8,13 @@ import {
 } from '@scalar/components'
 import { computed } from 'vue'
 
-const { activeCollection, isReadOnly, servers, collectionMutators } =
-  useWorkspace()
+const {
+  activeCollection,
+  activeWorkspace,
+  isReadOnly,
+  servers,
+  collectionMutators,
+} = useWorkspace()
 
 const serverOptions = computed(() =>
   activeCollection.value?.spec.serverUids?.map((serverUid: string) => ({
@@ -57,7 +62,7 @@ const serverUrl = computed(() => {
       teleport="#scalar-client"
       :value="activeCollection?.selectedServerUid">
       <button
-        class="font-code lg:text-sm text-xs whitespace-nowrap border border-b-3 border-solid rounded px-1.5 text-c-2 z-[1]"
+        class="font-code lg:text-sm text-xs whitespace-nowrap border border-b-3 border-solid rounded px-1.5 py-0.5 text-c-2 z-[1]"
         type="button"
         @click.stop>
         {{ serverUrl }}
@@ -77,8 +82,9 @@ const serverUrl = computed(() => {
                 : 'text-transparent'
             ">
             <ScalarIcon
-              class="relative top-[0.5px] size-2.5 stroke-[1.75]"
-              icon="Checkmark" />
+              class="relative top-[0.5px] size-2.5"
+              icon="Checkmark"
+              thickness="3.5" />
           </div>
           <span class="whitespace-nowrap text-ellipsis overflow-hidden">
             {{ server.label }}
@@ -88,7 +94,7 @@ const serverUrl = computed(() => {
         <ScalarDropdownItem>
           <RouterLink
             class="font-code text-xxs flex items-center gap-1.5"
-            to="/servers">
+            :to="`/workspace/${activeWorkspace.uid}/servers`">
             <div class="flex items-center justify-center h-4 w-4">
               <ScalarIcon
                 class="h-2.5"

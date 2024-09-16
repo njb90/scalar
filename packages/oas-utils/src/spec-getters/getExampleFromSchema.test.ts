@@ -24,7 +24,7 @@ describe('getExampleFromSchema', () => {
       getExampleFromSchema({
         enum: ['available', 'pending', 'sold'],
       }),
-    ).toMatchObject('available')
+    ).toBe('available')
   })
 
   it('uses empty quotes as a fallback for strings', () => {
@@ -32,7 +32,7 @@ describe('getExampleFromSchema', () => {
       getExampleFromSchema({
         type: 'string',
       }),
-    ).toMatchObject('')
+    ).toBe('')
   })
 
   it('only includes required attributes and attributes with example values', () => {
@@ -79,7 +79,7 @@ describe('getExampleFromSchema', () => {
       getExampleFromSchema({
         type: ['string', 'number'],
       }),
-    ).toMatchObject('')
+    ).toBe('')
   })
 
   it('uses null for nullable union types', () => {
@@ -187,7 +187,7 @@ describe('getExampleFromSchema', () => {
           emptyString: '…',
         },
       ),
-    ).toMatchObject('…')
+    ).toBe('…')
   })
 
   it('returns emails as an example value', () => {
@@ -416,7 +416,7 @@ describe('getExampleFromSchema', () => {
       default: 'BAD_REQUEST_EXCEPTION',
     }
 
-    expect(getExampleFromSchema(schema)).toMatchObject('BAD_REQUEST_EXCEPTION')
+    expect(getExampleFromSchema(schema)).toBe('BAD_REQUEST_EXCEPTION')
   })
 
   it('uses 1 as the default for a number', () => {
@@ -625,7 +625,7 @@ describe('getExampleFromSchema', () => {
           },
         ],
       }),
-    ).toMatchObject('')
+    ).toBe('')
   })
 
   it('works with allOf', () => {
@@ -637,7 +637,7 @@ describe('getExampleFromSchema', () => {
           },
         ],
       }),
-    ).toMatchObject('')
+    ).toBe('')
   })
 
   it('uses all schemas in allOf', () => {
@@ -682,7 +682,7 @@ describe('getExampleFromSchema', () => {
         example: 'foobar',
         readOnly: true,
       }),
-    ).toMatchObject('foobar')
+    ).toBe('foobar')
   })
 
   it('returns readOnly attributes in read mode', () => {
@@ -696,7 +696,7 @@ describe('getExampleFromSchema', () => {
           mode: 'read',
         },
       ),
-    ).toMatchObject('foobar')
+    ).toBe('foobar')
   })
 
   it('doesn’t return readOnly attributes in write mode', () => {
@@ -719,7 +719,7 @@ describe('getExampleFromSchema', () => {
         example: 'foobar',
         writeOnly: true,
       }),
-    ).toMatchObject('foobar')
+    ).toBe('foobar')
   })
 
   it('returns writeOnly attributes in write mode', () => {
@@ -733,7 +733,7 @@ describe('getExampleFromSchema', () => {
           mode: 'write',
         },
       ),
-    ).toMatchObject('foobar')
+    ).toBe('foobar')
   })
 
   it('doesn’t return writeOnly attributes in read mode', () => {
@@ -750,103 +750,127 @@ describe('getExampleFromSchema', () => {
     ).toBe(undefined)
   })
 
-  it('merges object from additionalProperties', () => {
+  it('allows any additonalProperty', () => {
     expect(
       getExampleFromSchema({
-        properties: {
-          myProperty: {
-            additionalProperties: {
-              properties: {
-                propertyOne: {
-                  type: 'string',
-                  title: 'Message',
-                },
-                propertyTwo: {
-                  type: 'string',
-                  title: 'Message',
-                },
-              },
-              type: 'object',
-            },
-            type: 'object',
-            title: 'MyProperty',
-          },
-        },
         type: 'object',
+        additionalProperties: {},
       }),
     ).toMatchObject({
-      myProperty: {
-        propertyOne: '',
-        propertyTwo: '',
-      },
+      ANY_ADDITIONAL_PROPERTY: 'anything',
+    })
+
+    expect(
+      getExampleFromSchema({
+        type: 'object',
+        additionalProperties: true,
+      }),
+    ).toMatchObject({
+      ANY_ADDITIONAL_PROPERTY: 'anything',
     })
   })
 
-  it('adds a key-value pair example with the schema additionalProperties', () => {
+  it('adds an additionalProperty with specific types', () => {
     expect(
       getExampleFromSchema({
-        properties: {
-          myProperty: {
-            additionalProperties: {
-              type: 'string',
-              title: 'Message',
-            },
-            type: 'object',
-            title: 'MyProperty',
-          },
-        },
         type: 'object',
+        additionalProperties: {
+          type: 'integer',
+        },
       }),
     ).toMatchObject({
-      myProperty: {
-        '{{key}}': '',
-      },
+      ANY_ADDITIONAL_PROPERTY: 1,
     })
-  })
 
-  it('adds a key-value pair example with the schema additionalProperties (omitEmptyAndOptionalProperties: true)', () => {
     expect(
-      getExampleFromSchema(
-        {
+      getExampleFromSchema({
+        type: 'object',
+        additionalProperties: {
+          type: 'boolean',
+        },
+      }),
+    ).toMatchObject({
+      ANY_ADDITIONAL_PROPERTY: true,
+    })
+
+    expect(
+      getExampleFromSchema({
+        type: 'object',
+        additionalProperties: {
+          type: 'boolean',
+          default: false,
+        },
+      }),
+    ).toMatchObject({
+      ANY_ADDITIONAL_PROPERTY: false,
+    })
+
+    expect(
+      getExampleFromSchema({
+        type: 'object',
+        additionalProperties: {
+          type: 'string',
+        },
+      }),
+    ).toMatchObject({
+      ANY_ADDITIONAL_PROPERTY: '',
+    })
+
+    expect(
+      getExampleFromSchema({
+        type: 'object',
+        additionalProperties: {
           type: 'object',
           properties: {
-            myProperty: {
-              additionalProperties: {
-                type: 'string',
-                title: 'Message',
-              },
-              type: 'object',
-              title: 'MyProperty',
+            foo: {
+              type: 'string',
             },
           },
         },
-        {
-          omitEmptyAndOptionalProperties: true,
-        },
-      ),
+      }),
     ).toMatchObject({
-      myProperty: {
-        '{{key}}': '',
+      ANY_ADDITIONAL_PROPERTY: {
+        foo: '',
       },
     })
   })
 
-  it('overwrites with nullable additionalProperties schema', () => {
+  it('works with anyOf', () => {
     expect(
       getExampleFromSchema({
-        properties: {
-          myProperty: {
-            additionalProperties: {
-              nullable: true,
-            },
+        title: 'Foo',
+        type: 'object',
+        anyOf: [
+          {
             type: 'object',
-            title: 'MyProperty',
+            required: ['a'],
+            properties: {
+              a: {
+                type: 'integer',
+                format: 'int32',
+              },
+            },
+          },
+          {
+            type: 'object',
+            required: ['b'],
+            properties: {
+              b: {
+                type: 'string',
+              },
+            },
+          },
+        ],
+        required: ['c'],
+        properties: {
+          c: {
+            type: 'boolean',
           },
         },
-        type: 'object',
       }),
-    ).toMatchObject({
-      myProperty: null,
+    ).toStrictEqual({
+      a: 1,
+      c: true,
     })
   })
 })

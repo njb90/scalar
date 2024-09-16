@@ -4,10 +4,11 @@ import {
   closeBracketsKeymap,
   completionKeymap,
 } from '@codemirror/autocomplete'
-import { indentWithTab } from '@codemirror/commands'
+import { indentWithTab, insertNewline } from '@codemirror/commands'
 import { css } from '@codemirror/lang-css'
 import { html } from '@codemirror/lang-html'
 import { json } from '@codemirror/lang-json'
+import { xml } from '@codemirror/lang-xml'
 import { yaml } from '@codemirror/lang-yaml'
 import {
   type LanguageSupport,
@@ -17,6 +18,7 @@ import {
   indentOnInput,
   syntaxHighlighting,
 } from '@codemirror/language'
+import { type Diagnostic, linter } from '@codemirror/lint'
 import { type Extension, StateEffect } from '@codemirror/state'
 import {
   EditorView,
@@ -24,6 +26,7 @@ import {
   highlightSpecialChars,
   keymap,
   lineNumbers as lineNumbersExtension,
+  placeholder as placeholderExtension,
 } from '@codemirror/view'
 import {
   type MaybeRefOrGetter,
@@ -52,19 +55,25 @@ type BaseParameters = {
   classes?: MaybeRefOrGetter<string[] | undefined>
   /** Put the editor into read-only mode */
   readOnly?: MaybeRefOrGetter<boolean | undefined>
+  /** Disable indent with tab */
+  disableTabIndent?: MaybeRefOrGetter<boolean | undefined>
   /** Option to show line numbers in the editor */
   lineNumbers?: MaybeRefOrGetter<boolean | undefined>
   withVariables?: MaybeRefOrGetter<boolean | undefined>
   disableEnter?: MaybeRefOrGetter<boolean | undefined>
+  disableCloseBrackets?: MaybeRefOrGetter<boolean | undefined>
+  /** Option to lint and show error in the editor */
+  lint?: MaybeRefOrGetter<boolean | undefined>
   onBlur?: (v: string) => void
   onFocus?: (v: string) => void
+  placeholder?: MaybeRefOrGetter<string | undefined>
 }
 
 export type UseCodeMirrorParameters =
   | (BaseParameters & {
       /** Prefill the content. Will be ignored when a provider is given. */
       content: MaybeRefOrGetter<string | undefined>
-      onChange: (v: string) => void
+      onChange?: (v: string) => void
     })
   | (BaseParameters & {
       provider: MaybeRefOrGetter<Extension | null>
@@ -140,14 +149,18 @@ export const useCodeMirror = (
     onChange: params.onChange,
     onBlur: params.onBlur,
     onFocus: params.onFocus,
+    disableTabIndent: toValue(params.disableTabIndent),
     language: toValue(params.language),
     classes: toValue(params.classes),
     readOnly: toValue(params.readOnly),
     lineNumbers: toValue(params.lineNumbers),
     withVariables: toValue(params.withVariables),
-    disableEnter: toValue(params.withVariables),
+    disableEnter: toValue(params.disableEnter),
+    disableCloseBrackets: toValue(params.disableCloseBrackets),
     withoutTheme: toValue(params.withoutTheme),
+    lint: toValue(params.lint),
     additionalExtensions: toValue(params.extensions),
+    placeholder: toValue(params.placeholder),
   }))
 
   // Provider must be watched separately because we need to restart codemirror if the provider changes
@@ -235,6 +248,7 @@ const languageExtensions: {
   json: json,
   yaml: yaml,
   css: css,
+  xml: xml,
 }
 
 /** Generate  the list of extension from parameters */
@@ -249,13 +263,19 @@ function getCodeMirrorExtensions({
   lineNumbers = false,
   withVariables = false,
   disableEnter = false,
+  disableCloseBrackets = false,
+  disableTabIndent = false,
   withoutTheme = false,
+  lint = false,
   additionalExtensions = [],
+  placeholder,
 }: {
   classes?: string[]
   language?: CodeMirrorLanguage
   readOnly?: boolean
   lineNumbers?: boolean
+  disableCloseBrackets?: boolean
+  disableTabIndent?: boolean
   withVariables?: boolean
   disableEnter?: boolean
   onChange?: (val: string) => void
@@ -263,7 +283,9 @@ function getCodeMirrorExtensions({
   onBlur?: (val: string) => void
   withoutTheme?: boolean
   provider: Extension | null
+  lint?: boolean
   additionalExtensions?: Extension[]
+  placeholder?: string
 }) {
   const extensions: Extension[] = [
     highlightSpecialChars(),
@@ -274,6 +296,17 @@ function getCodeMirrorExtensions({
       },
       '.cm-gutterElement': {
         lineHeight: '20px',
+      },
+      '.cm-tooltip': {
+        border: '1px solid #f5c6cb',
+        fontSize: '12px',
+      },
+      '.cm-tooltip-lint': {
+        backgroundColor: '#ffffff',
+      },
+      '.cm-diagnostic-error': {
+        borderLeft: '0',
+        color: '#dc1b19',
       },
     }),
     // Listen to updates
@@ -308,19 +341,60 @@ function getCodeMirrorExtensions({
       indentOnInput(),
       bracketMatching(),
       autocompletion(),
-      closeBrackets(),
-      keymap.of([
-        ...completionKeymap,
-        ...closeBracketsKeymap,
-        indentWithTab,
-        selectAllKeyBinding,
-      ]),
+      keymap.of([...completionKeymap, selectAllKeyBinding]),
+      bracketMatching(),
     )
+
+    if (!disableCloseBrackets)
+      extensions.push(closeBrackets(), keymap.of([...closeBracketsKeymap]))
+
+    if (disableTabIndent) {
+      extensions.push(
+        keymap.of([
+          {
+            key: 'Tab',
+            run: () => false, // Prevent default Tab behavior
+            shift: () => false, // Prevent default Shift+Tab behavior
+          },
+        ]),
+      )
+    } else {
+      extensions.push(keymap.of([indentWithTab]))
+    }
+  }
+
+  // Add placeholder extension if placeholder is provided
+  if (placeholder) {
+    extensions.push(placeholderExtension(placeholder))
   }
 
   // Syntax highlighting
   if (language && languageExtensions[language]) {
     extensions.push(languageExtensions[language]())
+  }
+
+  // JSON Linter
+  if (lint && language === 'json') {
+    const jsonLinter = linter((view) => {
+      const diagnostics: Diagnostic[] = []
+      const content = view.state.doc.toString()
+      if (content.trim()) {
+        try {
+          JSON.parse(content)
+        } catch (e) {
+          if (e instanceof Error) {
+            diagnostics.push({
+              from: 0,
+              to: view.state.doc.length,
+              severity: 'error',
+              message: e.message,
+            })
+          }
+        }
+      }
+      return diagnostics
+    })
+    extensions.push(jsonLinter)
   }
 
   // Line numbers
@@ -350,6 +424,15 @@ function getCodeMirrorExtensions({
           run: () => {
             return true
           },
+        },
+      ]),
+    )
+  } else {
+    extensions.push(
+      keymap.of([
+        {
+          key: 'Enter',
+          run: insertNewline,
         },
       ]),
     )

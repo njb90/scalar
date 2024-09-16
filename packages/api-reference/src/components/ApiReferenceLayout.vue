@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { provideUseId } from '@headlessui/vue'
 import { addScalarClassesToHeadless } from '@scalar/components'
-import type { SSRState } from '@scalar/oas-utils'
 import { defaultStateFactory } from '@scalar/oas-utils/helpers'
-import { type ThemeId, getThemeStyles } from '@scalar/themes'
+import {
+  type ThemeId,
+  getThemeStyles,
+  hasObtrusiveScrollbars,
+} from '@scalar/themes'
+import type { SSRState } from '@scalar/types/legacy'
 import { ScalarToasts, useToasts } from '@scalar/use-toasts'
 import { useDebounceFn, useMediaQuery, useResizeObserver } from '@vueuse/core'
 import {
@@ -21,9 +25,10 @@ import {
 import {
   GLOBAL_SECURITY_SYMBOL,
   HIDE_DOWNLOAD_BUTTON_SYMBOL,
+  HIDE_TEST_REQUEST_BUTTON_SYMBOL,
+  OPENAPI_DOCUMENT_URL_SYMBOL,
   downloadSpecBus,
   downloadSpecFile,
-  scrollToId,
   sleep,
 } from '../helpers'
 import { useDeprecationWarnings, useNavState, useSidebar } from '../hooks'
@@ -36,7 +41,6 @@ import ApiClientModal from './ApiClientModal.vue'
 import { Content } from './Content'
 import GettingStarted from './GettingStarted.vue'
 import { Sidebar } from './Sidebar'
-import { Style } from './Util'
 
 const props = defineProps<Omit<ReferenceLayoutProps, 'isDark'>>()
 
@@ -79,13 +83,18 @@ onMounted(() => {
   }
 })
 
+// Check for Obtrusive Scrollbars
+const obtrusiveScrollbars = computed(hasObtrusiveScrollbars)
+
 const {
   breadcrumb,
   collapsedSidebarItems,
   isSidebarOpen,
   setCollapsedSidebarItem,
   hideModels,
+  defaultOpenAllTags,
   setParsedSpec,
+  scrollToOperation,
 } = useSidebar()
 
 const {
@@ -103,13 +112,14 @@ pathRouting.value = props.configuration.pathRouting
 // Ideally this triggers absolutely first on the client so we can set hash value
 onBeforeMount(() => updateHash())
 
-// Disables intersection observer and scrolls to section
+// Disables intersection observer and scrolls to section once it has been opened
 const scrollToSection = async (id?: string) => {
   isIntersectionEnabled.value = false
   updateHash()
 
-  if (id) scrollToId(id)
-  else documentEl.value?.scrollTo(0, 0)
+  if (id) {
+    scrollToOperation(id)
+  } else documentEl.value?.scrollTo(0, 0)
 
   await sleep(100)
   isIntersectionEnabled.value = true
@@ -226,25 +236,32 @@ provide(
   HIDE_DOWNLOAD_BUTTON_SYMBOL,
   () => props.configuration.hideDownloadButton,
 )
+provide(
+  HIDE_TEST_REQUEST_BUTTON_SYMBOL,
+  () => props.configuration.hideTestRequestButton,
+)
+provide(OPENAPI_DOCUMENT_URL_SYMBOL, () => props.configuration.spec?.url)
 
 hideModels.value = props.configuration.hideModels ?? false
+defaultOpenAllTags.value = props.configuration.defaultOpenAllTags ?? false
 
 useDeprecationWarnings(props.configuration)
+
+const fontsStyleTag = computed(
+  () => `<style>
+  ${getThemeStyles(props.configuration.theme, {
+    fonts: props.configuration.withDefaultFonts,
+  })}</style>`,
+)
 </script>
 <template>
-  <Style
-    v-if="props.configuration.withDefaultFonts || props.configuration.theme">
-    {{
-      getThemeStyles(configuration.theme, {
-        fonts: configuration.withDefaultFonts,
-      })
-    }}
-  </Style>
+  <div v-html="fontsStyleTag"></div>
   <div
     ref="documentEl"
     class="scalar-app scalar-api-reference references-layout"
     :class="[
       {
+        'scalar-scrollbars-obtrusive': obtrusiveScrollbars,
         'references-editable': configuration.isEditable,
         'references-sidebar': configuration.showSidebar,
         'references-sidebar-mobile-open': isSidebarOpen,
@@ -268,7 +285,9 @@ useDeprecationWarnings(props.configuration)
       class="references-navigation t-doc__sidebar">
       <!-- Navigation tree / Table of Contents -->
       <div class="references-navigation-list">
-        <Sidebar :parsedSpec="parsedSpec">
+        <Sidebar
+          :parsedSpec="parsedSpec"
+          :tagsSorter="configuration.tagsSorter">
           <template #sidebar-start>
             <slot
               v-bind="referenceSlotProps"
@@ -336,6 +355,7 @@ useDeprecationWarnings(props.configuration)
     <!-- Fonts are fetched by @scalar/api-reference already, we can safely set `withDefaultFonts: false` -->
     <ApiClientModal
       :proxyUrl="configuration.proxy"
+      :servers="configuration.servers"
       :spec="configuration.spec" />
   </div>
   <ScalarToasts />

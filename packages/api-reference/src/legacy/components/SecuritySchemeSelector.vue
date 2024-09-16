@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ScalarIcon } from '@scalar/components'
-import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-parser'
+import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-types'
 import { computed, onMounted, onServerPrefetch } from 'vue'
 
 import { useAuthenticationStore } from '../stores'
@@ -113,7 +113,7 @@ const keys = computed(() => Object.keys(props.value ?? {}))
                 value?.[authentication.preferredSecurityScheme],
                 authentication.preferredSecurityScheme,
               )
-            : 'None'
+            : 'No Authentication'
         }}
       </span>
       <ScalarIcon icon="ChevronDown" />
@@ -121,7 +121,7 @@ const keys = computed(() => Object.keys(props.value ?? {}))
         :value="authentication.preferredSecurityScheme"
         @click.prevent
         @input="handleAuthenticationTypeInput">
-        <option value="">None</option>
+        <option value="">No Authentication</option>
         <template
           v-for="key in keys"
           :key="key">

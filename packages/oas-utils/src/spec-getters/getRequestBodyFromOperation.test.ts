@@ -203,39 +203,21 @@ describe('getRequestBodyFromOperation', () => {
                 ],
                 properties: {
                   recordString: {
-                    type: 'object',
-                    additionalProperties: {
-                      type: 'string',
-                    },
+                    type: 'string',
                   },
                   recordInteger: {
-                    type: 'object',
-                    additionalProperties: {
-                      type: 'integer',
-                    },
+                    type: 'integer',
                   },
                   recordArray: {
-                    type: 'object',
-                    additionalProperties: {
-                      type: 'array',
-                    },
+                    type: 'array',
                   },
                   recordBoolean: {
-                    type: 'object',
-                    additionalProperties: {
-                      type: 'boolean',
-                    },
+                    type: 'boolean',
                   },
                   recordNullable: {
-                    type: 'object',
-                    additionalProperties: {
-                      nullable: 'true',
-                    },
+                    nullable: 'true',
                   },
                   recordObject: {
-                    type: 'object',
-                  },
-                  recordWithoutAdditionalProperties: {
                     type: 'object',
                   },
                 },
@@ -247,28 +229,59 @@ describe('getRequestBodyFromOperation', () => {
     })
 
     const expectedResult = {
-      recordString: {
-        '{{key}}': '',
-      },
-      recordInteger: {
-        '{{key}}': 1,
-      },
-      recordArray: {
-        '{{key}}': [],
-      },
-      recordBoolean: {
-        '{{key}}': true,
-      },
-      recordNullable: {
-        '{{key}}': null,
-      },
+      recordString: '',
+      recordInteger: 1,
+      recordArray: [],
+      recordBoolean: true,
+      recordNullable: null,
       recordObject: {},
-      recordWithoutAdditionalProperties: {},
     }
 
     expect(request?.postData).toMatchObject({
       mimeType: 'application/json',
       text: JSON.stringify(expectedResult, null, 2),
+    })
+  })
+
+  it('adds parameters from a requestBody schema', () => {
+    const request = getRequestBodyFromOperation({
+      httpVerb: 'POST',
+      path: '/foobar',
+      information: {
+        requestBody: {
+          content: {
+            'application/x-www-form-urlencoded': {
+              schema: {
+                type: 'object',
+                properties: {
+                  id: {
+                    type: 'integer',
+                    example: 1,
+                  },
+                  name: {
+                    type: 'string',
+                    example: 'foobar',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    })
+
+    expect(request?.postData).toMatchObject({
+      mimeType: 'application/x-www-form-urlencoded',
+      params: [
+        {
+          name: 'id',
+          value: 1,
+        },
+        {
+          name: 'name',
+          value: 'foobar',
+        },
+      ],
     })
   })
 })

@@ -16,7 +16,7 @@
     "vue",
     "vue3"
   ],
-  "version": "0.11.4",
+  "version": "0.11.10",
   "engines": {
     "node": ">=18"
   },
@@ -41,8 +41,8 @@
   ],
   "module": "dist/index.js",
   "optionalDependencies": {
-    "yjs": "^13.6.0",
-    "y-codemirror.next": "^0.3.2"
+    "y-codemirror.next": "^0.3.2",
+    "yjs": "^13.6.0"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.12.0",
@@ -50,8 +50,10 @@
     "@codemirror/lang-css": "^6.2.1",
     "@codemirror/lang-html": "^6.4.8",
     "@codemirror/lang-json": "^6.0.0",
+    "@codemirror/lang-xml": "^6.0.0",
     "@codemirror/lang-yaml": "^6.0.0",
     "@codemirror/language": "^6.10.1",
+    "@codemirror/lint": "^6.8.1",
     "@codemirror/state": "^6.4.0",
     "@codemirror/view": "^6.23.1",
     "@lezer/common": "^1.2.1",
@@ -60,17 +62,15 @@
     "@replit/codemirror-css-color-picker": "^6.1.0",
     "@uiw/codemirror-themes": "^4.21.21",
     "codemirror": "^6.0.0",
-    "vue": "^3.4.22"
+    "vue": "^3.4.29"
   },
   "devDependencies": {
     "@scalar/build-tooling": "workspace:*",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitest/coverage-v8": "^1.6.0",
-    "tsc-alias": "^1.8.8",
     "vite": "^5.2.10",
     "vitest": "^1.6.0",
-    "vue": "^3.4.22",
-    "vue-tsc": "^2.0.13",
+    "vue": "^3.4.29",
     "y-codemirror.next": "^0.3.2",
     "yjs": "^13.6.0"
   }

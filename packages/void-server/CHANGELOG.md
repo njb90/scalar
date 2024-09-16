@@ -1,5 +1,30 @@
 # @scalar/void-server
 
+## 2.0.10
+
+### Patch Changes
+
+- a8fc60d: feat: respond with no content for /204
+
+## 2.0.9
+
+### Patch Changes
+
+- 1e77c9d: fix: file undefined (Node 18)
+
+## 2.0.8
+
+### Patch Changes
+
+- 1c5e924: chore: remove node:buffer import
+- f4e0edc: fix: wrong directory in package.json
+
+## 2.0.7
+
+### Patch Changes
+
+- a28ba3b: chore: remove undici dependency
+
 ## 2.0.6
 
 ### Patch Changes

@@ -1,5 +1,255 @@
 # @scalar/mock-server
 
+## 0.2.46
+
+### Patch Changes
+
+- Updated dependencies [dc9aff2]
+- Updated dependencies [6bb85a5]
+  - @scalar/openapi-types@0.1.1
+  - @scalar/openapi-parser@0.8.2
+  - @scalar/oas-utils@0.2.43
+
+## 0.2.45
+
+### Patch Changes
+
+- Updated dependencies [5483fc3]
+  - @scalar/oas-utils@0.2.42
+
+## 0.2.44
+
+### Patch Changes
+
+- Updated dependencies [5bd8337]
+- Updated dependencies [f931ac7]
+  - @scalar/openapi-parser@0.8.1
+  - @scalar/oas-utils@0.2.41
+
+## 0.2.43
+
+### Patch Changes
+
+- Updated dependencies [b4f9f97]
+- Updated dependencies [0afb293]
+- Updated dependencies [b4f9f97]
+- Updated dependencies [e67f5a8]
+- Updated dependencies [b4f9f97]
+- Updated dependencies [b4f9f97]
+- Updated dependencies [b63be39]
+- Updated dependencies [b231e7d]
+- Updated dependencies [152c016]
+- Updated dependencies [b4f9f97]
+  - @scalar/openapi-parser@0.8.0
+  - @scalar/oas-utils@0.2.40
+  - @scalar/openapi-types@0.1.0
+
+## 0.2.42
+
+### Patch Changes
+
+- @scalar/oas-utils@0.2.39
+
+## 0.2.41
+
+### Patch Changes
+
+- 7a6783e: feat(galaxy): migrate galaxy to monorepo
+  - @scalar/oas-utils@0.2.38
+
+## 0.2.40
+
+### Patch Changes
+
+- @scalar/oas-utils@0.2.37
+
+## 0.2.39
+
+### Patch Changes
+
+- Updated dependencies [af75550]
+  - @scalar/oas-utils@0.2.36
+
+## 0.2.38
+
+### Patch Changes
+
+- @scalar/oas-utils@0.2.35
+
+## 0.2.37
+
+### Patch Changes
+
+- Updated dependencies [78db8f5]
+- Updated dependencies [7f11bc6]
+  - @scalar/oas-utils@0.2.34
+
+## 0.2.36
+
+### Patch Changes
+
+- @scalar/oas-utils@0.2.33
+
+## 0.2.35
+
+### Patch Changes
+
+- Updated dependencies [1c81549]
+  - @scalar/oas-utils@0.2.32
+
+## 0.2.34
+
+### Patch Changes
+
+- Updated dependencies [c220358]
+- Updated dependencies [7ec175b]
+  - @scalar/oas-utils@0.2.31
+
+## 0.2.33
+
+### Patch Changes
+
+- @scalar/oas-utils@0.2.30
+
+## 0.2.32
+
+### Patch Changes
+
+- Updated dependencies [8672a78]
+- Updated dependencies [078ca72]
+- Updated dependencies [520caff]
+  - @scalar/oas-utils@0.2.29
+
+## 0.2.31
+
+### Patch Changes
+
+- Updated dependencies [dba83e4]
+  - @scalar/oas-utils@0.2.28
+
+## 0.2.30
+
+### Patch Changes
+
+- Updated dependencies [17e06de]
+  - @scalar/oas-utils@0.2.27
+
+## 0.2.29
+
+### Patch Changes
+
+- @scalar/oas-utils@0.2.26
+
+## 0.2.28
+
+### Patch Changes
+
+- Updated dependencies [9cc6311]
+  - @scalar/oas-utils@0.2.25
+
+## 0.2.27
+
+### Patch Changes
+
+- @scalar/oas-utils@0.2.24
+
+## 0.2.26
+
+### Patch Changes
+
+- Updated dependencies [8eec1b7]
+  - @scalar/oas-utils@0.2.23
+
+## 0.2.25
+
+### Patch Changes
+
+- @scalar/oas-utils@0.2.22
+
+## 0.2.24
+
+### Patch Changes
+
+- Updated dependencies [e18029f]
+  - @scalar/oas-utils@0.2.21
+
+## 0.2.23
+
+### Patch Changes
+
+- @scalar/oas-utils@0.2.20
+
+## 0.2.22
+
+### Patch Changes
+
+- Updated dependencies [bf2895e]
+  - @scalar/oas-utils@0.2.19
+
+## 0.2.21
+
+### Patch Changes
+
+- Updated dependencies [9815191]
+- Updated dependencies [869d255]
+  - @scalar/oas-utils@0.2.18
+
+## 0.2.20
+
+### Patch Changes
+
+- ad002b9: feat: add headers to mocked responses
+- f4e0edc: fix: imports cause a circular reference
+- ad002b9: feat: support redirects
+- ad002b9: feat: support all content types
+
+## 0.2.19
+
+### Patch Changes
+
+- @scalar/oas-utils@0.2.17
+
+## 0.2.18
+
+### Patch Changes
+
+- de9e775: fix: tries to register non-http methods as routes
+
+## 0.2.17
+
+### Patch Changes
+
+- Updated dependencies [7761630]
+  - @scalar/oas-utils@0.2.16
+
+## 0.2.16
+
+### Patch Changes
+
+- Updated dependencies [1dab515]
+  - @scalar/oas-utils@0.2.15
+
+## 0.2.15
+
+### Patch Changes
+
+- 6d2cfe8: chore: update build setup
+- 3f219f4: feat: add OpenAuth2 token endpoint
+- 3f219f4: feat: check whether OpenAuth2 password grant authentication is required
+
+## 0.2.14
+
+### Patch Changes
+
+- @scalar/oas-utils@0.2.14
+
+## 0.2.13
+
+### Patch Changes
+
+- Updated dependencies [1a675be]
+  - @scalar/oas-utils@0.2.13
+
 ## 0.2.12
 
 ### Patch Changes

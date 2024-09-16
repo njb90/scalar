@@ -1,5 +1,23 @@
 # @scalar/galaxy
 
+## 0.2.7
+
+### Patch Changes
+
+- 7a6783e: feat(galaxy): migrate galaxy to monorepo
+
+## 0.2.6
+
+### Patch Changes
+
+- 7f21330: fix: improper usage of ref in token response
+
+## 0.2.5
+
+### Patch Changes
+
+- 05c1360: fix(api-reference): allow scrolling to collapsed sections via hash
+
 ## 0.2.4
 
 ### Patch Changes

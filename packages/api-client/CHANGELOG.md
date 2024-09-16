@@ -1,5 +1,624 @@
 # @scalar/api-client
 
+## 2.0.64
+
+### Patch Changes
+
+- e9253af: fix(api-client): scope api client draggable styles
+- Updated dependencies [0fc3460]
+- Updated dependencies [c577cde]
+- Updated dependencies [e9253af]
+- Updated dependencies [dc9aff2]
+- Updated dependencies [6bb85a5]
+- Updated dependencies [dc9aff2]
+  - @scalar/components@0.12.44
+  - @scalar/themes@0.9.29
+  - @scalar/draggable@0.1.5
+  - @scalar/openapi-types@0.1.1
+  - @scalar/openapi-parser@0.8.2
+  - @scalar/types@0.0.8
+  - @scalar/oas-utils@0.2.43
+
+## 2.0.63
+
+### Patch Changes
+
+- Updated dependencies [a07cfc8]
+- Updated dependencies [5483fc3]
+- Updated dependencies [1e41dfe]
+- Updated dependencies [023ca15]
+- Updated dependencies [85872b6]
+- Updated dependencies [ad89ca3]
+  - @scalar/types@0.0.7
+  - @scalar/oas-utils@0.2.42
+  - @scalar/components@0.12.43
+  - @scalar/use-toasts@0.7.6
+
+## 2.0.62
+
+### Patch Changes
+
+- Updated dependencies [5bd8337]
+- Updated dependencies [f931ac7]
+  - @scalar/openapi-parser@0.8.1
+  - @scalar/oas-utils@0.2.41
+
+## 2.0.61
+
+### Patch Changes
+
+- 4b52f29: fix: request sidebar item ellipsis menu events
+- 294ba08: fix: variable removal breaking line
+- e67f5a8: chore(api-client): removed axios dependency
+- 044fd7d: fix: strip variable from functio name and cta
+- 152c016: feat: add environment selector to addressbar
+- Updated dependencies [b4f9f97]
+- Updated dependencies [0afb293]
+- Updated dependencies [b4f9f97]
+- Updated dependencies [e67f5a8]
+- Updated dependencies [b4f9f97]
+- Updated dependencies [b4f9f97]
+- Updated dependencies [b63be39]
+- Updated dependencies [b231e7d]
+- Updated dependencies [152c016]
+- Updated dependencies [b4f9f97]
+  - @scalar/openapi-parser@0.8.0
+  - @scalar/oas-utils@0.2.40
+  - @scalar/openapi-types@0.1.0
+  - @scalar/components@0.12.42
+  - @scalar/types@0.0.6
+
+## 2.0.60
+
+### Patch Changes
+
+- c02202c: feat: main topnav context menu
+- Updated dependencies [9e8d40d]
+- Updated dependencies [80a3c46]
+- Updated dependencies [c02202c]
+  - @scalar/components@0.12.41
+  - @scalar/themes@0.9.28
+  - @scalar/oas-utils@0.2.39
+  - @scalar/types@0.0.5
+
+## 2.0.59
+
+### Patch Changes
+
+- bbe5b49: feat: update dropdown context menu icons
+- Updated dependencies [bbe5b49]
+  - @scalar/components@0.12.40
+
+## 2.0.58
+
+### Patch Changes
+
+- 1c3de0e: fix(api-client): correctly initialize complex auth, fixes #2874
+- 857380d: fix: command palette import collection
+- ab8c4d7: feat: meta clik link request to topnav
+- 8d615dc: fix: request sidebar item new tab event modifier
+- 9bc0ae7: feat: command palette input required on submit
+- 8f24069: feat(api-client): add loading state and cancellation for slow requests
+- Updated dependencies [9bc0ae7]
+- Updated dependencies [a792002]
+- Updated dependencies [bb13304]
+  - @scalar/components@0.12.39
+  - @scalar/themes@0.9.27
+  - @scalar/oas-utils@0.2.38
+  - @scalar/types@0.0.4
+
+## 2.0.57
+
+### Patch Changes
+
+- 6babe66: fix(components): show icon for ScalarTextField errors
+- Updated dependencies [6babe66]
+- Updated dependencies [abb8ddd]
+  - @scalar/components@0.12.38
+  - @scalar/themes@0.9.26
+  - @scalar/oas-utils@0.2.37
+  - @scalar/types@0.0.3
+
+## 2.0.56
+
+### Patch Changes
+
+- af75550: feat: sidebar request search
+- f9c88a9: fix: request table tooltip
+- 5de17ce: fix: request params deletion
+- f3b9adf: fix(api-client): force code mirror to scroll on overflow
+- Updated dependencies [af75550]
+- Updated dependencies [af75550]
+  - @scalar/oas-utils@0.2.36
+  - @scalar/components@0.12.37
+
+## 2.0.55
+
+### Patch Changes
+
+- Updated dependencies [8bde837]
+- Updated dependencies [910b1c2]
+  - @scalar/components@0.12.36
+  - @scalar/types@0.0.2
+  - @scalar/oas-utils@0.2.35
+
+## 2.0.54
+
+### Patch Changes
+
+- 2db9eb8: feat: topnav context menu
+- Updated dependencies [7aa26fb]
+- Updated dependencies [2db9eb8]
+  - @scalar/components@0.12.35
+
+## 2.0.53
+
+### Patch Changes
+
+- 78db8f5: feat: use new @scalar/types package
+- Updated dependencies [78db8f5]
+- Updated dependencies [7f11bc6]
+  - @scalar/components@0.12.34
+  - @scalar/oas-utils@0.2.34
+  - @scalar/themes@0.9.25
+  - @scalar/types@0.0.1
+
+## 2.0.52
+
+### Patch Changes
+
+- cff5b1f: fix: close tab hotkey event prevent
+- Updated dependencies [298f7c4]
+- Updated dependencies [7bfee42]
+  - @scalar/themes@0.9.24
+  - @scalar/components@0.12.33
+  - @scalar/oas-utils@0.2.33
+
+## 2.0.51
+
+### Patch Changes
+
+- f2b4b3f: fix: request sidebar draft native context menu
+- c386d64: fix: enable sidebar resizer on request page
+- 5c877b8: fix: command palette navigation
+- 1c81549: feat: topnav navigation hotkeys
+- Updated dependencies [48693d7]
+- Updated dependencies [1c81549]
+  - @scalar/components@0.12.32
+  - @scalar/oas-utils@0.2.32
+
+## 2.0.50
+
+### Patch Changes
+
+- Updated dependencies [c220358]
+- Updated dependencies [7ec175b]
+  - @scalar/oas-utils@0.2.31
+
+## 2.0.49
+
+### Patch Changes
+
+- 56be4fe: feat(api-client): added complex multi auth
+- c450bb3: fix: scalar api ref use scalar-border-width
+- 75a5a64: fix: sidebar title
+- Updated dependencies [c450bb3]
+  - @scalar/themes@0.9.23
+  - @scalar/components@0.12.31
+  - @scalar/oas-utils@0.2.30
+
+## 2.0.48
+
+### Patch Changes
+
+- db96313: feat: workspace rename and deletion
+- de9747c: fix: topnav alignment
+- 8672a78: feat(api-client): moved command palette to the global key event bus
+- 58e5912: fix: markdown fixes and intro card polish
+- 6f7ab8d: feat: sidebar request transition and dragging capability
+- 89ee9da: fix(api-client): move web hash router to a factory function
+- 078ca72: feat: add topnav and addressbar hotkeys
+- 520caff: fix: hot keys bus modifier
+- 03e9bbb: Move to flatted for localstorage
+- db96313: feat: set request sidebar item context menu
+- Updated dependencies [8672a78]
+- Updated dependencies [db96313]
+- Updated dependencies [078ca72]
+- Updated dependencies [6f107e1]
+- Updated dependencies [520caff]
+- Updated dependencies [03e9bbb]
+- Updated dependencies [db96313]
+  - @scalar/oas-utils@0.2.29
+  - @scalar/components@0.12.30
+  - @scalar/object-utils@1.1.7
+
+## 2.0.47
+
+### Patch Changes
+
+- b00e50e: fix(api-client): improve api client responsiveness
+- df7372f: feat: make side navigation a drag region
+- 6f0632e: fix: sidebar list element action prop
+- 3023afe: fix: sidenav endpoint ui
+- 711ad03: fix: search modal data population
+- 14ed31f: feat: group cookie by domain and path
+- Updated dependencies [60e63d3]
+- Updated dependencies [db92a85]
+- Updated dependencies [dba83e4]
+  - @scalar/themes@0.9.22
+  - @scalar/use-toasts@0.7.5
+  - @scalar/object-utils@1.1.6
+  - @scalar/oas-utils@0.2.28
+  - @scalar/components@0.12.29
+
+## 2.0.46
+
+### Patch Changes
+
+- 2f6180a: fix: improve address bar styles
+- Updated dependencies [17e06de]
+  - @scalar/oas-utils@0.2.27
+
+## 2.0.45
+
+### Patch Changes
+
+- ee80ee5: feat: allow renaming requests, cookies, environments
+- f3fec79: fix: adds delete sidebar list element close event
+- 2301345: fix: authentication select
+- 57f5691: feat: set path variables from url
+- faf3ed9: fix: style updates to client app
+- a1c73a0: feat(api-client): improve client request loading and feedback
+- Updated dependencies [faf3ed9]
+  - @scalar/themes@0.9.21
+  - @scalar/components@0.12.28
+  - @scalar/oas-utils@0.2.26
+
+## 2.0.44
+
+### Patch Changes
+
+- d65dbcb: fix: long content info button position
+- 9cc6311: fix: add overload to servers as prop for create client app
+- Updated dependencies [9cc6311]
+  - @scalar/oas-utils@0.2.25
+
+## 2.0.43
+
+### Patch Changes
+
+- 425dc83: fix(api-client): rebuild address bar history with grid
+- 9afa9c5: feat: selected authentication pill ui
+- 13b2f6d: fix: scalar icon chevron left update
+- cd028bd: feat: added application/problem+json media type
+- 554df83: feat: intercept requests to avoid CORS issues
+- Updated dependencies [425dc83]
+- Updated dependencies [13b2f6d]
+  - @scalar/themes@0.9.20
+  - @scalar/components@0.12.28
+  - @scalar/oas-utils@0.2.24
+
+## 2.0.42
+
+### Patch Changes
+
+- 1062ceb: fix: authentication counter and select style
+- Updated dependencies [8eec1b7]
+  - @scalar/oas-utils@0.2.23
+
+## 2.0.41
+
+### Patch Changes
+
+- 09d07d1: fix: api client help and darkmode button, sidebar bugs, backgrounds, etc
+- Updated dependencies [09d07d1]
+- Updated dependencies [4e5de89]
+  - @scalar/components@0.12.27
+  - @scalar/use-codemirror@0.11.10
+
+## 2.0.40
+
+### Patch Changes
+
+- 3a6effa: feat(api-client): add response previews
+- dfa7434: feat(api-client): added drag and drop to the api client
+- Updated dependencies [3a6effa]
+- Updated dependencies [dfa7434]
+  - @scalar/use-codemirror@0.11.9
+  - @scalar/components@0.12.26
+  - @scalar/themes@0.9.19
+  - @scalar/draggable@0.1.4
+  - @scalar/oas-utils@0.2.22
+
+## 2.0.39
+
+### Patch Changes
+
+- 016ff7d: fix: dropdown add variable redirection
+- e8cf2f5: fix: back to requests link
+- c1ada84: feat(api-client): add the ability to delete and rename folders and collections
+- 3031929: feat: command palette empty state
+- c1ada84: fix: modal layout and size
+- 808eafb: fix: word break in sidebar and word wrapping from ellipsis
+- 7853b8d: feat: cookie removal
+- Updated dependencies [c1ada84]
+- Updated dependencies [c1ada84]
+- Updated dependencies [e18029f]
+  - @scalar/components@0.12.25
+  - @scalar/themes@0.9.18
+  - @scalar/oas-utils@0.2.21
+
+## 2.0.38
+
+### Patch Changes
+
+- de25d01: feat(api-client): add the ability to delete and rename folders and collections
+- Updated dependencies [de25d01]
+  - @scalar/components@0.12.24
+  - @scalar/themes@0.9.17
+  - @scalar/oas-utils@0.2.20
+
+## 2.0.37
+
+### Patch Changes
+
+- b21b419: feat(api-client): add submit to enter on command pallette
+- 7b58f10: fix: add discord and github line icons
+- 3d9e948: fix: add request on enter triggering in command palette
+- Updated dependencies [7b58f10]
+  - @scalar/components@0.12.23
+
+## 2.0.36
+
+### Patch Changes
+
+- 276e506: fix: show alpha version copy
+
+## 2.0.35
+
+### Patch Changes
+
+- bf2895e: feat(api-client): add multiple auth to api client
+- 5d2825a: feat: add sidebar request menu
+- Updated dependencies [bf2895e]
+- Updated dependencies [5d2825a]
+  - @scalar/components@0.12.22
+  - @scalar/oas-utils@0.2.19
+
+## 2.0.34
+
+### Patch Changes
+
+- c0cf4ac: fix: hide servers page
+- 225e32a: feat: make the command palette amazing
+- bb5909f: fix: tw-bg-base bug in gitbook and some app polish
+- 9815191: fix: actually add workspace cookies to request
+- a7ea3e3: fix: add default active collection to folder create command
+- 9243580: feat: improve create request command
+- 12bd5b8: fix: upload file in form-data with key
+- Updated dependencies [9815191]
+- Updated dependencies [e8fa353]
+- Updated dependencies [869d255]
+  - @scalar/oas-utils@0.2.18
+  - @scalar/components@0.12.21
+
+## 2.0.33
+
+### Patch Changes
+
+- ce3f630: fix: remove layout code from scalar-app class
+- d88c403: fix(api-client): remove default proxy
+- 0bea5b6: fix: window.matchMedia is not a function
+- 2c61c21: feat: make the configuration for createApiClientApp and createApiClientModal optional
+- 19a50de: feat: do not hide auth on write mode
+- Updated dependencies [b2a662a]
+- Updated dependencies [86014b5]
+- Updated dependencies [a60c916]
+  - @scalar/components@0.12.20
+
+## 2.0.32
+
+### Patch Changes
+
+- 6123165: fix(api-client-react): loosen type for initialRequest
+
+## 2.0.31
+
+### Patch Changes
+
+- 240a618: feat: allow multiple api-clients on single page
+- Updated dependencies [240a618]
+  - @scalar/object-utils@1.1.5
+
+## 2.0.30
+
+### Patch Changes
+
+- b4199e9: fix: api client app clean up (font sizes, spacing, etc)
+- Updated dependencies [a5f3a84]
+- Updated dependencies [9a08f46]
+  - @scalar/components@0.12.19
+  - @scalar/themes@0.9.16
+  - @scalar/oas-utils@0.2.17
+
+## 2.0.29
+
+### Patch Changes
+
+- d5408e8: fix: subpages now have headers in the api client
+
+## 2.0.28
+
+### Patch Changes
+
+- 23d498b: fix: scope search to active workspace
+- 624696e: chore: update broken links in error messages
+- 41341e9: fix: api client http method bg
+- 5402338: fix: scalap app sidenav spacing
+- 33f5a09: fix: revived the api-client-react package
+- 9f4db12: fix: remove trailing whitespace codemirror env pill
+- aee3783: fix: http method whitespace wrap
+- 9ca5d7d: fix: add null check to scheme model
+- d97bffd: fix: add powered by scalar for gitbook
+
+## 2.0.27
+
+### Patch Changes
+
+- 19d8b6a: feat: animate sidebar icon
+- c112f24: fix: remove ScalarCodeBlock that freezes browser in response preview
+- 83fc241: fix: constantly adding empty header
+- 2e1ef12: fix: set content type on body change and add proper header
+- Updated dependencies [19d8b6a]
+- Updated dependencies [c112f24]
+  - @scalar/components@0.12.18
+  - @scalar/use-codemirror@0.11.8
+
+## 2.0.26
+
+### Patch Changes
+
+- 54f7654: fix: add local storage to client.scalar/com
+- b0b3290: feat: create a default workspace if no OpenAPI document is passed to the modal
+- 7e01b12: fix: only trigger codeinput change event if the value has changed
+- b7211fb: fix: request history
+- Updated dependencies [67aefbf]
+- Updated dependencies [7761630]
+  - @scalar/components@0.12.17
+  - @scalar/oas-utils@0.2.16
+
+## 2.0.25
+
+### Patch Changes
+
+- 591fe24: fix: clipped border radius in requests items
+- 7f17fe4: feat: move command palette into the client app base
+- 1dab515: feat: revamp address bar
+- 4d76ff5: feat: add support for multiple workspaces
+- e8cd161: feat: store workspace in local storage
+- a431eb0: fix: table checkbox for required params on import
+- ff59399: fix: api client spacing issues, and icon thickness
+- ec47287: feat: made request examples functional in client
+- 747e80e: fix: only flex addressbar codemirror
+- 9d561b7: fix: make app topbar draggable
+- Updated dependencies [1dab515]
+- Updated dependencies [5e060b1]
+- Updated dependencies [ff59399]
+- Updated dependencies [694c1d8]
+  - @scalar/oas-utils@0.2.15
+  - @scalar/themes@0.9.15
+  - @scalar/components@0.12.16
+  - @scalar/use-codemirror@0.11.7
+  - @scalar/object-utils@1.1.4
+  - @scalar/use-toasts@0.7.4
+  - @scalar/use-tooltip@1.0.2
+
+## 2.0.24
+
+### Patch Changes
+
+- 7076725: feat(components): add outline icons
+- 1e72b03: fix(components): polish history icon
+- cbe984b: fix: adjust command palette icon thickness
+- Updated dependencies [7076725]
+- Updated dependencies [1e72b03]
+- Updated dependencies [dd2a42e]
+  - @scalar/components@0.12.15
+
+## 2.0.23
+
+### Patch Changes
+
+- 3928ac3: feat: add routing portion for multiple workspaces
+- Updated dependencies [96e7106]
+  - @scalar/themes@0.9.14
+  - @scalar/components@0.12.14
+  - @scalar/oas-utils@0.2.14
+
+## 2.0.22
+
+### Patch Changes
+
+- 45b956f: fix: only add body data if body data is not null
+
+## 2.0.21
+
+### Patch Changes
+
+- d48e4ac: fix: update active body when content type changes
+
+## 2.0.20
+
+### Patch Changes
+
+- Updated dependencies [e1aa4fc]
+  - @scalar/components@0.12.14
+
+## 2.0.19
+
+### Patch Changes
+
+- a0bb23a: fix: api client codemirror bg color
+
+## 2.0.18
+
+### Patch Changes
+
+- 8654323: fix: scopes checkbox
+
+## 2.0.17
+
+### Patch Changes
+
+- 91b97fa: fix: input checked by default on required item
+- 05bc858: feat: display select for boolean type
+- 05bc858: fix: data table input enum select back
+
+## 2.0.16
+
+### Patch Changes
+
+- a5b295c: fix: address bar scrollbar shown offset
+- bff602a: fix: client sidebar item width + some icon issues
+- 6f4d20d: fix: update client icon weights
+- 1ba4267: fix: top nav path error
+- 58da2c6: feat: new createApiClientApp method
+- 9e3348a: feat: use code input in request table
+- fe16789: fix: make env variable dropdown readonly
+- fc096b6: refactor!: rename `createScalarApiClient` to `createApiClientModal`
+- ebdc9cf: feat: new command palette
+- Updated dependencies [e285a6b]
+- Updated dependencies [bff602a]
+- Updated dependencies [6f4d20d]
+- Updated dependencies [2f10a39]
+- Updated dependencies [9e3348a]
+- Updated dependencies [2f10a39]
+  - @scalar/components@0.12.13
+  - @scalar/use-codemirror@0.11.6
+
+## 2.0.15
+
+### Patch Changes
+
+- f86a242: fix: data table input fixtures
+- Updated dependencies [f86a242]
+  - @scalar/components@0.12.12
+
+## 2.0.14
+
+### Patch Changes
+
+- 6b32eee: feat: enable lint on request body
+- 1a675be: feat: add empty state + drafts collection
+- a1d59de: fix: update sidebar list element modal style
+- Updated dependencies [e649da6]
+- Updated dependencies [6b32eee]
+- Updated dependencies [1a675be]
+- Updated dependencies [a1d59de]
+  - @scalar/components@0.12.11
+  - @scalar/use-codemirror@0.11.5
+  - @scalar/oas-utils@0.2.13
+
 ## 2.0.13
 
 ### Patch Changes

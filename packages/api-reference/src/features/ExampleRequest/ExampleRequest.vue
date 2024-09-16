@@ -6,18 +6,15 @@ import {
   useAuthenticationStore,
   useServerStore,
 } from '#legacy'
-import { ScalarCodeBlock, ScalarIcon } from '@scalar/components'
+import { ScalarCodeBlock } from '@scalar/components'
+import { createHash, ssrState } from '@scalar/oas-utils/helpers'
+import { getRequestFromOperation } from '@scalar/oas-utils/spec-getters'
 import type {
-  CustomRequestExample,
   ExampleRequestSSRKey,
   SSRState,
   TransformedOperation,
-} from '@scalar/oas-utils'
-import { createHash, ssrState } from '@scalar/oas-utils/helpers'
-import { getRequestFromOperation } from '@scalar/oas-utils/spec-getters'
-import { snippetz } from '@scalar/snippetz'
+} from '@scalar/types/legacy'
 import { asyncComputed } from '@vueuse/core'
-import { HTTPSnippet } from 'httpsnippet-lite'
 import {
   computed,
   inject,
@@ -37,15 +34,14 @@ import { HttpMethod } from '../../components/HttpMethod'
 import {
   GLOBAL_SECURITY_SYMBOL,
   getApiClientRequest,
+  getExampleCode,
   getHarRequest,
 } from '../../helpers'
-import { useClipboard } from '../../hooks'
 import { type HttpClientState, useHttpClientStore } from '../../stores'
 import ExamplePicker from './ExamplePicker.vue'
 import TextSelect from './TextSelect.vue'
 
 const props = defineProps<{
-  customExamples?: CustomRequestExample[] | null
   operation: TransformedOperation
 }>()
 
@@ -57,7 +53,6 @@ const ssrStateKey =
 
 const selectedExampleKey = ref<string>()
 
-const { copyToClipboard } = useClipboard()
 const {
   httpClient,
   setHttpClient,
@@ -69,6 +64,26 @@ const {
 const { server: serverState } = useServerStore()
 const { authentication: authenticationState } = useAuthenticationStore()
 
+const customRequestExamples = computed(() => {
+  const keys = ['x-custom-examples', 'x-codeSamples', 'x-code-samples']
+
+  for (const key of keys) {
+    if (
+      props.operation.information?.[
+        key as 'x-custom-examples' | 'x-codeSamples' | 'x-code-samples'
+      ]
+    ) {
+      return (
+        props.operation.information[
+          key as 'x-custom-examples' | 'x-codeSamples' | 'x-code-samples'
+        ] ?? []
+      )
+    }
+  }
+
+  return []
+})
+
 /** Use the selected custom example or the globally selected HTTP client */
 const localHttpClient = ref<
   | HttpClientState
@@ -78,7 +93,7 @@ const localHttpClient = ref<
     }
 >(
   // Default to first custom example
-  props.customExamples?.length
+  customRequestExamples.value.length
     ? {
         targetKey: 'customExamples',
         clientKey: 0,
@@ -111,11 +126,13 @@ const getGlobalSecurity = inject(GLOBAL_SECURITY_SYMBOL)
 async function generateSnippet() {
   // Use the selected custom example
   if (localHttpClient.value.targetKey === 'customExamples') {
-    return props.customExamples?.[localHttpClient.value.clientKey]?.source ?? ''
+    return (
+      customRequestExamples.value[localHttpClient.value.clientKey]?.source ?? ''
+    )
   }
 
   // Generate a request object
-  const request = getHarRequest(
+  const harRequest = getHarRequest(
     {
       url: getUrlFromServerState(serverState),
     },
@@ -139,27 +156,12 @@ async function generateSnippet() {
       ? httpClient.clientKey
       : null
 
-  const targetKey = httpClient.targetKey.replace('javascript', 'js')
+  const targetKey = httpClient.targetKey
 
-  if (
-    clientKey &&
-    snippetz().hasPlugin(targetKey, clientKey) &&
-    (targetKey === 'node' || targetKey === 'js')
-  ) {
-    return snippetz().print(targetKey, clientKey, request as any) ?? ''
-  }
-
-  // Use httpsnippet-lite for other languages
-  try {
-    const snippet = new HTTPSnippet(request)
-    return (await snippet.convert(
-      httpClient.targetKey,
-      httpClient.clientKey,
-    )) as string
-  } catch (e) {
-    console.error('[ExampleRequest]', e)
-    return ''
-  }
+  return (
+    (await getExampleCode(harRequest as any, targetKey, clientKey as string)) ??
+    ''
+  )
 }
 
 const generatedCode = asyncComputed<string>(async () => {
@@ -191,7 +193,7 @@ const language = computed(() => {
   const key =
     // Specified language
     localHttpClient.value?.targetKey === 'customExamples'
-      ? props.customExamples?.[localHttpClient.value.clientKey]?.lang ??
+      ? customRequestExamples.value[localHttpClient.value.clientKey]?.lang ??
         'plaintext'
       : // Or language for the globally selected HTTP client
         httpClient.targetKey
@@ -227,11 +229,11 @@ const options = computed(() => {
   })
 
   // Add entries for all available custom examples
-  if (props.customExamples?.length) {
+  if (customRequestExamples.value.length) {
     entries.unshift({
       value: 'customExamples',
       label: 'Examples',
-      options: props.customExamples.map((example, index) => {
+      options: customRequestExamples.value.map((example, index) => {
         return {
           value: JSON.stringify({
             targetKey: 'customExamples',
@@ -258,7 +260,9 @@ function updateHttpClient(value: string) {
 }
 </script>
 <template>
-  <Card class="dark-mode">
+  <Card
+    v-if="availableTargets.length || customRequestExamples.length"
+    class="dark-mode">
     <CardHeader muted>
       <div class="request-header">
         <HttpMethod
@@ -275,7 +279,7 @@ function updateHttpClient(value: string) {
           @update:modelValue="updateHttpClient">
           <template v-if="localHttpClient.targetKey === 'customExamples'">
             {{
-              props.customExamples?.[localHttpClient.clientKey].label ??
+              customRequestExamples[localHttpClient.clientKey].label ??
               'Example'
             }}
           </template>
@@ -284,15 +288,6 @@ function updateHttpClient(value: string) {
             {{ httpClientTitle }}
           </template>
         </TextSelect>
-
-        <button
-          class="copy-button"
-          type="button"
-          @click="copyToClipboard(generatedCode)">
-          <ScalarIcon
-            icon="Clipboard"
-            width="10px" />
-        </button>
       </template>
     </CardHeader>
     <CardContent
@@ -302,6 +297,7 @@ function updateHttpClient(value: string) {
       <!-- Multiple examples -->
       <div class="code-snippet">
         <ScalarCodeBlock
+          class="bg-b-2"
           :content="generatedCode"
           :hideCredentials="
             getSecretCredentialsFromAuthentication(authenticationState)
@@ -346,43 +342,7 @@ function updateHttpClient(value: string) {
 .request-client-picker {
   padding-left: 12px;
   padding-right: 9px;
-  border-right: 1px solid var(--scalar-border-color);
 }
-
-.copy-button {
-  appearance: none;
-  -webkit-appearance: none;
-  outline: none;
-  background: transparent;
-  display: flex;
-  cursor: pointer;
-  color: var(--scalar-color-3);
-  margin-left: 6px;
-  margin-right: 10.5px;
-  border: none;
-  border-radius: 3px;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  height: fit-content;
-}
-/* Can't use flex align center on parent (scalar-card-header-actions) so have to match sibling font size vertically align*/
-.copy-button:after {
-  content: '.';
-  color: transparent;
-  font-size: var(--scalar-mini);
-  line-height: 1.35;
-  width: 0px;
-}
-.copy-button:hover {
-  color: var(--scalar-color-1);
-}
-
-.copy-button svg {
-  width: 13px;
-  height: 13px;
-}
-
 .request-card-footer {
   display: flex;
   justify-content: flex-end;
@@ -400,7 +360,6 @@ function updateHttpClient(value: string) {
   display: flex;
   flex: 1;
 }
-
 .code-snippet {
   display: flex;
   flex-direction: column;

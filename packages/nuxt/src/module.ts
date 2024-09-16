@@ -34,6 +34,7 @@ export default defineNuxtModule<ModuleOptions>({
     showSidebar: true,
     devtools: true,
     configurations: [],
+    theme: 'nuxt',
   },
   setup(_options, _nuxt) {
     const resolver = createResolver(import.meta.url)
@@ -52,6 +53,26 @@ export default defineNuxtModule<ModuleOptions>({
     _nuxt.options.imports.transform ||= {}
     _nuxt.options.imports.transform.exclude ||= []
     _nuxt.options.imports.transform.exclude.push(/scalar/)
+
+    /**
+     * Ensure we transform these cjs dependencies, remove as they get converted to ejs
+     * Last time this was fixed on the nuxt side so we removed this and it started working
+     * however its back so we add this back in
+     *
+     * error:
+     * doesn't provide an export named: 'default'
+     */
+    _nuxt.options.vite.optimizeDeps ||= {}
+    _nuxt.options.vite.optimizeDeps.include ||= []
+    _nuxt.options.vite.optimizeDeps.include.push(
+      '@scalar/nuxt > @scalar/api-reference',
+      '@scalar/nuxt > jsonpointer',
+      '@scalar/nuxt > ajv-draft-04',
+      '@scalar/nuxt > ajv-formats',
+      '@scalar/nuxt > ajv',
+      '@scalar/nuxt > asjv-draft-04 > ajv',
+      '@scalar/nuxt > asjv-formats > ajv',
+    )
 
     // Also check for Nitro OpenAPI auto generation
     _nuxt.hook('nitro:config', (config) => {

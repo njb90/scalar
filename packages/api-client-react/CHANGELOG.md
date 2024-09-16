@@ -1,5 +1,471 @@
 # @scalar/api-client-react
 
+## 1.0.37
+
+### Patch Changes
+
+- Updated dependencies [e9253af]
+  - @scalar/api-client@2.0.64
+
+## 1.0.36
+
+### Patch Changes
+
+- @scalar/api-client@2.0.63
+
+## 1.0.35
+
+### Patch Changes
+
+- @scalar/api-client@2.0.62
+
+## 1.0.34
+
+### Patch Changes
+
+- Updated dependencies [4b52f29]
+- Updated dependencies [294ba08]
+- Updated dependencies [e67f5a8]
+- Updated dependencies [044fd7d]
+- Updated dependencies [152c016]
+  - @scalar/api-client@2.0.61
+
+## 1.0.33
+
+### Patch Changes
+
+- Updated dependencies [c02202c]
+  - @scalar/api-client@2.0.60
+
+## 1.0.32
+
+### Patch Changes
+
+- Updated dependencies [bbe5b49]
+  - @scalar/api-client@2.0.59
+
+## 1.0.31
+
+### Patch Changes
+
+- Updated dependencies [1c3de0e]
+- Updated dependencies [857380d]
+- Updated dependencies [ab8c4d7]
+- Updated dependencies [8d615dc]
+- Updated dependencies [9bc0ae7]
+- Updated dependencies [8f24069]
+  - @scalar/api-client@2.0.58
+
+## 1.0.30
+
+### Patch Changes
+
+- Updated dependencies [6babe66]
+  - @scalar/api-client@2.0.57
+
+## 1.0.29
+
+### Patch Changes
+
+- Updated dependencies [af75550]
+- Updated dependencies [f9c88a9]
+- Updated dependencies [5de17ce]
+- Updated dependencies [f3b9adf]
+  - @scalar/api-client@2.0.56
+
+## 1.0.28
+
+### Patch Changes
+
+- @scalar/api-client@2.0.55
+
+## 1.0.27
+
+### Patch Changes
+
+- Updated dependencies [2db9eb8]
+  - @scalar/api-client@2.0.54
+
+## 1.0.26
+
+### Patch Changes
+
+- Updated dependencies [78db8f5]
+  - @scalar/api-client@2.0.53
+
+## 1.0.25
+
+### Patch Changes
+
+- Updated dependencies [cff5b1f]
+  - @scalar/api-client@2.0.52
+
+## 1.0.24
+
+### Patch Changes
+
+- Updated dependencies [f2b4b3f]
+- Updated dependencies [c386d64]
+- Updated dependencies [5c877b8]
+- Updated dependencies [1c81549]
+  - @scalar/api-client@2.0.51
+
+## 1.0.23
+
+### Patch Changes
+
+- @scalar/api-client@2.0.50
+
+## 1.0.22
+
+### Patch Changes
+
+- Updated dependencies [56be4fe]
+- Updated dependencies [c450bb3]
+- Updated dependencies [75a5a64]
+  - @scalar/api-client@2.0.49
+
+## 1.0.21
+
+### Patch Changes
+
+- Updated dependencies [db96313]
+- Updated dependencies [de9747c]
+- Updated dependencies [8672a78]
+- Updated dependencies [58e5912]
+- Updated dependencies [6f7ab8d]
+- Updated dependencies [89ee9da]
+- Updated dependencies [078ca72]
+- Updated dependencies [520caff]
+- Updated dependencies [03e9bbb]
+- Updated dependencies [db96313]
+  - @scalar/api-client@2.0.48
+
+## 1.0.20
+
+### Patch Changes
+
+- Updated dependencies [b00e50e]
+- Updated dependencies [df7372f]
+- Updated dependencies [6f0632e]
+- Updated dependencies [3023afe]
+- Updated dependencies [711ad03]
+- Updated dependencies [14ed31f]
+  - @scalar/api-client@2.0.47
+
+## 1.0.19
+
+### Patch Changes
+
+- Updated dependencies [2f6180a]
+  - @scalar/api-client@2.0.46
+
+## 1.0.18
+
+### Patch Changes
+
+- Updated dependencies [ee80ee5]
+- Updated dependencies [f3fec79]
+- Updated dependencies [2301345]
+- Updated dependencies [57f5691]
+- Updated dependencies [faf3ed9]
+- Updated dependencies [a1c73a0]
+  - @scalar/api-client@2.0.45
+
+## 1.0.17
+
+### Patch Changes
+
+- Updated dependencies [d65dbcb]
+- Updated dependencies [9cc6311]
+  - @scalar/api-client@2.0.44
+
+## 1.0.16
+
+### Patch Changes
+
+- Updated dependencies [425dc83]
+- Updated dependencies [9afa9c5]
+- Updated dependencies [13b2f6d]
+- Updated dependencies [cd028bd]
+- Updated dependencies [554df83]
+  - @scalar/api-client@2.0.43
+
+## 1.0.15
+
+### Patch Changes
+
+- Updated dependencies [1062ceb]
+  - @scalar/api-client@2.0.42
+
+## 1.0.14
+
+### Patch Changes
+
+- Updated dependencies [09d07d1]
+  - @scalar/api-client@2.0.41
+
+## 1.0.13
+
+### Patch Changes
+
+- Updated dependencies [3a6effa]
+- Updated dependencies [dfa7434]
+  - @scalar/api-client@2.0.40
+
+## 1.0.12
+
+### Patch Changes
+
+- Updated dependencies [016ff7d]
+- Updated dependencies [e8cf2f5]
+- Updated dependencies [c1ada84]
+- Updated dependencies [3031929]
+- Updated dependencies [c1ada84]
+- Updated dependencies [808eafb]
+- Updated dependencies [7853b8d]
+  - @scalar/api-client@2.0.39
+
+## 1.0.11
+
+### Patch Changes
+
+- Updated dependencies [de25d01]
+  - @scalar/api-client@2.0.38
+
+## 1.0.10
+
+### Patch Changes
+
+- Updated dependencies [b21b419]
+- Updated dependencies [7b58f10]
+- Updated dependencies [3d9e948]
+  - @scalar/api-client@2.0.37
+
+## 1.0.9
+
+### Patch Changes
+
+- Updated dependencies [276e506]
+  - @scalar/api-client@2.0.36
+
+## 1.0.8
+
+### Patch Changes
+
+- Updated dependencies [bf2895e]
+- Updated dependencies [5d2825a]
+  - @scalar/api-client@2.0.35
+
+## 1.0.7
+
+### Patch Changes
+
+- Updated dependencies [c0cf4ac]
+- Updated dependencies [225e32a]
+- Updated dependencies [bb5909f]
+- Updated dependencies [9815191]
+- Updated dependencies [a7ea3e3]
+- Updated dependencies [9243580]
+- Updated dependencies [12bd5b8]
+  - @scalar/api-client@2.0.34
+
+## 1.0.6
+
+### Patch Changes
+
+- Updated dependencies [ce3f630]
+- Updated dependencies [d88c403]
+- Updated dependencies [0bea5b6]
+- Updated dependencies [2c61c21]
+- Updated dependencies [19a50de]
+  - @scalar/api-client@2.0.33
+
+## 1.0.5
+
+### Patch Changes
+
+- Updated dependencies [6123165]
+  - @scalar/api-client@2.0.32
+
+## 1.0.4
+
+### Patch Changes
+
+- 240a618: feat: allow multiple api-clients on single page
+- Updated dependencies [240a618]
+  - @scalar/api-client@2.0.31
+
+## 1.0.3
+
+### Patch Changes
+
+- Updated dependencies [b4199e9]
+  - @scalar/api-client@2.0.30
+
+## 1.0.2
+
+### Patch Changes
+
+- 5d19345: feat(api-client-react): adds use client directive at the top of file for next.js
+- Updated dependencies [d5408e8]
+  - @scalar/api-client@2.0.29
+
+## 1.0.1
+
+### Patch Changes
+
+- 2945efe: chore: make api client react public
+
+## 1.0.0
+
+### Major Changes
+
+- e41c15e: fix: SSR issue with api-client-react
+
+## 0.5.45
+
+### Patch Changes
+
+- 33f5a09: fix: revived the api-client-react package
+- Updated dependencies [23d498b]
+- Updated dependencies [624696e]
+- Updated dependencies [41341e9]
+- Updated dependencies [5402338]
+- Updated dependencies [33f5a09]
+- Updated dependencies [9f4db12]
+- Updated dependencies [aee3783]
+- Updated dependencies [9ca5d7d]
+- Updated dependencies [d97bffd]
+  - @scalar/api-client@2.0.28
+
+## 0.5.44
+
+### Patch Changes
+
+- Updated dependencies [19d8b6a]
+- Updated dependencies [c112f24]
+- Updated dependencies [83fc241]
+- Updated dependencies [2e1ef12]
+  - @scalar/api-client@2.0.27
+
+## 0.5.43
+
+### Patch Changes
+
+- Updated dependencies [54f7654]
+- Updated dependencies [b0b3290]
+- Updated dependencies [7e01b12]
+- Updated dependencies [b7211fb]
+  - @scalar/api-client@2.0.26
+
+## 0.5.42
+
+### Patch Changes
+
+- Updated dependencies [591fe24]
+- Updated dependencies [7f17fe4]
+- Updated dependencies [1dab515]
+- Updated dependencies [4d76ff5]
+- Updated dependencies [e8cd161]
+- Updated dependencies [a431eb0]
+- Updated dependencies [ff59399]
+- Updated dependencies [ec47287]
+- Updated dependencies [747e80e]
+- Updated dependencies [9d561b7]
+  - @scalar/api-client@2.0.25
+
+## 0.5.41
+
+### Patch Changes
+
+- Updated dependencies [7076725]
+- Updated dependencies [1e72b03]
+- Updated dependencies [cbe984b]
+  - @scalar/api-client@2.0.24
+
+## 0.5.40
+
+### Patch Changes
+
+- Updated dependencies [3928ac3]
+  - @scalar/api-client@2.0.23
+
+## 0.5.39
+
+### Patch Changes
+
+- Updated dependencies [45b956f]
+  - @scalar/api-client@2.0.22
+
+## 0.5.38
+
+### Patch Changes
+
+- Updated dependencies [d48e4ac]
+  - @scalar/api-client@2.0.21
+
+## 0.5.37
+
+### Patch Changes
+
+- @scalar/api-client@2.0.20
+
+## 0.5.36
+
+### Patch Changes
+
+- Updated dependencies [a0bb23a]
+  - @scalar/api-client@2.0.19
+
+## 0.5.35
+
+### Patch Changes
+
+- Updated dependencies [8654323]
+  - @scalar/api-client@2.0.18
+
+## 0.5.34
+
+### Patch Changes
+
+- Updated dependencies [91b97fa]
+- Updated dependencies [05bc858]
+- Updated dependencies [05bc858]
+  - @scalar/api-client@2.0.17
+
+## 0.5.33
+
+### Patch Changes
+
+- fc096b6: refactor!: rename `createScalarApiClient` to `createApiClientModal`
+- Updated dependencies [a5b295c]
+- Updated dependencies [bff602a]
+- Updated dependencies [6f4d20d]
+- Updated dependencies [1ba4267]
+- Updated dependencies [58da2c6]
+- Updated dependencies [9e3348a]
+- Updated dependencies [fe16789]
+- Updated dependencies [fc096b6]
+- Updated dependencies [ebdc9cf]
+  - @scalar/api-client@2.0.16
+
+## 0.5.32
+
+### Patch Changes
+
+- Updated dependencies [f86a242]
+  - @scalar/api-client@2.0.15
+
+## 0.5.31
+
+### Patch Changes
+
+- Updated dependencies [6b32eee]
+- Updated dependencies [1a675be]
+- Updated dependencies [a1d59de]
+  - @scalar/api-client@2.0.14
+
 ## 0.5.30
 
 ### Patch Changes

@@ -1,6 +1,12 @@
 import { ScalarButton } from './components/ScalarButton'
 import { ScalarCodeBlock } from './components/ScalarCodeBlock'
 import {
+  ScalarCombobox,
+  ScalarComboboxMultiselect,
+  type ScalarComboboxOption,
+} from './components/ScalarCombobox'
+import { ScalarContextMenu } from './components/ScalarContextMenu'
+import {
   ScalarDropdown,
   ScalarDropdownDivider,
   ScalarDropdownItem,
@@ -34,6 +40,8 @@ export * from './helpers'
 export {
   ScalarButton,
   ScalarCodeBlock,
+  ScalarCombobox,
+  ScalarComboboxMultiselect,
   ScalarMarkdown,
   ScalarDropdown,
   ScalarDropdownDivider,
@@ -43,6 +51,7 @@ export {
   ScalarIconButton,
   ScalarListbox,
   ScalarLoading,
+  ScalarContextMenu,
   ScalarModal,
   ScalarPopover,
   ScalarSearchInput,
@@ -52,6 +61,7 @@ export {
   ScalarTooltip,
   type Icon,
   type ScalarListboxOption,
+  type ScalarComboboxOption,
   type ModalState,
   useLoadingState,
   useModal,

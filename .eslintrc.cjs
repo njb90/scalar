@@ -30,6 +30,7 @@ module.exports = {
     '**/cdn/**',
     '**/hydrateClient.d.ts',
     '**/hydrateClient.d.mts',
+    'packages/api-client-app/src/preload/index.d.ts',
   ],
   rules: {
     // ---------------------------------------------------------------------------
@@ -217,6 +218,13 @@ module.exports = {
           },
         ],
         'vue/custom-event-name-casing': ['error', 'camelCase'],
+        'vue/max-lines-per-block': [
+          'warn',
+          {
+            script: 150,
+            skipBlankLines: true,
+          },
+        ],
       },
     },
     /** Other rule overrides */

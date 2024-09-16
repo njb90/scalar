@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-parser'
+import type { OpenAPIV2, OpenAPIV3, OpenAPIV3_1 } from '@scalar/openapi-types'
 
 defineProps<{
   value:
@@ -45,8 +45,10 @@ defineProps<{
 /* Style the "icon" */
 .schema-type-icon {
   color: var(--scalar-color-1);
+  display: none;
 }
 .schema-type {
   font-family: var(--scalar-font-code);
+  color: var(--scalar-color-1);
 }
 </style>

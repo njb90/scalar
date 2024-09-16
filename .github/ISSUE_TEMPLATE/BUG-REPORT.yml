@@ -15,17 +15,6 @@ body:
       label: What did you expect to happen?
     validations:
       required: true
-  - type: textarea
-    id: reprod
-    attributes:
-      label: 'How can we reproduce the issue?'
-      placeholder: |
-        1. Go to …
-        2. Click on …
-        3. Scroll down to …
-        4. See error
-    validations:
-      required: true
   - type: input
     id: env-link
     attributes:

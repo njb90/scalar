@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+import { SearchButton } from '../../features/Search'
 import type { ReferenceLayoutProps, ReferenceLayoutSlots } from '../../types'
 import ApiReferenceLayout from '../ApiReferenceLayout.vue'
 import ClassicHeader from '../ClassicHeader.vue'
 import { DarkModeIconToggle } from '../DarkModeToggle'
-import SearchButton from '../SearchButton.vue'
 
 const props = defineProps<ReferenceLayoutProps>()
 
@@ -36,11 +36,13 @@ const config = computed(() => ({ ...props.configuration, showSidebar: false }))
     <template #content-start="{ spec }">
       <ClassicHeader>
         <SearchButton
+          v-if="!props.configuration.hideSearch"
           class="t-doc__sidebar"
           :searchHotKey="config.searchHotKey"
           :spec="spec" />
         <template #dark-mode-toggle>
           <DarkModeIconToggle
+            v-if="!!!props.configuration.hideDarkModeToggle"
             :isDarkMode="isDark"
             @toggleDarkMode="$emit('toggleDarkMode')" />
         </template>

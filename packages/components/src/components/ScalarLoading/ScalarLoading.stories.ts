@@ -9,9 +9,7 @@ import ScalarLoading, { useLoadingState } from './ScalarLoading.vue'
 const meta = {
   component: ScalarLoading,
   tags: ['autodocs'],
-  argTypes: {
-    size: { control: 'text', default: '24px' },
-  },
+  argTypes: {},
   render: () => ({
     components: { ScalarButton, ScalarLoading },
     setup() {
@@ -20,11 +18,13 @@ const meta = {
       return { loadingState }
     },
     template: `
-      <div className="row gap-4 items-center">
-        <ScalarLoading :loadingState="loadingState" />
-        <ScalarButton @click="loadingState.validate()">Success</ScalarButton>
-        <ScalarButton variant="danger" @click="loadingState.invalidate()">Error</ScalarButton>
-        <ScalarButton variant="ghost" @click="loadingState.clear() && loadingState.startLoading()">Reset</ScalarButton>
+      <div className="row gap-16 items-center">
+        <ScalarLoading size="xl" :loadingState="loadingState" />
+        <div className="row gap-4 items-center">
+          <ScalarButton @click="loadingState.validate()">Validate</ScalarButton>
+          <ScalarButton variant="danger" @click="loadingState.invalidate()">Invalidate</ScalarButton>
+          <ScalarButton variant="outlined" @click="loadingState.clear() && loadingState.startLoading()">Clear</ScalarButton>
+        </div>
       </div>
     `,
   }),

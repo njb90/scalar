@@ -1,21 +1,24 @@
 <script setup lang="ts">
-import type { Spec } from '@scalar/oas-utils'
+import type { Spec } from '@scalar/types/legacy'
 import { onMounted, ref, watch } from 'vue'
 
 import { sleep } from '../../helpers'
-import { useNavState, useSidebar } from '../../hooks'
+import { type TagsSorterOption, useNavState, useSidebar } from '../../hooks'
 import SidebarElement from './SidebarElement.vue'
 import SidebarGroup from './SidebarGroup.vue'
 
-const props = defineProps<{
-  parsedSpec: Spec
-}>()
+const props = defineProps<
+  {
+    parsedSpec: Spec
+  } & TagsSorterOption
+>()
 
 const { hash, isIntersectionEnabled } = useNavState()
 
 const { items, toggleCollapsedSidebarItem, collapsedSidebarItems } = useSidebar(
   {
     parsedSpec: props.parsedSpec,
+    tagsSorter: props.tagsSorter,
   },
 )
 
@@ -184,7 +187,7 @@ onMounted(() => {
   height: 100%;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid
+  border-right: var(--scalar-border-width) solid
     var(--scalar-sidebar-border-color, var(--scalar-border-color));
   background: var(--scalar-sidebar-background-1, var(--scalar-background-1));
   --scalar-sidebar-level: 0;
@@ -213,7 +216,8 @@ onMounted(() => {
   line-height: 1.385;
 }
 .sidebar-group-item + .sidebar-group-title {
-  border-top: 1px solid var(--scalar-sidebar-border-color);
+  border-top: var(--scalar-border-width) solid
+    var(--scalar-sidebar-border-color);
   margin-top: 9px;
 }
 </style>

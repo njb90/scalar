@@ -51,7 +51,6 @@ defineOptions({
   align-items: baseline;
   border-color: inherit;
 }
-
 .card-form-input label,
 .card-form-input input {
   padding: 9px;
@@ -64,6 +63,12 @@ defineOptions({
   appearance: none;
   -webkit-appearance: none;
   left: 0;
+}
+.card-form-input input:placeholder,
+.card-form-input input:-ms-input-placeholder,
+.card-form-input input::-webkit-input-placeholder {
+  color: var(--scalar-color-3);
+  font-family: var(--scalar-font);
 }
 .card-form-input label {
   width: fit-content;
@@ -79,7 +84,7 @@ defineOptions({
   color: var(--scalar-color-1);
 }
 .card-form-input + .card-form-input {
-  border-left: 1px solid var(--scalar-border-color);
+  border-left: var(--scalar-border-width) solid var(--scalar-border-color);
 }
 .card-form-input input:not(:placeholder-shown) + label {
   color: var(--scalar-color-2);
@@ -92,5 +97,11 @@ defineOptions({
   width: auto;
   align-self: center;
   stroke-width: 0.75;
+}
+.card-form-input label {
+  display: none;
+}
+.card-form-input label[for='oAuth2.clientId'] {
+  display: flex;
 }
 </style>

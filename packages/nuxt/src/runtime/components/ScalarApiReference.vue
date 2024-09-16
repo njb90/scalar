@@ -4,8 +4,6 @@ import { ModernLayout, parse } from '@scalar/api-reference'
 import { reactive, ref, toRaw } from 'vue'
 import type { Configuration } from '~/src/types'
 
-import './nuxt-theme.css'
-
 const props = defineProps<{
   configuration: Configuration
 }>()
@@ -51,3 +49,7 @@ const config = {
     :rawSpec="rawSpec"
     @toggleDarkMode="isDark = !isDark" />
 </template>
+
+<style>
+@import './nuxt-theme.css';
+</style>

@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { useAuthenticationStore } from '#legacy'
 import { migrateThemeVariables } from '@scalar/themes'
+import type { ReferenceConfiguration } from '@scalar/types/legacy'
 import { useSeoMeta } from '@unhead/vue'
+import { useFavicon } from '@vueuse/core'
 import { computed, toRef, watch } from 'vue'
 
 import { useDarkModeState, useReactiveSpec } from '../hooks'
 import { useHttpClientStore } from '../stores'
-import type { ReferenceConfiguration, ReferenceProps } from '../types'
+import type { ReferenceProps } from '../types'
 import { Layouts } from './Layouts'
 
 const props = defineProps<ReferenceProps>()
@@ -18,6 +20,7 @@ defineEmits<{
 
 const { toggleDarkMode, isDark } = useDarkModeState(
   props.configuration?.darkMode,
+  props.configuration?.forceDarkModeState,
 )
 
 /** Update the dark mode state when props change */
@@ -76,13 +79,17 @@ const { setAuthentication } = useAuthenticationStore()
 mapConfigToState('authentication', setAuthentication)
 
 // Hides any client snippets from the references
-const { setExcludedClients } = useHttpClientStore()
+const { setExcludedClients, setDefaultHttpClient } = useHttpClientStore()
+mapConfigToState('defaultHttpClient', setDefaultHttpClient)
 mapConfigToState('hiddenClients', setExcludedClients)
 
 const { parsedSpec, rawSpec } = useReactiveSpec({
   proxy: toRef(() => configuration.value.proxy || ''),
   specConfig: toRef(() => configuration.value.spec || {}),
 })
+
+const favicon = computed(() => configuration.value.favicon)
+useFavicon(favicon)
 </script>
 <template>
   <!-- Inject any custom CSS directly into a style tag -->
@@ -104,7 +111,10 @@ const { parsedSpec, rawSpec } = useReactiveSpec({
   </Layouts>
 </template>
 <style>
-body {
-  margin: 0;
+@layer scalar-base {
+  body {
+    margin: 0;
+    background-color: var(--scalar-background-1);
+  }
 }
 </style>

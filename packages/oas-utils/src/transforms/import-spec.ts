@@ -1,15 +1,13 @@
 import { createCollection } from '@/entities/workspace/collection'
 import { type Folder, createFolder } from '@/entities/workspace/folder'
-import type { SecuritySchemeOauth2 } from '@/entities/workspace/security'
-import { createServer } from '@/entities/workspace/server'
+import { type ServerPayload, createServer } from '@/entities/workspace/server'
 import { type Request, createRequest } from '@/entities/workspace/spec'
 import { tagObjectSchema } from '@/entities/workspace/spec/spec'
 import type { RequestMethod } from '@/helpers'
-import { parseJsonOrYaml } from '@/helpers/parse'
 import { schemaModel } from '@/helpers/schema-model'
-import type { AnyObject } from '@/types'
 import { dereference, load } from '@scalar/openapi-parser'
-import type { OpenAPIV3_1 } from 'openapi-types'
+import type { Spec } from '@scalar/types/legacy'
+import type { UnknownObject } from '@scalar/types/utils'
 
 const PARAM_DICTIONARY = {
   cookie: 'cookies',
@@ -19,14 +17,16 @@ const PARAM_DICTIONARY = {
 } as const
 
 /** Import an OpenAPI spec file and convert it to workspace entities */
-export const importSpecToWorkspace = async (spec: string | AnyObject) => {
+export const importSpecToWorkspace = async (
+  spec: string | UnknownObject,
+  overloadServers?: Spec['servers'],
+) => {
   const importWarnings: string[] = []
   const requests: Request[] = []
-  const parsedSpec = parseJsonOrYaml(spec) as OpenAPIV3_1.Document
 
   // TODO: `parsedSpec` can have circular reference and will break.
   // We always have to use the original document.
-  const { filesystem } = await load(parsedSpec)
+  const { filesystem } = await load(spec)
   const { schema, errors } = await dereference(filesystem)
 
   if (errors?.length || !schema) {
@@ -100,13 +100,13 @@ export const importSpecToWorkspace = async (spec: string | AnyObject) => {
         description: operation.description,
         operationId: operation.operationId,
         security: operation.security,
-        summary: operation.summary,
+        summary: operation.summary || pathString,
         externalDocs: operation.externalDocs,
         requestBody: operation.requestBody,
         parameters,
       })
 
-      request.tags.forEach((t) => requestTags.add(t))
+      request.tags?.forEach((t) => requestTags.add(t))
       requests.push(request)
     })
   })
@@ -135,7 +135,7 @@ export const importSpecToWorkspace = async (spec: string | AnyObject) => {
     const folder = createFolder({
       ...t,
       childUids: requests
-        .filter((r) => r.tags.includes(t.name))
+        .filter((r) => r.tags?.includes(t.name))
         .map((r) => r.uid),
     })
 
@@ -143,37 +143,21 @@ export const importSpecToWorkspace = async (spec: string | AnyObject) => {
   })
 
   // Toss in a default server if there aren't any
-  const unparsedServers = parsedSpec.servers?.length
-    ? parsedSpec.servers!
-    : [
-        {
-          url: 'http://localhost',
-          description: 'Replace with your API server',
-        },
-      ]
+  const unparsedServers: ServerPayload[] =
+    overloadServers ??
+    (schema?.servers?.length
+      ? schema.servers!
+      : [
+          {
+            url:
+              typeof window !== 'undefined'
+                ? window.location.origin
+                : 'http://localhost',
+            description: 'Replace with your API server',
+          },
+        ])
+
   const servers = unparsedServers.map((server) => createServer(server))
-
-  // Select initial security
-  const firstSecurityKey = Object.keys(
-    (schema?.components?.securitySchemes || schema?.securityDefinitions) ?? {},
-  )?.[0]
-
-  const firstScheme = (schema?.components?.securitySchemes ||
-    schema?.securityDefinitions)?.[
-    firstSecurityKey ?? ''
-  ] as OpenAPIV3_1.SecuritySchemeObject
-
-  // In the case of oauth2 we need to select the flow as well
-  const flowKey =
-    firstScheme?.type === 'oauth2'
-      ? (Object.keys(
-          firstScheme.flows ?? {},
-        )[0] as keyof SecuritySchemeOauth2['flows'])
-      : undefined
-
-  const selectedSecuritySchemes = firstSecurityKey
-    ? [{ uid: firstSecurityKey, ...(flowKey ? { flowKey } : {}) }]
-    : []
 
   const collection = createCollection({
     spec: {
@@ -184,7 +168,6 @@ export const importSpecToWorkspace = async (spec: string | AnyObject) => {
       serverUids: servers.map(({ uid }) => uid),
       tags,
     },
-    selectedSecuritySchemes,
     selectedServerUid: servers[0].uid,
     // We default to having all the requests in the root folder
     childUids: folders.map(({ uid }) => uid),

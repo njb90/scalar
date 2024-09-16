@@ -8,14 +8,14 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/scalar/scalar.git",
-    "directory": "packages/void"
+    "directory": "packages/void-server"
   },
   "keywords": [
     "scalar",
     "http testing",
     "hono"
   ],
-  "version": "2.0.6",
+  "version": "2.0.10",
   "engines": {
     "node": ">=18"
   },
@@ -43,11 +43,9 @@
   "dependencies": {
     "@hono/node-server": "^1.11.0",
     "hono": "^4.2.7",
-    "object-to-xml": "^2.0.0",
-    "undici": "^6.19.2"
+    "object-to-xml": "^2.0.0"
   },
   "devDependencies": {
-    "@scalar/build-tooling": "workspace:*",
-    "nodemon": "^3.1.3"
+    "@scalar/build-tooling": "workspace:*"
   }
 }

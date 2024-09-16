@@ -13,6 +13,7 @@ export default {
       lg: 'var(--scalar-radius-lg)',
       xl: 'var(--scalar-radius-xl)',
       full: '9999px',
+      none: '0px',
     },
     borderWidth: {
       'DEFAULT': 'var(--scalar-border-width)',
@@ -49,6 +50,7 @@ export default {
     },
     colors: {
       current: 'currentColor',
+      inherit: 'inherit',
       // Backdrop Colors
       b: {
         1: 'var(--scalar-background-1)',
@@ -90,9 +92,6 @@ export default {
       grey: 'var(--scalar-color-3)',
       indigo: 'var(--scalar-color-blue)',
       pink: 'var(--scalar-color-pink)',
-
-      // Control Colors
-      error: 'var(--scalar-error-color)',
 
       // Hard-coded Colors
       white: '#FFF',
