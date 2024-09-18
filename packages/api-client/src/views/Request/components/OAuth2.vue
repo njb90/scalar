@@ -100,9 +100,9 @@ const handleAuthorize = async () => {
           :id="`oauth2-password-username-${scheme.uid}`"
           class="text-c-2"
           :modelValue="scheme.flow.value"
-          placeholder="ScalarEnjoyer01"
+          placeholder="Key"
           @update:modelValue="(v) => updateScheme('flow.value', v)">
-          Username
+          Key
         </RequestAuthDataTableInput>
       </DataTableRow>
       <DataTableRow>
@@ -112,7 +112,7 @@ const handleAuthorize = async () => {
           placeholder="xxxxxx"
           type="password"
           @update:modelValue="(v) => updateScheme('flow.secondValue', v)">
-          Password
+          Secret
         </RequestAuthDataTableInput>
       </DataTableRow>
     </template>

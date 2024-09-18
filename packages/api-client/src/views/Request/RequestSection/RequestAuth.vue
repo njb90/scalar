@@ -327,10 +327,10 @@ const unselectAuth = (id: string) => {
                   :id="`http-basic-username-${scheme.uid}`"
                   class="text-c-2"
                   :modelValue="scheme.value"
-                  placeholder="ScalarEnjoyer01"
+                  placeholder="Key"
                   required
                   @update:modelValue="(v) => updateScheme(scheme, 'value', v)">
-                  Username
+                  Key
                 </RequestAuthDataTableInput>
               </DataTableRow>
               <DataTableRow>
@@ -342,7 +342,7 @@ const unselectAuth = (id: string) => {
                   @update:modelValue="
                     (v) => updateScheme(scheme, 'secondValue', v)
                   ">
-                  Password
+                  Secret
                 </RequestAuthDataTableInput>
               </DataTableRow>
             </template>
